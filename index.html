@@ -100,6 +100,7 @@
 
         <main class="flex-1 relative overflow-hidden bg-gray-100 flex flex-col">
 
+            <!-- 목록 화면 -->
             <div id="view-list" class="view-content hide-scrollbar active flex flex-col h-full">
                 <div class="px-4 pt-4 pb-3 bg-gray-100 shrink-0 space-y-2">
                     <div class="flex justify-between items-center">
@@ -132,12 +133,15 @@
                 </div>
             </div>
 
+            <!-- 상세 화면 -->
             <div id="view-detail" class="view-content hide-scrollbar bg-gray-300 relative">
                 <div class="sticky top-0 z-20 bg-white border-b border-gray-200 p-3 flex justify-between items-center shadow-sm">
                     <button onclick="setView('list')" class="w-8 h-8 flex items-center justify-center bg-gray-100 text-gray-600 rounded-full hover:bg-gray-200 transition-colors">
                         <i class="ph-bold ph-arrow-left"></i>
                     </button>
+
                     <span id="detail-title" class="font-bold text-sm truncate flex-1 text-center px-2 text-gray-800"></span>
+
                     <button onclick="switchToPip()" class="bg-blue-600 text-white px-3 py-1.5 rounded-full text-[10px] font-bold shadow-md flex items-center gap-1 hover:bg-blue-700 transition-colors active:scale-95">
                         <i class="ph-bold ph-monitor-arrow-up"></i> PiP
                     </button>
@@ -148,13 +152,20 @@
                 </div>
 
                 <div class="fixed bottom-[70px] w-full sm:w-[420px] bg-white/90 backdrop-blur border-t p-2 flex justify-center items-center space-x-6 z-20 shadow-[0_-5px_10px_rgba(0,0,0,0.05)]">
-                    <button onclick="adjustDetailZoom(-0.1)" class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-gray-100 active:bg-gray-200 text-gray-500"><i class="ph-bold ph-minus-circle text-2xl"></i></button>
+                    <button onclick="adjustDetailZoom(-0.1)" class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-gray-100 active:bg-gray-200 text-gray-500">
+                        <i class="ph-bold ph-minus-circle text-2xl"></i>
+                    </button>
+
                     <span id="detail-zoom-val" class="font-bold text-xs w-10 text-center text-gray-700">100%</span>
-                    <button onclick="adjustDetailZoom(0.1)" class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-gray-100 active:bg-gray-200 text-gray-500"><i class="ph-bold ph-plus-circle text-2xl"></i></button>
+
+                    <button onclick="adjustDetailZoom(0.1)" class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-gray-100 active:bg-gray-200 text-gray-500">
+                        <i class="ph-bold ph-plus-circle text-2xl"></i>
+                    </button>
                 </div>
             </div>
         </main>
 
+        <!-- 하단 메뉴: 읽기 전용 -->
         <nav class="absolute bottom-0 w-full bg-white border-t flex justify-center items-center py-3 safe-bottom z-30 shadow-[0_-5px_15px_rgba(0,0,0,0.03)]">
             <button onclick="setView('list')" class="flex flex-col items-center text-blue-600 w-full group">
                 <div class="p-1 group-hover:bg-blue-50 rounded-lg transition-colors flex flex-col items-center">
@@ -165,32 +176,49 @@
         </nav>
     </div>
 
+    <!-- PiP 외부창 -->
     <div id="pip-window" style="width: 450px; height: 700px; top: 5vh; left: calc(50vw + 220px);">
         <div class="pip-header p-3 flex justify-between items-center select-none bg-gradient-to-r from-gray-50 to-gray-100">
             <div class="flex items-center min-w-0">
                 <i class="ph-fill ph-dots-six-vertical text-gray-400 mr-2 cursor-move shrink-0"></i>
                 <span id="pip-title" class="font-bold text-sm truncate max-w-[230px] text-gray-800">소식지 외부창</span>
             </div>
+
             <div class="flex space-x-2 items-center shrink-0">
                 <button onclick="togglePipFull()" id="pip-full-btn" class="w-8 h-8 flex justify-center items-center text-gray-600 bg-white border border-gray-200 rounded-lg shadow-sm hover:bg-gray-50" title="전체화면 전환">
                     <i class="ph-bold ph-corners-out text-lg"></i>
                 </button>
+
                 <button onclick="closePip()" class="w-8 h-8 flex justify-center items-center text-white bg-red-500 rounded-lg shadow-sm hover:bg-red-600" title="창 닫기">
                     <i class="ph-bold ph-x text-lg"></i>
                 </button>
             </div>
         </div>
+
         <div class="pip-body overflow-y-auto bg-gray-200" id="pip-scroll-area">
             <div id="pip-content" class="zoom-area p-4 min-h-full bg-white shadow-md"></div>
         </div>
+
         <div class="p-2 border-t bg-white flex justify-center items-center space-x-6 text-gray-600 shrink-0">
-            <button onclick="adjustPipZoom(-0.1)" class="hover:text-blue-600 transition-colors"><i class="ph-bold ph-minus-circle text-2xl"></i></button>
+            <button onclick="adjustPipZoom(-0.1)" class="hover:text-blue-600 transition-colors">
+                <i class="ph-bold ph-minus-circle text-2xl"></i>
+            </button>
+
             <span id="pip-zoom-val" class="font-bold text-xs w-12 text-center bg-gray-100 py-1 rounded">100%</span>
-            <button onclick="adjustPipZoom(0.1)" class="hover:text-blue-600 transition-colors"><i class="ph-bold ph-plus-circle text-2xl"></i></button>
+
+            <button onclick="adjustPipZoom(0.1)" class="hover:text-blue-600 transition-colors">
+                <i class="ph-bold ph-plus-circle text-2xl"></i>
+            </button>
         </div>
     </div>
 
     <script>
+        /*
+          저장소 설정
+          - HTML 파일은 GitHub 저장소 루트에 직접 업로드
+          - index.html은 목록에서 제외
+          - 새 HTML 파일을 올리면 자동으로 목록에 표시됨
+        */
         const OWNER = "JongCheon-Kim";
         const REPO = "kimC-fishery-intelligence";
         const BRANCH = "main";
@@ -206,8 +234,10 @@
 
         let serverItems = [];
         let newsItems = [];
+
         let currentSortType = "time";
         let sortDesc = true;
+
         let currentActiveIndex = -1;
         let currentDetailZoom = 1;
         let currentPipZoom = 1;
@@ -238,11 +268,19 @@
 
         async function fetchLastCommitDate(path) {
             const url = `https://api.github.com/repos/${OWNER}/${REPO}/commits?path=${encodeURIComponent(path)}&per_page=1&sha=${BRANCH}`;
+
             try {
-                const res = await fetch(url, { headers: { "Accept": "application/vnd.github+json" } });
+                const res = await fetch(url, {
+                    headers: { "Accept": "application/vnd.github+json" }
+                });
+
                 if (!res.ok) return null;
+
                 const commits = await res.json();
-                return commits?.[0]?.commit?.committer?.date || commits?.[0]?.commit?.author?.date || null;
+
+                return commits?.[0]?.commit?.committer?.date ||
+                       commits?.[0]?.commit?.author?.date ||
+                       null;
             } catch {
                 return null;
             }
@@ -250,6 +288,7 @@
 
         async function loadGithubFiles() {
             const listContainer = document.getElementById("list-container");
+
             listContainer.innerHTML = `
                 <div class="text-center text-gray-500 py-10 text-sm flex flex-col items-center">
                     <i class="ph-duotone ph-spinner-gap animate-spin text-3xl mb-2 text-blue-400"></i>
@@ -258,10 +297,16 @@
             `;
 
             try {
-                const res = await fetch(GITHUB_API_URL, { headers: { "Accept": "application/vnd.github+json" } });
-                if (!res.ok) throw new Error(`GitHub API 오류: ${res.status}`);
+                const res = await fetch(GITHUB_API_URL, {
+                    headers: { "Accept": "application/vnd.github+json" }
+                });
+
+                if (!res.ok) {
+                    throw new Error(`GitHub API 오류: ${res.status}`);
+                }
 
                 const files = await res.json();
+
                 const htmlFiles = Array.isArray(files)
                     ? files.filter(file =>
                         file.type === "file" &&
@@ -272,7 +317,9 @@
 
                 const mapped = await Promise.all(htmlFiles.map(async (file) => {
                     const commitDate = await fetchLastCommitDate(file.path);
+
                     const pageUrl = GITHUB_PAGES_BASE + encodeURIComponent(file.name).replace(/%20/g, "%20");
+
                     return {
                         id: file.sha,
                         title: cleanTitle(file.name),
@@ -292,9 +339,12 @@
 
             } catch (error) {
                 console.error(error);
+
                 serverItems = [];
                 newsItems = [];
+
                 document.getElementById("list-count").innerText = "0";
+
                 listContainer.innerHTML = `
                     <div class="text-center text-red-500 py-10 text-sm px-5">
                         <i class="ph-duotone ph-warning-circle text-3xl mb-2"></i>
@@ -312,7 +362,9 @@
 
             newsItems = serverItems.filter(item => {
                 if (!keyword) return true;
-                return [item.title, item.fileName, item.path].some(v => String(v || "").toLowerCase().includes(keyword));
+
+                return [item.title, item.fileName, item.path]
+                    .some(v => String(v || "").toLowerCase().includes(keyword));
             });
 
             newsItems.sort((a, b) => {
@@ -324,6 +376,7 @@
 
                 const titleA = a.title || "";
                 const titleB = b.title || "";
+
                 return sortDesc
                     ? titleB.localeCompare(titleA, "ko")
                     : titleA.localeCompare(titleB, "ko");
@@ -370,28 +423,44 @@
 
             newsItems.forEach((item, index) => {
                 const dateObj = item.timestamp ? new Date(item.timestamp) : null;
+
                 const dateStr = dateObj && !Number.isNaN(dateObj.getTime())
-                    ? dateObj.toLocaleString("ko-KR", { year: "numeric", month: "2-digit", day: "2-digit", hour: "2-digit", minute: "2-digit" })
+                    ? dateObj.toLocaleString("ko-KR", {
+                        year: "numeric",
+                        month: "2-digit",
+                        day: "2-digit",
+                        hour: "2-digit",
+                        minute: "2-digit"
+                    })
                     : "GitHub Pages";
 
                 const card = document.createElement("div");
+
                 card.className = "bg-white p-4 rounded-2xl shadow-sm border border-gray-100 flex justify-between items-center cursor-pointer hover:border-blue-300 active:scale-[0.98] transition-all group";
+
                 card.innerHTML = `
                     <div class="flex items-center flex-1 min-w-0 pr-4">
                         <div class="w-10 h-10 rounded-full bg-gray-50 flex items-center justify-center mr-3 shrink-0 border border-gray-100">
                             <i class="ph-duotone ph-file-html text-blue-500 text-2xl"></i>
                         </div>
+
                         <div class="flex-1 min-w-0">
-                            <div class="font-bold text-gray-800 text-sm mb-1 truncate group-hover:text-blue-600">${escapeHTML(item.title)}</div>
+                            <div class="font-bold text-gray-800 text-sm mb-1 truncate group-hover:text-blue-600">
+                                ${escapeHTML(item.title)}
+                            </div>
+
                             <div class="text-[10px] text-gray-400 flex items-center truncate">
-                                <i class="ph-fill ph-clock mr-1"></i>${escapeHTML(dateStr)} · ${escapeHTML(item.fileName)}
+                                <i class="ph-fill ph-clock mr-1"></i>
+                                ${escapeHTML(dateStr)} · ${escapeHTML(item.fileName)}
                             </div>
                         </div>
                     </div>
+
                     <div class="bg-gray-50 group-hover:bg-blue-50 w-8 h-8 rounded-full flex items-center justify-center shrink-0 transition-colors">
                         <i class="ph-bold ph-caret-right text-gray-400 group-hover:text-blue-500"></i>
                     </div>
                 `;
+
                 card.addEventListener("click", () => openDetail(index));
                 listContainer.appendChild(card);
             });
@@ -412,20 +481,30 @@
 
         window.setView = (mode) => {
             document.querySelectorAll(".view-content").forEach(v => v.classList.remove("active"));
+
             const targetView = document.getElementById(`view-${mode}`);
-            if (targetView) targetView.classList.add("active");
+
+            if (targetView) {
+                targetView.classList.add("active");
+            }
         };
 
         window.openDetail = (index) => {
             currentActiveIndex = index;
+
             const item = newsItems[index];
+
             if (!item) return;
 
             document.getElementById("detail-title").innerText = item.title;
+
             renderIframe("detail-content", item);
+
             setView("detail");
+
             currentDetailZoom = 1;
             updateDetailZoom();
+
             document.getElementById("view-detail").scrollTop = 0;
         };
 
@@ -436,28 +515,34 @@
 
         function updateDetailZoom() {
             const content = document.getElementById("detail-content");
+
             content.style.transform = `scale(${currentDetailZoom})`;
             content.style.width = currentDetailZoom > 1 ? `${100 / currentDetailZoom}%` : "100%";
+
             document.getElementById("detail-zoom-val").innerText = `${Math.round(currentDetailZoom * 100)}%`;
         }
 
         window.switchToPip = () => {
             if (currentActiveIndex === -1) return;
+
             setView("list");
             openPip(currentActiveIndex);
         };
 
         window.openPip = (index) => {
             const item = newsItems[index];
+
             if (!item) return;
 
             document.getElementById("pip-title").innerText = item.title;
+
             renderIframe("pip-content", item);
 
             const pipWin = document.getElementById("pip-window");
             pipWin.style.display = "flex";
 
             const isMobile = window.innerWidth <= 600;
+
             if (isMobile) {
                 pipWin.style.width = "90vw";
                 pipWin.style.height = "80vh";
@@ -475,10 +560,14 @@
             pipWin.style.transform = "translate(0px, 0px)";
             pipWin.setAttribute("data-x", 0);
             pipWin.setAttribute("data-y", 0);
+
             isPipFull = false;
+
             document.getElementById("pip-full-btn").innerHTML = '<i class="ph-bold ph-corners-out text-lg"></i>';
+
             currentPipZoom = 1;
             updatePipZoom();
+
             document.getElementById("pip-scroll-area").scrollTop = 0;
         };
 
@@ -492,6 +581,7 @@
 
             if (isPipFull) {
                 const isMobile = window.innerWidth <= 600;
+
                 if (isMobile) {
                     pipWin.style.width = "90vw";
                     pipWin.style.height = "80vh";
@@ -503,6 +593,7 @@
                     pipWin.style.top = "5vh";
                     pipWin.style.left = "calc(50vw + 220px)";
                 }
+
                 pipWin.style.borderRadius = "16px";
                 btn.innerHTML = '<i class="ph-bold ph-corners-out text-lg"></i>';
             } else {
@@ -517,6 +608,7 @@
             pipWin.style.transform = "translate(0px, 0px)";
             pipWin.setAttribute("data-x", 0);
             pipWin.setAttribute("data-y", 0);
+
             isPipFull = !isPipFull;
         };
 
@@ -527,8 +619,10 @@
 
         function updatePipZoom() {
             const content = document.getElementById("pip-content");
+
             content.style.transform = `scale(${currentPipZoom})`;
             content.style.width = currentPipZoom > 1 ? `${100 / currentPipZoom}%` : "100%";
+
             document.getElementById("pip-zoom-val").innerText = `${Math.round(currentPipZoom * 100)}%`;
         }
 
@@ -537,9 +631,12 @@
             listeners: {
                 move(e) {
                     if (isPipFull) return;
+
                     const target = e.target;
+
                     const x = (parseFloat(target.getAttribute("data-x")) || 0) + e.dx;
                     const y = (parseFloat(target.getAttribute("data-y")) || 0) + e.dy;
+
                     target.style.transform = `translate(${x}px, ${y}px)`;
                     target.setAttribute("data-x", x);
                     target.setAttribute("data-y", y);
