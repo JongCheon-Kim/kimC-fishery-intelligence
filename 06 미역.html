@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>미역 종합 연구 보고서 | AI Web Developer</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800&family=Noto+Sans+KR:wght@300;400;500;700&family=Source+Sans+Pro:wght@600;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            deep: '#1A535C',
+                            accent: '#007B8C',
+                            bg: '#F8F9FA',
+                            text: '#212529',
+                            muted: '#6C757D'
+                        }
+                    },
+                    fontFamily: {
+                        heading: ['Montserrat', 'Noto Sans KR', 'sans-serif'],
+                        body: ['Noto Sans KR', 'sans-serif'],
+                        display: ['Source Sans Pro', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #F8F9FA;
+            color: #212529;
+            font-family: 'Noto Sans KR', sans-serif;
+            line-height: 1.8;
+            -webkit-font-smoothing: antialiased;
+        }
+        
+        .glass-card {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 24px;
+            box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.05);
+        }
+
+        .report-content h2 {
+            font-family: 'Montserrat', 'Noto Sans KR', sans-serif;
+            font-weight: 700;
+            font-size: 1.75rem;
+            color: #1A535C;
+            margin-top: 3rem;
+            margin-bottom: 1.5rem;
+            border-left: 5px solid #007B8C;
+            padding-left: 1rem;
+            letter-spacing: -0.025em;
+        }
+
+        .report-content strong {
+            color: #1A535C;
+            font-weight: 700;
+        }
+
+        .report-content p {
+            margin-bottom: 1.5rem;
+            text-align: justify;
+            font-weight: 400;
+            font-size: 1.05rem;
+            color: #333;
+        }
+
+        .report-content ul {
+            list-style: none;
+            padding-left: 0;
+            margin-bottom: 2rem;
+        }
+
+        .report-content li {
+            position: relative;
+            padding-left: 1.5rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .report-content li::before {
+            content: "•";
+            color: #007B8C;
+            font-weight: bold;
+            position: absolute;
+            left: 0;
+        }
+
+        .fade-in {
+            animation: fadeIn 1s ease-out forwards;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .hero-gradient {
+            background: linear-gradient(135deg, #1A535C 0%, #007B8C 100%);
+        }
+
+        .word-cloud-container img {
+            transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .word-cloud-container:hover img {
+            transform: scale(1.02);
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #f1f1f1; }
+        ::-webkit-scrollbar-thumb { background: #1A535C; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #007B8C; }
+    </style>
+</head>
+<body class="overflow-x-hidden">
+
+    <!-- Header Section -->
+    <header class="hero-gradient py-20 px-6 text-white text-center relative overflow-hidden">
+        <div class="absolute inset-0 opacity-10">
+            <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                    <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+                        <path d="M 40 0 L 0 0 0 40" fill="none" stroke="white" stroke-width="1"/>
+                    </pattern>
+                </defs>
+                <rect width="100%" height="100%" fill="url(#grid)" />
+            </svg>
+        </div>
+        <div class="max-w-4xl mx-auto relative z-10 fade-in">
+            <span class="inline-block px-4 py-1 mb-4 text-xs font-bold tracking-widest uppercase bg-white/20 backdrop-blur-md rounded-full">Marine Resource Report</span>
+            <h1 class="text-5xl md:text-7xl font-heading font-extrabold mb-4 tracking-tight">
+                미역 <span class="font-light opacity-80">(Wakame)</span>
+            </h1>
+            <p class="text-xl md:text-2xl font-light text-cyan-50 opacity-90 max-w-2xl mx-auto">
+                지속 가능한 미래를 위한 해양 바이오 자원의 재발견
+            </p>
+        </div>
+    </header>
+
+    <main class="max-w-screen-xl mx-auto px-4 md:px-8 -mt-10 pb-20 relative z-20">
+        
+        <!-- Visual Summary Section (Word Cloud) -->
+        <section class="mb-16 fade-in" style="animation-delay: 0.2s;">
+            <div class="glass-card p-8 md:p-12 text-center">
+                <h3 class="font-heading text-brand-deep text-lg font-bold mb-8 uppercase tracking-widest">Key Concept Visualization</h3>
+                <div class="word-cloud-container inline-block overflow-hidden rounded-2xl shadow-2xl bg-white p-4">
+                    <img src='https://opal.google/board/blobs/099dfec6-7845-4143-985c-04c6eaad001b' alt='미역 키워드 클라우드' class="max-w-full h-auto mx-auto rounded-lg">
+                </div>
+                <p class="mt-6 text-brand-muted text-sm max-w-lg mx-auto italic">
+                    미역의 생태, 영양, 경제적 가치를 아우르는 핵심 키워드 데이터 시각화
+                </p>
+            </div>
+        </section>
+
+        <!-- Report Body Section -->
+        <section class="max-w-[800px] mx-auto fade-in" style="animation-delay: 0.4s;">
+            <article class="report-content bg-white p-8 md:p-16 rounded-[40px] shadow-sm border border-gray-100">
+                
+                <div class="mb-12 border-b border-gray-100 pb-12">
+                    <h2 class="!mt-0">1. 서론(Introduction)</h2>
+                    <p>
+                        <strong>미역(Wakame)</strong>은 전 세계적으로 지속 가능한 식량 자원(Food Resource)이자 차세대 에너지 공급원으로 주목받는 핵심 <strong>해양 자원(Marine Resource)</strong>이다. 한국 역사에서는 『세종실록(Sejong Sillok)』과 『동의보감(Donguibogam)』 등에 기록될 만큼 오랜 기간 우리 민족의 애용 식품이자 산후선약(Postpartum Medicine)으로 활용되어 왔다. 현대에 이르러 미역(Wakame)은 단순한 식재료를 넘어 <strong>고부가가치(High Value-added) 바이오 소재(Bio-material)</strong> 및 탄소 중립(Carbon Neutrality) 실현을 위한 <strong>블루카본(Blue Carbon)</strong>으로 급부상하고 있다. 본 보고서(Report)는 미역의 다각적 가치를 생태, 영양, 경제 산업적 측면에서 상세히 분석한다.
+                    </p>
+                </div>
+
+                <div class="mb-12 border-b border-gray-100 pb-12">
+                    <h2>2. 분류 및 생태(Classification and Ecology)</h2>
+                    <p>
+                        미역(Wakame)은 색소체(Plastid)에 따른 해조류(Marine Algae) 분류상 <strong>갈조류(Brown Algae)</strong>의 대표 품목이다. 국내 해조류 양식(Aquaculture) 산업에서 김(Laver)과 함께 전체 생산량의 80% 이상을 차지하는 핵심 품목으로 국가 수산업의 근간을 이룬다. 
+                    </p>
+                    <div class="bg-brand-bg p-6 rounded-2xl mb-6 border-l-4 border-brand-accent">
+                        <p class="text-sm m-0">
+                            생태학(Ecology)적 측면에서 미역을 포함한 <strong>바다숲(Marine Forest)</strong>은 대규모 탄소(Carbon)를 흡수하여 기후 완화에 기여하는 전 지구적 온실가스(Greenhouse Gas) 감축원인 <strong>블루카본(Blue Carbon)</strong>으로 평가받는다. 
+                        </p>
+                    </div>
+                    <p>
+                        그러나 최근 기후변화(Climate Change)로 인해 해양 생태계(Marine Ecosystem)가 위협받고 있다. 특히 해수 중 용존무기질소(Dissolved Inorganic Nitrogen/DIN) 농도가 0.07mg/L 이하로 유지되는 빈영양 상태(Oligotrophic State)가 지속될 경우, 엽체가 변색되는 황백화 현상(Chlorosis)이 발생하여 산업적 임계치(Threshold)에 도달할 위험이 있다.
+                    </p>
+                </div>
+
+                <div class="mb-12 border-b border-gray-100 pb-12">
+                    <h2>3. 영양 성분(Nutritional Components)</h2>
+                    <p>
+                        미역(Wakame)은 '바다의 약'이라 불릴 만큼 영양소(Nutrient)가 풍부한 <strong>강알칼리성 식품(Strong Alkaline Food)</strong>으로, 육류 등 산성 식품(Acidic Food)의 산도를 중화하는 데 탁월하다. 미역 열수 추출물(Hot Water Extract)에 대한 정밀 화학 분석 결과는 다음과 같다.
+                    </p>
+                    <ul>
+                        <li><strong>미네랄(Mineral) 및 비타민(Vitamin):</strong> 미네랄 프로파일(Mineral Profile) 분석 결과, 칼슘(Calcium, 1,112.41 mg/kg)과 마그네슘(Magnesium, 1,012.72 mg/kg)이 주성분(Main Component)을 이루며, 칼륨(Potassium), 철분(Iron) 순으로 분포한다. 칼륨(Potassium) 함량은 다시마(Kelp)보다 약 22배 낮아 독보적인 칼슘 및 마그네슘 공급원으로서의 우위를 가진다. 비타민 E는 0.30mg/100g, 비타민 C는 0.11mg/100g 함유되어 있다.</li>
+                        <li><strong>핵심 기능성 성분(Functional Component):</strong> 갑상선 호르몬 생성과 신진대사를 돕는 요오드(Iodine)가 풍부하며, 특유의 점질 성분인 알긴산(Alginic Acid)을 다량 함유하고 있다. 또한 100g당 43.43g의 식이섬유(Dietary Fiber)가 포함되어 있다.</li>
+                        <li><strong>아미노산(Amino Acid):</strong> 유리 아미노산(Free Amino Acid)은 프롤린(Proline, 46.60mg/100mL)이 가장 높고, 구성 아미노산(Constituent Amino Acid)으로는 글루탐산(Glutamic Acid, 20.69mg/100mL)과 알라닌(Alanine)이 주요 성분(Component)으로 분석되었다.</li>
+                    </ul>
+                </div>
+
+                <div class="mb-12 border-b border-gray-100 pb-12">
+                    <h2>4. 효능 및 연구 현황(Efficacy and Research Status)</h2>
+                    <p>
+                        전통적으로 미역(Wakame)은 신체의 저항력(Immunity)을 강화하고 노폐물 배출(Waste Elimination)을 돕는 효능(Efficacy)이 있다고 알려져 왔으며, 현대 과학을 통해 그 생리활성(Physiological Activity)이 입증되고 있다.
+                    </p>
+                    <p>
+                        <strong>항산화 및 대사 질환 예방:</strong> 미역 추출물(Extract)은 유해 활성산소(Free Radical)를 제거하는 능력이 뛰어나다. DPPH 라디칼 소거능은 50mg/mL 농도에서 70.1%의 활성을 보였으며, 아질산염 소거 효과는 pH 1.2 조건에서 81.6%를 기록했다. 또한 알긴산(Alginic Acid)과 푸코스테롤(Fucosterol)은 혈중 콜레스테롤 산화를 막고 중금속 배출을 도우며, 동맥경화 및 고혈압 예방에 기여한다.
+                    </p>
+                    <p>
+                        <strong>바이오 헬스케어(Bio Healthcare) 연구:</strong> '미역귀(Sporophyll)'에서 추출한 <strong>후코이단(Fucoidan)</strong>은 강력한 항암(Anti-cancer), 항바이러스(Anti-viral), 항혈전(Anti-thrombotic) 효능을 가져 신약 및 기능성 제약의 원료로 연구되고 있다. 세포 재생 성분(PDRN)을 활용한 비건 화장품 연구도 활발하다.
+                    </p>
+                    <p>
+                        <strong>생명공학(Biotechnology) 도입:</strong> 고온 내성(Heat Tolerance)과 내병성(Disease Resistance)을 확보하기 위해 <strong>유전자가위(CRISPR-Cas9)</strong> 등 첨단 유전자 편집 기술을 활용한 신종자(New Seed) 개발 연구가 필수적으로 요구되고 있다.
+                    </p>
+                </div>
+
+                <div class="mb-12 border-b border-gray-100 pb-12">
+                    <h2>5. 활용 및 경제성(Utilization and Economics)</h2>
+                    <p>
+                        한국의 미역 생산은 전라남도가 전국 생산량의 95.6%를 담당하는 절대적 생산 거점(Production Hub)이다. 그러나 원물의 상당 부분이 전복 먹이용(Abalone Feed)으로 소비되는 저부가가치 산업 구조라는 한계가 있다.
+                    </p>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 my-8">
+                        <div class="p-5 rounded-xl bg-cyan-50 border border-cyan-100">
+                            <h4 class="font-bold text-brand-deep mb-2">식품 산업 (Food)</h4>
+                            <p class="text-sm mb-0">HMR 미역국 제품의 급성장 및 기능성 제빵 소재 활용. 두부 및 식초와 높은 시너지.</p>
+                        </div>
+                        <div class="p-5 rounded-xl bg-teal-50 border border-teal-100">
+                            <h4 class="font-bold text-brand-deep mb-2">친환경 산업 (Eco)</h4>
+                            <p class="text-sm mb-0">생분해성 바이오플라스틱 및 친환경 포장재 제작 산업 각광.</p>
+                        </div>
+                    </div>
+                    <p>
+                        <strong>정책적 지원:</strong> 대한민국 해양수산부는 미역(Wakame)을 제5차 양식산업 발전 기본계획의 미래 '육성 품목(Fostering Item)'으로 지정하였다. 스마트 양식 인프라, 스마트 팩토리 기반의 물류 현대화, 국제 표준(ISO) 준수 등의 정책적 대응이 추진되고 있다.
+                    </p>
+                </div>
+
+                <div>
+                    <h2>6. 결론(Conclusion)</h2>
+                    <p>
+                        미역(Wakame)은 고유의 미네랄 프로파일과 알긴산, 후코이단 등의 생리활성 물질을 다량 보유한 핵심 해양 자원이다. 과거 단순한 식용 소비재에 머물렀던 미역은 이제 첨단 유전자 편집 기술을 기반으로 한 미래 식량 안보, 탄소 격리를 통한 기후 위기 극복, 그리고 바이오메디컬 및 생분해성 소재 분야를 융합하는 <strong>고부가가치 산업(High Value-added Industry)</strong>의 중심축으로 성장할 강력한 잠재력을 지니고 있다. 지속 가능한 발전을 위해서는 규제 완화 및 스마트 인프라 확충을 통한 국가적 차원의 R&D 투자가 지속되어야 할 것이다.
+                    </p>
+                </div>
+            </article>
+        </section>
+
+        <!-- Back to Top Button -->
+        <button onclick="window.scrollTo({top: 0, behavior: 'smooth'})" class="fixed bottom-8 right-8 bg-brand-deep hover:bg-brand-accent text-white p-4 rounded-full shadow-2xl transition-all duration-300 transform hover:scale-110 focus:outline-none z-50">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18" />
+            </svg>
+        </button>
+    </main>
+
+    <script>
+        // Smooth reveal on scroll logic
+        const observerOptions = {
+            threshold: 0.1
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('fade-in');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('section').forEach(section => {
+            observer.observe(section);
+        });
+    </script>
+</body>
+</html>
