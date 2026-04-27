@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>수산물인텔리전스 - 김C GitHub Shell</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <script src="https://cdn.jsdelivr.net/npm/interactjs/dist/interact.min.js"></script>
+    <style>
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        
+        .view-content { display: none; height: 100%; overflow-y: auto; padding-bottom: 90px; }
+        .view-content.active { display: block; animation: fadeIn 0.3s ease-in-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* 외부 독립 PiP 창 */
+        #pip-window { 
+            position: fixed; z-index: 9999; background: white; border-radius: 16px; 
+            box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5); display: none; flex-direction: column; 
+            touch-action: none; border: 1px solid #e5e7eb; overflow: hidden; transition: all 0.3s ease;
+        }
+        .pip-header { cursor: move; background: #f9fafb; border-bottom: 1px solid #eee; }
+        .pip-body { flex: 1; overflow: auto; position: relative; background: #fff; }
+        
+        /* 인앱 상세보기 스타일 */
+        #view-detail { overflow-y: auto !important; -webkit-overflow-scrolling: touch; }
+        #detail-content-wrapper { min-height: 100%; overflow-x: hidden; }
+        
+        /* Iframe 스타일 (GitHub Raw 컨텐츠 렌더링용) */
+        iframe { width: 100%; height: 100%; min-height: 800px; border: none; background: #ffffff; }
+    </style>
+</head>
+<body class="bg-gray-200 min-h-screen flex items-center justify-center p-0 sm:p-8 font-sans overflow-hidden">
+
+    <!-- 스마트폰 앱 컨테이너 -->
+    <div id="app-container" class="w-full h-[100dvh] sm:h-[800px] sm:w-[400px] bg-gray-50 sm:rounded-[2rem] sm:shadow-2xl relative overflow-hidden flex flex-col mx-auto border border-gray-300">
+
+        <header class="bg-white px-5 py-4 shadow-sm border-b flex justify-between items-center z-40 shrink-0">
+            <div>
+                <h1 class="font-extrabold text-blue-700 leading-none text-lg">수산물인텔리전스</h1>
+                <span class="text-[10px] text-gray-400 font-bold">김C GitHub Shell v3.0</span>
+            </div>
+            <div class="w-8 h-8 flex justify-center items-center rounded-full bg-blue-50 text-blue-600">
+                <i class="ph-bold ph-list-bullets text-lg"></i>
+            </div>
+        </header>
+
+        <main class="flex-1 relative overflow-hidden bg-gray-100 flex flex-col">
+            <!-- 1. 리스트형 목록 (GitHub API 연동) -->
+            <div id="view-list" class="view-content hide-scrollbar active flex flex-col h-full">
+                <div class="px-4 pt-4 pb-2 flex justify-between items-center bg-gray-100 shrink-0">
+                    <span class="text-xs font-bold text-gray-500">총 <span id="list-count">0</span>건</span>
+                    <div class="flex space-x-1">
+                        <button onclick="toggleSort('title')" id="btn-sort-title" class="text-[10px] bg-white border border-gray-200 text-gray-600 px-2 py-1 rounded font-bold shadow-sm transition-colors">이름순</button>
+                        <button onclick="syncFromGithub()" class="text-[10px] bg-blue-600 text-white border border-blue-600 px-2 py-1 rounded font-bold shadow-sm flex items-center gap-1">
+                            <i class="ph-bold ph-arrows-clockwise"></i> 새로고침
+                        </button>
+                    </div>
+                </div>
+                
+                <div id="list-container" class="p-4 space-y-3 flex-1 overflow-y-auto">
+                    <div id="loading-spinner" class="text-center text-gray-500 py-10 text-sm flex flex-col items-center">
+                        <i class="ph-duotone ph-spinner-gap animate-spin text-3xl mb-2 text-blue-400"></i>
+                        GitHub 데이터를 불러오는 중...
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 2. 인앱 상세 보기 -->
+            <div id="view-detail" class="view-content hide-scrollbar bg-gray-300 relative">
+                <div class="sticky top-0 z-20 bg-white border-b border-gray-200 p-3 flex justify-between items-center shadow-sm">
+                    <button onclick="setView('list')" class="w-8 h-8 flex items-center justify-center bg-gray-100 text-gray-600 rounded-full hover:bg-gray-200 transition-colors">
+                        <i class="ph-bold ph-arrow-left"></i>
+                    </button>
+                    <span id="detail-title" class="font-bold text-sm truncate flex-1 text-center px-2 text-gray-800"></span>
+                    <button onclick="switchToPip()" class="bg-blue-600 text-white px-3 py-1.5 rounded-full text-[10px] font-bold shadow-md flex items-center gap-1 hover:bg-blue-700 transition-colors">
+                        <i class="ph-bold ph-monitor-arrow-up"></i> PiP (외부창)
+                    </button>
+                </div>
+                
+                <div id="detail-content-wrapper" class="relative pb-24 px-2 pt-4"> 
+                    <div id="detail-content" class="origin-top-left transition-transform w-full bg-white shadow-lg rounded-xl overflow-hidden min-h-full">
+                        <!-- GitHub URL Iframe -->
+                    </div>
+                </div>
+                
+                <div class="fixed bottom-[70px] w-full sm:w-[400px] bg-white/90 backdrop-blur border-t p-2 flex justify-center items-center space-x-6 z-20 shadow-[0_-5px_10px_rgba(0,0,0,0.05)]">
+                    <button onclick="adjustDetailZoom(-0.1)" class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-gray-100 text-gray-500"><i class="ph-bold ph-minus-circle text-2xl"></i></button>
+                    <span id="detail-zoom-val" class="font-bold text-xs w-10 text-center text-gray-700">100%</span>
+                    <button onclick="adjustDetailZoom(0.1)" class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-gray-100 text-gray-500"><i class="ph-bold ph-plus-circle text-2xl"></i></button>
+                </div>
+            </div>
+        </main>
+
+        <nav class="absolute bottom-0 w-full bg-white border-t flex justify-around items-center py-3 pb-safe z-30 shadow-[0_-5px_15px_rgba(0,0,0,0.03)]">
+            <button onclick="setView('list')" class="flex flex-col items-center text-blue-600 w-1/2">
+                <i class="ph-fill ph-house text-2xl mb-1"></i>
+                <span class="text-[10px] font-bold">홈</span>
+            </button>
+            <div class="w-px h-8 bg-gray-200"></div>
+            <button onclick="openAdmin()" class="flex flex-col items-center text-gray-400 hover:text-blue-500 transition-colors w-1/2">
+                <i class="ph-fill ph-gear text-2xl mb-1"></i>
+                <span class="text-[10px] font-bold">연결설정</span>
+            </button>
+        </nav>
+
+        <!-- 관리자/설정 모달 -->
+        <div id="admin-modal" class="absolute inset-0 bg-black/70 z-[110] hidden flex items-center justify-center sm:p-2 backdrop-blur-sm">
+            <div class="bg-white w-full h-full sm:h-[80%] sm:rounded-3xl shadow-2xl relative flex flex-col overflow-hidden">
+                <div class="p-4 border-b flex justify-between items-center bg-gray-50">
+                    <h3 class="font-bold text-gray-800">GitHub 연결 설정</h3>
+                    <button onclick="closeAdmin()" class="bg-white rounded-full w-8 h-8 flex items-center justify-center border text-gray-400 shadow-sm"><i class="ph-bold ph-x"></i></button>
+                </div>
+                
+                <div id="admin-auth" class="p-6 flex flex-col justify-center flex-1">
+                    <input type="password" id="admin-pw" class="w-full border rounded-xl p-3 text-center mb-4 text-gray-900" placeholder="비밀번호">
+                    <button onclick="verifyAdmin()" class="w-full bg-blue-600 text-white font-bold py-3 rounded-xl">설정 열기</button>
+                </div>
+
+                <div id="admin-config" class="hidden p-6 space-y-4 flex-1 overflow-y-auto">
+                    <p class="text-[10px] text-gray-500 leading-relaxed">
+                        파일을 업로드할 GitHub 저장소 정보를 입력하세요.<br>
+                        예: sunshine40/webplay (사용자명/저장소명)
+                    </p>
+                    <div>
+                        <label class="text-[10px] font-bold text-gray-400 uppercase">GitHub Repository</label>
+                        <input type="text" id="conf-repo" class="w-full border-b py-2 outline-none text-sm text-blue-600 font-mono" placeholder="username/repo">
+                    </div>
+                    <div>
+                        <label class="text-[10px] font-bold text-gray-400 uppercase">Folder Path (Optional)</label>
+                        <input type="text" id="conf-path" class="w-full border-b py-2 outline-none text-sm text-gray-600 font-mono" placeholder="docs">
+                    </div>
+                    <button onclick="saveConfig()" class="w-full bg-gray-800 text-white font-bold py-3 rounded-xl mt-4">저장 및 동기화</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 외부 PiP -->
+    <div id="pip-window" style="width: 450px; height: 700px; top: 5vh; left: calc(50vw + 220px);">
+        <div class="pip-header p-3 flex justify-between items-center select-none bg-gray-50">
+            <span id="pip-title" class="font-bold text-xs truncate max-w-[200px]">소식지 외부창</span>
+            <div class="flex space-x-2">
+                <button onclick="togglePipFull()" class="w-8 h-8 bg-white border rounded-lg text-gray-600"><i class="ph-bold ph-corners-out"></i></button>
+                <button onclick="closePip()" class="w-8 h-8 bg-red-500 text-white rounded-lg"><i class="ph-bold ph-x"></i></button>
+            </div>
+        </div>
+        <div class="pip-body overflow-y-auto">
+            <div id="pip-content" class="zoom-area p-4 min-h-full bg-white"></div>
+        </div>
+        <div class="p-2 border-t bg-white flex justify-center items-center space-x-6 text-gray-600">
+            <button onclick="adjustPipZoom(-0.1)"><i class="ph-bold ph-minus-circle text-2xl"></i></button>
+            <span id="pip-zoom-val" class="text-xs font-bold w-12 text-center">100%</span>
+            <button onclick="adjustPipZoom(0.1)"><i class="ph-bold ph-plus-circle text-2xl"></i></button>
+        </div>
+    </div>
+
+    <script type="module">
+        let newsItems = [];
+        let config = {
+            repo: 'sunshine40/webplay', // 기본값
+            path: '',
+            sortType: 'title',
+            sortDesc: false
+        };
+
+        let currentActiveIndex = -1;
+        let currentDetailZoom = 1;
+        let currentPipZoom = 1;
+        let isPipFull = false;
+
+        // 초기 실행
+        window.onload = () => {
+            const saved = localStorage.getItem('kimc_shell_config');
+            if(saved) config = JSON.parse(saved);
+            syncFromGithub();
+        };
+
+        // [핵심] GitHub Contents API를 사용하여 파일 목록 가져오기
+        window.syncFromGithub = async () => {
+            const listContainer = document.getElementById('list-container');
+            const countEl = document.getElementById('list-count');
+            
+            listContainer.innerHTML = `
+                <div class="text-center text-gray-500 py-10 text-sm flex flex-col items-center">
+                    <i class="ph-duotone ph-spinner-gap animate-spin text-3xl mb-2 text-blue-400"></i>
+                    GitHub 동기화 중...
+                </div>`;
+
+            try {
+                const url = `https://api.github.com/repos/${config.repo}/contents/${config.path}`;
+                const res = await fetch(url);
+                if(!res.ok) throw new Error('Repository를 찾을 수 없습니다.');
+                
+                const data = await res.json();
+                
+                // HTML 및 PDF 파일만 필터링
+                newsItems = data.filter(file => {
+                    const ext = file.name.split('.').pop().toLowerCase();
+                    return (ext === 'html' || ext === 'pdf') && file.type === 'file';
+                }).map(file => ({
+                    title: file.name.replace(/\.(html|pdf)$/i, ''),
+                    url: file.download_url,
+                    type: file.name.split('.').pop().toLowerCase(),
+                    path: file.path
+                }));
+
+                updateView();
+            } catch (e) {
+                listContainer.innerHTML = `<div class="p-6 text-center text-red-500 text-xs font-bold">${e.message}<br>연결 설정을 확인해 주세요.</div>`;
+            }
+        };
+
+        function updateView() {
+            // 정렬
+            newsItems.sort((a, b) => {
+                return config.sortDesc ? b.title.localeCompare(a.title) : a.title.localeCompare(b.title);
+            });
+
+            document.getElementById('list-count').innerText = newsItems.length;
+            renderList();
+        }
+
+        function renderList() {
+            const container = document.getElementById('list-container');
+            container.innerHTML = '';
+
+            if(newsItems.length === 0) {
+                container.innerHTML = '<div class="text-center text-gray-400 py-10 text-xs">표시할 파일이 없습니다.</div>';
+                return;
+            }
+
+            newsItems.forEach((item, index) => {
+                const icon = item.type === 'pdf' ? 'ph-file-pdf text-red-500' : 'ph-file-html text-blue-500';
+                container.innerHTML += `
+                    <div onclick="openDetail(${index})" class="bg-white p-4 rounded-2xl shadow-sm border border-gray-100 flex justify-between items-center cursor-pointer active:scale-95 transition-all group">
+                        <div class="flex items-center flex-1 min-w-0 pr-4">
+                            <div class="w-10 h-10 rounded-full bg-gray-50 flex items-center justify-center mr-3 shrink-0">
+                                <i class="ph-duotone ${icon} text-2xl"></i>
+                            </div>
+                            <div class="flex-1 min-w-0">
+                                <div class="font-bold text-gray-800 text-sm truncate group-hover:text-blue-600">${item.title}</div>
+                                <div class="text-[9px] text-gray-400 uppercase tracking-tighter">${item.type} source</div>
+                            </div>
+                        </div>
+                        <div class="bg-gray-50 w-8 h-8 rounded-full flex items-center justify-center text-gray-400 group-hover:text-blue-500 transition-colors">
+                            <i class="ph-bold ph-caret-right"></i>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        window.toggleSort = (type) => {
+            config.sortDesc = !config.sortDesc;
+            updateView();
+        };
+
+        window.setView = (mode) => {
+            document.querySelectorAll('.view-content').forEach(v => v.classList.remove('active'));
+            document.getElementById(`view-${mode}`).classList.add('active');
+        };
+
+        window.openDetail = (index) => {
+            currentActiveIndex = index;
+            const item = newsItems[index];
+            document.getElementById('detail-title').innerText = item.title;
+            document.getElementById('detail-content').innerHTML = `<iframe src="${item.url}"></iframe>`;
+            setView('detail');
+            currentDetailZoom = 1; updateDetailZoom();
+            document.getElementById('view-detail').scrollTop = 0;
+        };
+
+        window.adjustDetailZoom = (val) => {
+            currentDetailZoom = Math.max(0.5, Math.min(3, currentDetailZoom + val));
+            updateDetailZoom();
+        };
+        function updateDetailZoom() {
+            const content = document.getElementById('detail-content');
+            content.style.transform = `scale(${currentDetailZoom})`;
+            content.style.width = currentDetailZoom > 1 ? `${100 / currentDetailZoom}%` : '100%';
+            document.getElementById('detail-zoom-val').innerText = `${Math.round(currentDetailZoom*100)}%`;
+        }
+
+        window.switchToPip = () => {
+            if(currentActiveIndex === -1) return;
+            setView('list');
+            openPip(currentActiveIndex);
+        };
+
+        window.openPip = (index) => {
+            const item = newsItems[index];
+            document.getElementById('pip-title').innerText = item.title;
+            document.getElementById('pip-content').innerHTML = `<iframe src="${item.url}"></iframe>`;
+            document.getElementById('pip-window').style.display = 'flex';
+            isPipFull = false;
+            currentPipZoom = 1; updatePipZoom();
+        };
+
+        window.closePip = () => document.getElementById('pip-window').style.display = 'none';
+
+        window.togglePipFull = () => {
+            const pip = document.getElementById('pip-window');
+            if(!isPipFull) {
+                pip.style.width = '100vw'; pip.style.height = '100vh'; pip.style.top = '0'; pip.style.left = '0';
+            } else {
+                pip.style.width = '450px'; pip.style.height = '700px'; pip.style.top = '5vh'; pip.style.left = 'calc(50vw + 220px)';
+            }
+            pip.style.transform = 'translate(0,0)';
+            pip.setAttribute('data-x', 0); pip.setAttribute('data-y', 0);
+            isPipFull = !isPipFull;
+        };
+
+        window.adjustPipZoom = (val) => {
+            currentPipZoom = Math.max(0.5, Math.min(3, currentPipZoom + val));
+            updatePipZoom();
+        };
+        function updatePipZoom() {
+            const content = document.getElementById('pip-content');
+            content.style.transform = `scale(${currentPipZoom})`;
+            content.style.width = currentPipZoom > 1 ? `${100 / currentPipZoom}%` : '100%';
+            document.getElementById('pip-zoom-val').innerText = `${Math.round(currentPipZoom*100)}%`;
+        }
+
+        // 관리자/설정
+        window.openAdmin = () => {
+            document.getElementById('admin-modal').classList.remove('hidden');
+            document.getElementById('admin-auth').classList.remove('hidden');
+            document.getElementById('admin-config').classList.add('hidden');
+            document.getElementById('admin-pw').value = '';
+        };
+        window.closeAdmin = () => document.getElementById('admin-modal').classList.add('hidden');
+        window.verifyAdmin = () => {
+            if(document.getElementById('admin-pw').value === '1208kjc@@@') {
+                document.getElementById('admin-auth').classList.add('hidden');
+                document.getElementById('admin-config').classList.remove('hidden');
+                document.getElementById('conf-repo').value = config.repo;
+                document.getElementById('conf-path').value = config.path;
+            } else { alert('비밀번호 오류'); }
+        };
+        window.saveConfig = () => {
+            config.repo = document.getElementById('conf-repo').value;
+            config.path = document.getElementById('conf-path').value;
+            localStorage.setItem('kimc_shell_config', JSON.stringify(config));
+            closeAdmin();
+            syncFromGithub();
+        };
+
+        interact('#pip-window').draggable({
+            allowFrom: '.pip-header',
+            listeners: { move(e) {
+                const t = e.target;
+                const x = (parseFloat(t.getAttribute('data-x')) || 0) + e.dx;
+                const y = (parseFloat(t.getAttribute('data-y')) || 0) + e.dy;
+                t.style.transform = `translate(${x}px, ${y}px)`;
+                t.setAttribute('data-x', x); t.setAttribute('data-y', y);
+            }}
+        });
+    </script>
+</body>
+</html>

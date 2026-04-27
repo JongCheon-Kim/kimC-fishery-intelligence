@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>한국AI어촌가치연구소 - 다시마 연구 보고서</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Noto+Sans+KR:wght@300;400;700;900&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        deepSea: '#0a192f',
+                        kelpGreen: '#2D5A27',
+                        kelpGold: '#C5A059',
+                        oceanBlue: '#1e3a8a',
+                        glass: 'rgba(255, 255, 255, 0.05)',
+                        cardBg: 'rgba(15, 23, 42, 0.8)'
+                    },
+                    fontFamily: {
+                        display: ['Outfit', 'Noto Sans KR', 'sans-serif'],
+                        body: ['Noto Sans KR', 'sans-serif'],
+                    },
+                    animation: {
+                        'fade-in': 'fadeIn 1s ease-out forwards',
+                        'float': 'float 6s ease-in-out infinite',
+                    },
+                    keyframes: {
+                        fadeIn: {
+                            '0%': { opacity: '0', transform: 'translateY(20px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' },
+                        },
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-10px)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background: radial-gradient(circle at top right, #1e3a8a, #0a192f 60%);
+            color: #f8fafc;
+            scroll-behavior: smooth;
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+        .glass-card:hover {
+            border-color: rgba(197, 160, 89, 0.5);
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+        }
+        .gradient-text {
+            background: linear-gradient(135deg, #C5A059 0%, #EEDC82 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0a192f;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #2D5A27;
+            border-radius: 10px;
+        }
+        .bento-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1.5rem;
+        }
+        @media (max-width: 1024px) {
+            .bento-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+        @media (max-width: 640px) {
+            .bento-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body class="font-body selection:bg-kelpGold selection:text-deepSea">
+
+    <!-- Navigation -->
+    <nav class="fixed top-0 w-full z-50 px-6 py-4 flex justify-between items-center bg-deepSea/80 backdrop-blur-md border-b border-white/10">
+        <div class="flex items-center space-x-2">
+            <div class="w-8 h-8 bg-kelpGold rounded-full animate-pulse"></div>
+            <span class="font-display font-bold text-xl tracking-tighter">KAIVRI</span>
+        </div>
+        <div class="hidden md:flex space-x-8 text-sm font-medium tracking-widest uppercase">
+            <a href="#intro" class="hover:text-kelpGold transition-colors">Introduction</a>
+            <a href="#nutrition" class="hover:text-kelpGold transition-colors">Nutrition</a>
+            <a href="#industry" class="hover:text-kelpGold transition-colors">Industry</a>
+            <a href="#strategy" class="hover:text-kelpGold transition-colors">Strategy</a>
+        </div>
+    </nav>
+
+    <main class="pt-32 px-6 max-w-7xl mx-auto pb-20">
+        
+        <!-- Hero Section -->
+        <header id="intro" class="mb-24 animate-fade-in">
+            <div class="flex flex-col md:flex-row justify-between items-end gap-8">
+                <div class="max-w-3xl">
+                    <span class="inline-block px-3 py-1 bg-kelpGreen/30 border border-kelpGreen text-kelpGold text-xs font-bold tracking-widest uppercase rounded-full mb-6">
+                        Research Report 2026-02-13
+                    </span>
+                    <h1 class="text-5xl md:text-7xl font-display font-extrabold leading-tight mb-8">
+                        바다의 검은 보석,<br/><span class="gradient-text">다시마(Sea Tangle)</span> 분석
+                    </h1>
+                    <p class="text-lg text-slate-400 leading-relaxed max-w-2xl">
+                        한국AI어촌가치연구소는 갈조식물 다시마목에 속하는 '다시마'의 역사적 가치와 영양학적 우수성, 그리고 현대 수산업이 직면한 위기를 데이터 기반으로 분석합니다.
+                    </p>
+                </div>
+                <div class="text-right hidden lg:block">
+                    <p class="text-sm font-bold text-kelpGold uppercase tracking-widest">Institution</p>
+                    <p class="text-2xl font-display font-bold">한국AI어촌가치연구소</p>
+                </div>
+            </div>
+        </header>
+
+        <!-- Historical Context - Bento Grid -->
+        <section class="mb-32">
+            <h2 class="text-3xl font-display font-bold mb-12 flex items-center gap-4">
+                <span class="w-12 h-[1px] bg-kelpGold"></span>
+                01. 역사 및 품종
+            </h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="md:col-span-2 glass-card p-8 rounded-3xl relative overflow-hidden group">
+                    <div class="relative z-10">
+                        <h3 class="text-2xl font-bold mb-4">고문헌 속의 다시마</h3>
+                        <div class="space-y-6 text-slate-300">
+                            <div class="flex gap-4">
+                                <span class="text-kelpGold font-bold">『고려도경』</span>
+                                <p>초기에는 식용보다 의복 재료로 활용되었으며, 비린 맛으로 인해 식용 부적합 인식이 존재했음을 기록.</p>
+                            </div>
+                            <div class="flex gap-4">
+                                <span class="text-kelpGold font-bold">『동국여지승람』</span>
+                                <p>한반도 전역에서 중요한 해산물로 인식되었으며, 전국적인 분포와 중요성을 시사.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="glass-card p-8 rounded-3xl flex flex-col justify-center">
+                    <h3 class="text-xl font-bold mb-6 text-center">주요 품종</h3>
+                    <ul class="space-y-4">
+                        <li class="flex justify-between items-center border-b border-white/5 pb-2">
+                            <span>참다시마</span><span class="text-xs text-kelpGold">Representative</span>
+                        </li>
+                        <li class="flex justify-between items-center border-b border-white/5 pb-2">
+                            <span>긴다시마</span><span class="text-xs text-slate-500">Long</span>
+                        </li>
+                        <li class="flex justify-between items-center border-b border-white/5 pb-2">
+                            <span>오호츠크다시마</span><span class="text-xs text-slate-500">Cold Water</span>
+                        </li>
+                        <li class="flex justify-between items-center">
+                            <span>애기다시마</span><span class="text-xs text-slate-500">Small</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Nutrition Stats -->
+        <section id="nutrition" class="mb-32">
+            <h2 class="text-3xl font-display font-bold mb-12 flex items-center gap-4">
+                <span class="w-12 h-[1px] bg-kelpGold"></span>
+                02. 영양학적 가치
+            </h2>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+                <div class="glass-card p-6 rounded-2xl text-center">
+                    <p class="text-slate-500 text-xs uppercase mb-2">Potassium</p>
+                    <p class="text-3xl font-display font-bold text-kelpGold">700<span class="text-sm font-normal ml-1">mg</span></p>
+                    <p class="text-[10px] mt-1 text-slate-400">건조 100g 기준</p>
+                </div>
+                <div class="glass-card p-6 rounded-2xl text-center">
+                    <p class="text-slate-500 text-xs uppercase mb-2">Magnesium</p>
+                    <p class="text-3xl font-display font-bold text-kelpGold">532<span class="text-sm font-normal ml-1">mg</span></p>
+                    <p class="text-[10px] mt-1 text-slate-400">건조 100g 기준</p>
+                </div>
+                <div class="glass-card p-6 rounded-2xl text-center">
+                    <p class="text-slate-500 text-xs uppercase mb-2">Phosphorus</p>
+                    <p class="text-3xl font-display font-bold text-kelpGold">1500<span class="text-sm font-normal ml-1">mg</span></p>
+                    <p class="text-[10px] mt-1 text-slate-400">건조 100g 기준</p>
+                </div>
+                <div class="glass-card p-6 rounded-2xl text-center">
+                    <p class="text-slate-500 text-xs uppercase mb-2">Iron</p>
+                    <p class="text-3xl font-display font-bold text-kelpGold">7.4<span class="text-sm font-normal ml-1">mg</span></p>
+                    <p class="text-[10px] mt-1 text-slate-400">건조 100g 기준</p>
+                </div>
+            </div>
+
+            <div class="overflow-x-auto glass-card rounded-3xl border border-white/10">
+                <table class="w-full text-left border-collapse">
+                    <thead>
+                        <tr class="bg-white/5">
+                            <th class="p-6 text-sm font-bold uppercase tracking-wider text-kelpGold">영양 성분 (100g당)</th>
+                            <th class="p-6 text-sm font-bold uppercase tracking-wider">생 다시마 (Raw)</th>
+                            <th class="p-6 text-sm font-bold uppercase tracking-wider">건조 다시마 (Dried)</th>
+                        </tr>
+                    </thead>
+                    <tbody class="text-slate-300">
+                        <tr class="border-b border-white/5 hover:bg-white/5 transition-colors">
+                            <td class="p-6 font-medium">에너지 (Energy)</td>
+                            <td class="p-6">87 kcal</td>
+                            <td class="p-6 font-bold text-white">87 kcal</td>
+                        </tr>
+                        <tr class="border-b border-white/5 hover:bg-white/5 transition-colors">
+                            <td class="p-6 font-medium">단백질 (Protein)</td>
+                            <td class="p-6">1.1g</td>
+                            <td class="p-6 font-bold text-white">7.4g</td>
+                        </tr>
+                        <tr class="border-b border-white/5 hover:bg-white/5 transition-colors">
+                            <td class="p-6 font-medium">탄수화물 (Carbs)</td>
+                            <td class="p-6">4.5g</td>
+                            <td class="p-6 font-bold text-white">45.3g</td>
+                        </tr>
+                        <tr class="border-b border-white/5 hover:bg-white/5 transition-colors">
+                            <td class="p-6 font-medium">비타민 C</td>
+                            <td class="p-6">1.1mg</td>
+                            <td class="p-6">0.7mg</td>
+                        </tr>
+                        <tr class="hover:bg-white/5 transition-colors">
+                            <td class="p-6 font-medium">글루탐산 (Glutamic Acid)</td>
+                            <td class="p-6 text-center" colspan="2">천연 감칠맛 성분 매우 높음 (지수 60.12)</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Market Trends & Visualization -->
+        <section id="industry" class="mb-32">
+            <h2 class="text-3xl font-display font-bold mb-12 flex items-center gap-4">
+                <span class="w-12 h-[1px] bg-kelpGold"></span>
+                03. 산업 동향 및 위기
+            </h2>
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <div class="space-y-6">
+                    <div class="glass-card p-8 rounded-3xl border-l-4 border-red-500">
+                        <h3 class="text-xl font-bold mb-4">시장 생산량 감소 경보</h3>
+                        <p class="text-slate-400 leading-relaxed mb-6">
+                            2025년 식용 건조 다시마 생산량은 약 4,462톤으로 전년 대비 13.5% 감소했습니다. 특히 전남 지역이 전체의 78.7%를 차지하며 지역 편중이 심화되고 있습니다.
+                        </p>
+                        <div class="flex items-end gap-2">
+                            <div class="w-1/3 bg-white/10 h-32 rounded-t-lg relative group">
+                                <div class="absolute bottom-0 w-full bg-kelpGold h-full rounded-t-lg opacity-80"></div>
+                                <p class="absolute -top-8 left-0 right-0 text-center text-xs">2021년<br/>67.7만톤</p>
+                            </div>
+                            <div class="w-1/3 bg-white/10 h-16 rounded-t-lg relative group">
+                                <div class="absolute bottom-0 w-full bg-slate-500 h-[30%] rounded-t-lg"></div>
+                                <p class="absolute -top-8 left-0 right-0 text-center text-xs">2026년(전망)<br/>3,569톤</p>
+                            </div>
+                            <div class="w-1/3 bg-white/10 h-12 rounded-t-lg relative group">
+                                <div class="absolute bottom-0 w-full bg-red-500 h-[20%] rounded-t-lg"></div>
+                                <p class="absolute -top-8 left-0 right-0 text-center text-xs">2027년(전망)<br/>3,034톤</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="glass-card p-8 rounded-3xl">
+                        <h3 class="text-xl font-bold mb-4">가격 및 수익성 악화</h3>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div class="bg-black/20 p-4 rounded-xl">
+                                <p class="text-xs text-slate-500 mb-1">평균 산지 가격</p>
+                                <p class="text-xl font-bold">6,539원/kg</p>
+                                <p class="text-xs text-red-400">▼ 31.9% 하락</p>
+                            </div>
+                            <div class="bg-black/20 p-4 rounded-xl">
+                                <p class="text-xs text-slate-500 mb-1">시설 축소 계획</p>
+                                <p class="text-xl font-bold">33.8% 어가</p>
+                                <p class="text-xs text-red-400">▲ 전년비 8배 폭증</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="glass-card p-8 rounded-3xl flex flex-col justify-between">
+                    <div>
+                        <h3 class="text-xl font-bold mb-2">키워드 분석 (Semantic Analysis)</h3>
+                        <p class="text-sm text-slate-400 mb-6">다시마 관련 텍스트 정서 및 핵심어 분포</p>
+                        <div class="flex flex-wrap gap-2">
+                            <span class="px-4 py-2 bg-kelpGold text-deepSea rounded-full font-bold text-lg">다시마</span>
+                            <span class="px-4 py-2 bg-kelpGreen text-white rounded-full font-bold text-base">활용</span>
+                            <span class="px-3 py-1 bg-white/10 rounded-full text-sm">산업</span>
+                            <span class="px-3 py-1 bg-white/10 rounded-full text-sm">영양</span>
+                            <span class="px-3 py-1 bg-white/10 rounded-full text-sm">감칠맛</span>
+                            <span class="px-3 py-1 bg-white/10 rounded-full text-sm">아미노산</span>
+                            <span class="px-3 py-1 bg-white/10 rounded-full text-sm">생산량</span>
+                            <span class="px-3 py-1 bg-white/10 rounded-full text-sm">도전</span>
+                            <span class="px-3 py-1 bg-white/10 rounded-full text-sm">전략</span>
+                            <span class="px-3 py-1 bg-red-500/20 text-red-400 border border-red-500/30 rounded-full text-sm">감소</span>
+                            <span class="px-3 py-1 bg-white/10 rounded-full text-sm">건강</span>
+                            <span class="px-3 py-1 bg-white/10 rounded-full text-sm">변화</span>
+                            <span class="px-3 py-1 bg-white/10 rounded-full text-sm">추출물</span>
+                        </div>
+                    </div>
+                    <div class="mt-8 pt-8 border-t border-white/5">
+                        <h4 class="text-sm font-bold text-kelpGold mb-4 uppercase tracking-widest">실용 구매 가이드</h4>
+                        <div class="grid grid-cols-2 gap-4 text-xs">
+                            <div class="flex gap-2">
+                                <span class="text-kelpGold">●</span>
+                                <span>윤기 있는 짙은 갈색</span>
+                            </div>
+                            <div class="flex gap-2">
+                                <span class="text-kelpGold">●</span>
+                                <span>표면의 흰 가루(만니톨)</span>
+                            </div>
+                            <div class="flex gap-2">
+                                <span class="text-kelpGold">●</span>
+                                <span>은은한 바다 향</span>
+                            </div>
+                            <div class="flex gap-2">
+                                <span class="text-kelpGold">●</span>
+                                <span>두껍고 탄력 있는 질감</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Policy Recommendations -->
+        <section id="strategy" class="mb-20">
+            <h2 class="text-3xl font-display font-bold mb-12 flex items-center gap-4">
+                <span class="w-12 h-[1px] bg-kelpGold"></span>
+                04. 지속 가능 발전을 위한 정책 제언
+            </h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div class="glass-card p-6 rounded-2xl">
+                    <div class="w-12 h-12 bg-kelpGold/20 rounded-xl flex items-center justify-center mb-6">
+                        <svg class="w-6 h-6 text-kelpGold" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.642.214a6 6 0 01-3.86.517L5.27 15.18a2 2 0 00-1.022.547l-1.022 1.022a2 2 0 00-.547 1.022l.51 5.105a2 2 0 002.04 1.794h11.542a2 2 0 002.04-1.794l.51-5.105a2 2 0 00-.547-1.022l-1.022-1.022zM21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    </div>
+                    <h4 class="text-lg font-bold mb-3">고부가가치 R&D 지원</h4>
+                    <p class="text-sm text-slate-400 leading-relaxed">천연 조미료, 건강기능식품, 의약품 원료 등 다시마 추출물을 활용한 융복합 제품 개발 투자 확대.</p>
+                </div>
+                <div class="glass-card p-6 rounded-2xl">
+                    <div class="w-12 h-12 bg-kelpGold/20 rounded-xl flex items-center justify-center mb-6">
+                        <svg class="w-6 h-6 text-kelpGold" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
+                    </div>
+                    <h4 class="text-lg font-bold mb-3">데이터 기반 수급 관리</h4>
+                    <p class="text-sm text-slate-400 leading-relaxed">스마트 양식 기술 및 유통 단계 축소를 통해 어가 수익을 보전하고 소비자 가격 안정화 시스템 구축.</p>
+                </div>
+                <div class="glass-card p-6 rounded-2xl">
+                    <div class="w-12 h-12 bg-kelpGold/20 rounded-xl flex items-center justify-center mb-6">
+                        <svg class="w-6 h-6 text-kelpGold" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    </div>
+                    <h4 class="text-lg font-bold mb-3">수출 다변화 마케팅</h4>
+                    <p class="text-sm text-slate-400 leading-relaxed">한류 콘텐츠와 연계하여 다시마의 감칠맛과 건강 효능을 세계 시장에 적극 홍보 및 판로 개척.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- References -->
+        <section class="border-t border-white/10 pt-12">
+            <h5 class="text-xs font-bold text-slate-500 uppercase tracking-[0.2em] mb-6">References & Sources</h5>
+            <div class="flex flex-wrap gap-x-8 gap-y-4 text-[10px] text-slate-500 font-medium">
+                <a href="#" class="hover:text-kelpGold transition-colors">고려도경(高麗圖經)</a>
+                <a href="https://kmi.re.kr" target="_blank" class="hover:text-kelpGold transition-colors">한국해양수산개발원(KMI)</a>
+                <a href="https://www.mof.go.kr" target="_blank" class="hover:text-kelpGold transition-colors">해양수산부</a>
+                <a href="https://www.chosun.com" target="_blank" class="hover:text-kelpGold transition-colors">CHOSUN.COM</a>
+                <a href="https://www.fisheco.com" target="_blank" class="hover:text-kelpGold transition-colors">FISHECO.COM</a>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Interactive Background Elements -->
+    <div class="fixed top-20 right-[-10%] w-[40%] h-[40%] bg-kelpGreen/20 blur-[120px] rounded-full -z-10 animate-float"></div>
+    <div class="fixed bottom-[-10%] left-[-10%] w-[30%] h-[30%] bg-oceanBlue/30 blur-[100px] rounded-full -z-10"></div>
+
+    <script>
+        // Simple scroll animation trigger
+        const observerOptions = {
+            threshold: 0.1
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('animate-fade-in');
+                    entry.target.style.opacity = "1";
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('section').forEach(section => {
+            section.style.opacity = "0";
+            observer.observe(section);
+        });
+    </script>
+</body>
+</html>
+

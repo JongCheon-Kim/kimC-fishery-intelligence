@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>우뭇가사리 디지털 수산물 사전</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Outfit:wght@400;600;800&family=Noto+Sans+KR:wght@300;400;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        ocean: {
+                            50: '#f0f9ff',
+                            100: '#e0f2fe',
+                            600: '#0284c7',
+                            800: '#075985',
+                            900: '#0c4a6e',
+                        },
+                        accent: {
+                            coral: '#ff7e67',
+                            gold: '#d4af37',
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'Noto Sans KR', 'sans-serif'],
+                        display: ['Outfit', 'sans-serif'],
+                    },
+                    animation: {
+                        'fade-in': 'fadeIn 0.8s ease-out forwards',
+                        'slide-up': 'slideUp 1s ease-out forwards',
+                    },
+                    keyframes: {
+                        fadeIn: {
+                            '0%': { opacity: '0' },
+                            '100%': { opacity: '1' },
+                        },
+                        slideUp: {
+                            '0%': { transform: 'translateY(20px)', opacity: '0' },
+                            '100%': { transform: 'translateY(0)', opacity: '1' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #f8fafc;
+            color: #1e293b;
+            scroll-behavior: smooth;
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.07);
+        }
+        .gradient-text {
+            background: linear-gradient(135deg, #075985 0%, #0284c7 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .hero-gradient {
+            background: radial-gradient(circle at top right, #e0f2fe, transparent),
+                        radial-gradient(circle at bottom left, #f0f9ff, transparent);
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            height: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #0284c7;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body class="font-sans antialiased">
+
+    <!-- Header -->
+    <header class="sticky top-0 z-50 glass-card py-4 px-6 md:px-12 border-b border-ocean-100">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
+            <h1 class="font-display text-3xl md:text-4xl font-extrabold tracking-tight gradient-text">
+                우뭇가사리 <span class="text-sm font-normal text-ocean-600 ml-2 italic">Gelidium amansii</span>
+            </h1>
+            <nav class="hidden md:block">
+                <p class="text-ocean-800 font-semibold tracking-wide uppercase text-xs">Digital Seafood Dictionary Report</p>
+            </nav>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-6 md:px-12 py-12 space-y-24">
+        
+        <!-- 1. Hero Section -->
+        <section class="animate-fade-in relative overflow-hidden rounded-3xl hero-gradient p-8 md:p-16 flex flex-col lg:flex-row items-center gap-12">
+            <div class="lg:w-1/2 space-y-6">
+                <span class="inline-block px-4 py-1.5 rounded-full bg-ocean-600 text-white text-xs font-bold tracking-widest uppercase">Premium Insight</span>
+                <h2 class="text-4xl md:text-5xl font-display font-extrabold text-ocean-900 leading-tight">
+                    인류의 생존에서<br>생명 연장으로 진화한<br><span class="text-ocean-600">바다의 선물</span>
+                </h2>
+                <p class="text-lg text-slate-600 leading-relaxed font-light">
+                    바다의 숨겨진 보석이라 불리는 <strong>우뭇가사리</strong>는 단순한 구황식품을 넘어 유전공학의 핵심 도구이자, 차세대 항암 및 의료용 소재로 거듭나고 있는 미래 자원입니다.
+                </p>
+            </div>
+            <div class="lg:w-1/2 relative group">
+                <div class="absolute -inset-4 bg-ocean-600/10 rounded-full blur-3xl group-hover:bg-ocean-600/20 transition duration-500"></div>
+                <!-- Note: As per instructions, only use provided URLs. Since none were provided, we use a high-end CSS-styled placeholder concept to maintain visual excellence. -->
+                <div class="relative rounded-2xl overflow-hidden shadow-2xl bg-white p-2 border border-ocean-100 transform group-hover:scale-[1.02] transition duration-500">
+                    <div class="aspect-video bg-gradient-to-br from-ocean-100 to-ocean-600 flex items-center justify-center text-white text-xl font-display italic">
+                        Digital Representation of Gelidium amansii
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 2. History Story -->
+        <section class="animate-slide-up">
+            <div class="grid lg:grid-cols-3 gap-12">
+                <div class="lg:col-span-1">
+                    <h2 class="text-2xl font-display font-bold text-ocean-900 border-l-4 border-accent-coral pl-4">History Story</h2>
+                    <p class="mt-4 text-slate-500 text-sm">구황식품에서 현대 미생물학의 혁명을 이끌기까지의 여정</p>
+                </div>
+                <div class="lg:col-span-2 prose prose-slate max-w-none text-slate-700 leading-loose">
+                    <p class="mb-6">
+                        우뭇가사리는 고대부터 동아시아 해역에서 귀중한 자원이었습니다. 조선 시대 정약전의 <strong class="text-ocean-800">현산어보</strong>에는 소의 털과 비슷하다 하여 '우모초'라 기록되었으며, 해동초 또는 석화채로도 불렸습니다. 과거 흉년에는 굶주림을 이겨내게 해준 구황식품이자 왕실 진상품이었습니다.
+                    </p>
+                    <div class="bg-ocean-50 p-6 rounded-2xl border-l-4 border-ocean-600 mb-6 italic">
+                        17세기 미노야 타로자에몬의 '한천(Agar)' 가공 기술 발견은 해조류 역사상 가장 비약적인 발전을 가져왔습니다.
+                    </div>
+                    <p class="mb-6">
+                        이후 19세기 말, 독일의 미생물학자 로베르트 코흐의 조수 발터 헤세의 아내 <strong class="text-ocean-800">파니 헤세</strong>가 한천을 배양 매지로 제안하면서 현대 미생물학 및 의학 발전에 결정적인 기여를 하게 되었습니다.
+                    </p>
+                    <p class="mb-6 p-6 bg-slate-100 rounded-2xl text-slate-600 border border-slate-200">
+                        20세기 초 일제강점기에는 특수 군수 물자로 수요가 폭발하며 가격이 미역 대비 최대 <strong>1,066배</strong>까지 폭등했습니다. 이는 제주 해녀 항일운동의 배경이 된 아픈 역사이기도 합니다.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 3. Nutrition Data -->
+        <section class="animate-slide-up">
+            <div class="mb-8">
+                <h2 class="text-3xl font-display font-extrabold text-ocean-900 flex items-center gap-3">
+                    <span class="w-10 h-10 flex items-center justify-center bg-ocean-600 text-white rounded-xl text-lg">03</span>
+                    Nutrition Data (건조 우뭇가사리 100g당 영양 성분 TOP 10)
+                </h2>
+                <p class="mt-2 text-slate-500">독특한 탄수화물과 필수 미네랄이 고농도로 함유되어 있습니다.</p>
+            </div>
+            
+            <div class="overflow-x-auto custom-scrollbar rounded-2xl shadow-xl border border-slate-100">
+                <table class="w-full text-left bg-white border-collapse">
+                    <thead>
+                        <tr class="bg-ocean-900 text-white font-display uppercase tracking-widest text-xs">
+                            <th class="px-6 py-4">Rank</th>
+                            <th class="px-6 py-4">Nutrient (영양소)</th>
+                            <th class="px-6 py-4">Quantity (g)</th>
+                            <th class="px-6 py-4">Key Nutritional Benefit</th>
+                        </tr>
+                    </thead>
+                    <tbody class="text-slate-700">
+                        <tr class="border-b border-slate-50 hover:bg-ocean-50 transition duration-150">
+                            <td class="px-6 py-4 font-bold text-ocean-600">1</td>
+                            <td class="px-6 py-4 font-semibold">탄수화물 (Carbohydrates)</td>
+                            <td class="px-6 py-4 font-mono font-bold">81.000 g</td>
+                            <td class="px-6 py-4">주요 겔화제(Gelling agents) 공급원</td>
+                        </tr>
+                        <tr class="border-b border-slate-50 hover:bg-ocean-50 transition duration-150">
+                            <td class="px-6 py-4 font-bold text-ocean-600">2</td>
+                            <td class="px-6 py-4 font-semibold">식이섬유 (Dietary Fiber)</td>
+                            <td class="px-6 py-4 font-mono font-bold">7.700 g</td>
+                            <td class="px-6 py-4">소화기 건강 유지 (최대 80% 농축 가능)</td>
+                        </tr>
+                        <tr class="border-b border-slate-50 hover:bg-ocean-50 transition duration-150">
+                            <td class="px-6 py-4 font-bold text-ocean-600">3</td>
+                            <td class="px-6 py-4 font-semibold">단백질 (Protein)</td>
+                            <td class="px-6 py-4 font-mono font-bold">6.200 g</td>
+                            <td class="px-6 py-4">필수 아미노산 및 구조 단백질 공급원</td>
+                        </tr>
+                        <tr class="border-b border-slate-50 hover:bg-ocean-50 transition duration-150">
+                            <td class="px-6 py-4 font-bold text-ocean-600">4</td>
+                            <td class="px-6 py-4 font-semibold">칼륨 (Potassium)</td>
+                            <td class="px-6 py-4 font-mono font-bold">1.125 g</td>
+                            <td class="px-6 py-4">심장 기능 및 체액 균형에 필수적</td>
+                        </tr>
+                        <tr class="border-b border-slate-50 hover:bg-ocean-50 transition duration-150">
+                            <td class="px-6 py-4 font-bold text-ocean-600">5</td>
+                            <td class="px-6 py-4 font-semibold">마그네슘 (Magnesium)</td>
+                            <td class="px-6 py-4 font-mono font-bold">0.770 g</td>
+                            <td class="px-6 py-4">체내 300개 이상의 생화학 반응 관여</td>
+                        </tr>
+                        <tr class="border-b border-slate-50 hover:bg-ocean-50 transition duration-150">
+                            <td class="px-6 py-4 font-bold text-ocean-600 text-sm">...</td>
+                            <td class="px-6 py-4 font-semibold">기타 미네랄 (Calcium, Iron 등)</td>
+                            <td class="px-6 py-4 font-mono font-bold">0.02 ~ 0.6 g</td>
+                            <td class="px-6 py-4">뼈 건강 및 산소 운반 필수적 역할</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- 4. Industry & Forecast -->
+        <section class="animate-slide-up">
+            <div class="grid lg:grid-cols-2 gap-12">
+                <div class="space-y-6">
+                    <h2 class="text-3xl font-display font-extrabold text-ocean-900 border-b-2 border-ocean-600 pb-2 inline-block">Industry & Forecast</h2>
+                    <p class="text-slate-600 leading-relaxed">
+                        글로벌 시장 전망 분석 결과, 우뭇가사리 시장은 2026년부터 꾸준한 회복세를 보이며 기록적인 수출액을 달성할 것으로 전망됩니다. 단순 원물 시장을 넘어 <strong class="text-ocean-600 underline decoration-accent-coral">바이오메디컬 및 초정밀 응용 분야</strong>로의 전환이 가속화되고 있습니다.
+                    </p>
+                    <div class="p-6 rounded-2xl glass-card border-ocean-200">
+                        <h4 class="font-bold text-ocean-900 mb-4 uppercase text-xs tracking-tighter">Market Insight</h4>
+                        <div class="flex items-end gap-2 text-ocean-600 font-display">
+                            <span class="text-5xl font-extrabold">2030</span>
+                            <span class="text-xl font-semibold mb-1">Peak Prediction</span>
+                        </div>
+                        <p class="mt-4 text-sm text-slate-500">향후 5년 내 산업의 최고점인 $14,355,243 달성 예상</p>
+                    </div>
+                </div>
+                <div class="space-y-4">
+                    <div class="grid grid-cols-1 gap-3">
+                        <div class="p-4 bg-white border border-slate-100 rounded-xl shadow-sm hover:translate-x-2 transition duration-300">
+                            <div class="flex justify-between items-center">
+                                <span class="text-sm font-bold text-slate-400">2026 Forecast</span>
+                                <span class="text-ocean-600 font-bold">$13,265,814</span>
+                            </div>
+                            <div class="w-full bg-slate-100 h-1 mt-2 rounded-full overflow-hidden">
+                                <div class="bg-ocean-600 h-full w-[80%]"></div>
+                            </div>
+                        </div>
+                        <div class="p-4 bg-white border border-slate-100 rounded-xl shadow-sm hover:translate-x-2 transition duration-300">
+                            <div class="flex justify-between items-center">
+                                <span class="text-sm font-bold text-slate-400">2028 Forecast</span>
+                                <span class="text-ocean-600 font-bold">$13,810,529</span>
+                            </div>
+                            <div class="w-full bg-slate-100 h-1 mt-2 rounded-full overflow-hidden">
+                                <div class="bg-ocean-600 h-full w-[90%]"></div>
+                            </div>
+                        </div>
+                        <div class="p-4 bg-ocean-900 border border-ocean-900 rounded-xl shadow-lg hover:translate-x-2 transition duration-300">
+                            <div class="flex justify-between items-center">
+                                <span class="text-sm font-bold text-ocean-100">2030 Peak Forecast</span>
+                                <span class="text-white font-bold">$14,355,243</span>
+                            </div>
+                            <div class="w-full bg-ocean-800 h-1 mt-2 rounded-full overflow-hidden">
+                                <div class="bg-accent-coral h-full w-full"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 5. Trend Keywords -->
+        <section class="animate-slide-up">
+            <h2 class="text-3xl font-display font-extrabold text-ocean-900 text-center mb-12 uppercase tracking-tight">Trend Keywords</h2>
+            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div class="p-8 rounded-3xl bg-white border border-slate-100 shadow-sm hover:shadow-xl hover:-translate-y-2 transition duration-300">
+                    <div class="w-12 h-12 bg-green-100 text-green-600 rounded-2xl flex items-center justify-center mb-6">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-7.714 2.143L11 21l-2.143-7.714L1 12l6.857-2.143L11 3z"></path></svg>
+                    </div>
+                    <h3 class="font-bold text-lg text-slate-900 mb-2">비건 및 식물성 대체제</h3>
+                    <p class="text-sm text-slate-500 leading-relaxed">식물성 응고제로서 전 세계 비건 식품 시장의 필수 재료</p>
+                </div>
+                <div class="p-8 rounded-3xl bg-white border border-slate-100 shadow-sm hover:shadow-xl hover:-translate-y-2 transition duration-300">
+                    <div class="w-12 h-12 bg-blue-100 text-blue-600 rounded-2xl flex items-center justify-center mb-6">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.641.32a6 6 0 01-3.86.517l-2.388-.477a2 2 0 00-1.022.547l-1.168 1.168a2 2 0 00.556 3.391l3.321.83a6 6 0 004.242 0l3.321-.83a2 2 0 00.556-3.391l-1.168-1.168z"></path></svg>
+                    </div>
+                    <h3 class="font-bold text-lg text-slate-900 mb-2">지속 가능한 소재</h3>
+                    <p class="text-sm text-slate-500 leading-relaxed">플라스틱 오염 해결을 위한 생분해성 비닐 및 바이오 플라스틱</p>
+                </div>
+                <div class="p-8 rounded-3xl bg-white border border-slate-100 shadow-sm hover:shadow-xl hover:-translate-y-2 transition duration-300">
+                    <div class="w-12 h-12 bg-purple-100 text-purple-600 rounded-2xl flex items-center justify-center mb-6">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.641.32a6 6 0 01-3.86.517l-2.388-.477a2 2 0 00-1.022.547l-1.168 1.168a2 2 0 00.556 3.391l3.321.83a6 6 0 004.242 0l3.321-.83a2 2 0 00.556-3.391l-1.168-1.168z"></path></svg>
+                    </div>
+                    <h3 class="font-bold text-lg text-slate-900 mb-2">바이오메디컬 & 유전공학</h3>
+                    <p class="text-sm text-slate-500 leading-relaxed">DNA 분리용 아가로스 및 차세대 암세포 성장 억제 소재</p>
+                </div>
+                <div class="p-8 rounded-3xl bg-white border border-slate-100 shadow-sm hover:shadow-xl hover:-translate-y-2 transition duration-300">
+                    <div class="w-12 h-12 bg-orange-100 text-orange-600 rounded-2xl flex items-center justify-center mb-6">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                    </div>
+                    <h3 class="font-bold text-lg text-slate-900 mb-2">웰니스 및 다이어트</h3>
+                    <p class="text-sm text-slate-500 leading-relaxed">식이섬유가 풍부하고 칼로리가 낮은 고부가가치 건강기능식품</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 6. Policy & Action -->
+        <section class="animate-slide-up bg-ocean-900 text-white rounded-3xl p-8 md:p-16 relative overflow-hidden">
+            <div class="absolute top-0 right-0 w-64 h-64 bg-ocean-600 opacity-20 rounded-full -mr-32 -mt-32"></div>
+            <div class="absolute bottom-0 left-0 w-32 h-32 bg-accent-coral opacity-10 rounded-full -ml-16 -mb-16"></div>
+            
+            <div class="relative z-10 max-w-4xl">
+                <h2 class="text-3xl font-display font-bold mb-10 border-b border-ocean-800 pb-4">Policy & Action: 5대 정책 제언</h2>
+                <div class="space-y-6">
+                    <div class="flex gap-4 group">
+                        <span class="flex-shrink-0 w-8 h-8 rounded-lg bg-ocean-800 text-ocean-100 font-bold flex items-center justify-center group-hover:bg-accent-coral group-hover:text-white transition duration-300">01</span>
+                        <div>
+                            <h4 class="font-bold text-lg">지속 가능한 채취 및 해양 생태계 보존 시스템 구축</h4>
+                            <p class="text-ocean-200 text-sm mt-1">해녀들의 전통 채취 방식 보호 및 무분별한 남획 방지 정책 도입</p>
+                        </div>
+                    </div>
+                    <div class="flex gap-4 group">
+                        <span class="flex-shrink-0 w-8 h-8 rounded-lg bg-ocean-800 text-ocean-100 font-bold flex items-center justify-center group-hover:bg-accent-coral group-hover:text-white transition duration-300">02</span>
+                        <div>
+                            <h4 class="font-bold text-lg">첨단 바이오메디컬 연구개발 지원 확대</h4>
+                            <p class="text-ocean-200 text-sm mt-1">아가로스 기반 차세대 의료용 소재 원천 기술 확보를 위한 R&D 투자</p>
+                        </div>
+                    </div>
+                    <div class="flex gap-4 group">
+                        <span class="flex-shrink-0 w-8 h-8 rounded-lg bg-ocean-800 text-ocean-100 font-bold flex items-center justify-center group-hover:bg-accent-coral group-hover:text-white transition duration-300">03</span>
+                        <div>
+                            <h4 class="font-bold text-lg">친환경 바이오 플라스틱 상용화 인프라 조성</h4>
+                            <p class="text-ocean-200 text-sm mt-1">지속 가능한 소재 제조 인프라 구축 및 상용화 세제 혜택 제공</p>
+                        </div>
+                    </div>
+                    <div class="flex gap-4 group">
+                        <span class="flex-shrink-0 w-8 h-8 rounded-lg bg-ocean-800 text-ocean-100 font-bold flex items-center justify-center group-hover:bg-accent-coral group-hover:text-white transition duration-300">04</span>
+                        <div>
+                            <h4 class="font-bold text-lg">글로벌 비건 식품 시장 맞춤형 가공 기술 고도화</h4>
+                            <p class="text-ocean-200 text-sm mt-1">식물성 대체제 수요에 맞춘 고순도 한천 가공 기술 혁신</p>
+                        </div>
+                    </div>
+                    <div class="flex gap-4 group">
+                        <span class="flex-shrink-0 w-8 h-8 rounded-lg bg-ocean-800 text-ocean-100 font-bold flex items-center justify-center group-hover:bg-accent-coral group-hover:text-white transition duration-300">05</span>
+                        <div>
+                            <h4 class="font-bold text-lg">해양 역사 문화의 보존 및 관광 자원화</h4>
+                            <p class="text-ocean-200 text-sm mt-1">제주 해녀 항일 운동 등 역사적 가치 재조명 및 문화 관광 연계</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 7. Formal References -->
+        <section class="animate-slide-up pt-12 border-t border-slate-200">
+            <h2 class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-6">Formal References</h2>
+            <ul class="grid md:grid-cols-2 gap-4 text-sm text-slate-500">
+                <li class="flex items-center gap-2">
+                    <span class="w-1.5 h-1.5 bg-slate-300 rounded-full"></span>
+                    역사적 문헌 (현산어보, 연희식 및 일제강점기 수탈 기록)
+                </li>
+                <li class="flex items-center gap-2">
+                    <span class="w-1.5 h-1.5 bg-slate-300 rounded-full"></span>
+                    바이오메디컬 및 해양 소재 연구 분석 보고서
+                </li>
+                <li class="flex items-center gap-2">
+                    <span class="w-1.5 h-1.5 bg-slate-300 rounded-full"></span>
+                    파이썬 시장 분석 보고서 (Linear Regression Analysis)
+                </li>
+                <li class="flex items-center gap-2">
+                    <span class="w-1.5 h-1.5 bg-slate-300 rounded-full"></span>
+                    우뭇가사리 정밀 영양 성분 데이터 (Nutrition Data)
+                </li>
+            </ul>
+        </section>
+
+    </main>
+
+    <!-- Simple Bottom Navigation for premium feel -->
+    <div class="fixed bottom-6 left-1/2 -translate-x-1/2 glass-card px-6 py-3 rounded-full flex gap-8 z-40">
+        <button onclick="window.scrollTo({top:0, behavior:'smooth'})" class="text-ocean-900 font-bold text-xs uppercase hover:text-ocean-600 transition">Overview</button>
+        <button onclick="document.querySelector('.prose').scrollIntoView({behavior:'smooth'})" class="text-ocean-900 font-bold text-xs uppercase hover:text-ocean-600 transition">History</button>
+        <button onclick="document.querySelector('table').scrollIntoView({behavior:'smooth'})" class="text-ocean-900 font-bold text-xs uppercase hover:text-ocean-600 transition">Data</button>
+        <button onclick="document.querySelector('.bg-ocean-900').scrollIntoView({behavior:'smooth'})" class="text-ocean-900 font-bold text-xs uppercase hover:text-ocean-600 transition">Policy</button>
+    </div>
+
+</body>
+</html>
