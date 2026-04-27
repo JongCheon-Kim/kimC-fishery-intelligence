@@ -2,7 +2,7 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>수산물인텔리전스 - GitHub HTML WebPlayer v2</title>
 
     <script src="https://cdn.tailwindcss.com"></script>
@@ -10,26 +10,126 @@
     <script src="https://cdn.jsdelivr.net/npm/interactjs/dist/interact.min.js"></script>
 
     <style>
+        html, body {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            min-height: 100%;
+        }
+
+        body {
+            -webkit-text-size-adjust: 100%;
+            overscroll-behavior: none;
+        }
+
         .hide-scrollbar::-webkit-scrollbar { display: none; }
         .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-
-        .view-content {
-            display: none;
-            height: 100%;
-            overflow-y: auto;
-            padding-bottom: 88px;
-        }
-
-        .view-content.active {
-            display: block;
-            animation: fadeIn 0.25s ease-in-out;
-        }
 
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(5px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
+        .view-content {
+            display: none;
+            height: 100%;
+            min-height: 0;
+            overflow-y: auto;
+            padding-bottom: 96px;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .view-content.active {
+            display: flex;
+            flex-direction: column;
+            animation: fadeIn 0.25s ease-in-out;
+        }
+
+        #app-container {
+            height: 100svh;
+            max-height: 100svh;
+        }
+
+        @supports (height: 100dvh) {
+            #app-container {
+                height: 100dvh;
+                max-height: 100dvh;
+            }
+        }
+
+        /* 상세보기: 아래에서 위로 올라오는 슬라이드업 패널 */
+        #detail-backdrop {
+            position: absolute;
+            inset: 0;
+            z-index: 45;
+            background: rgba(15, 23, 42, 0.28);
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.25s ease;
+        }
+
+        #detail-backdrop.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        #detail-panel {
+            position: absolute;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            height: 86%;
+            z-index: 60;
+            background: #e5e7eb;
+            border-radius: 24px 24px 0 0;
+            box-shadow: 0 -18px 38px rgba(15, 23, 42, 0.24);
+            transform: translateY(105%);
+            transition: transform 0.28s cubic-bezier(.2,.8,.2,1);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            will-change: transform;
+        }
+
+        #detail-panel.active {
+            transform: translateY(0);
+        }
+
+        #detail-content-wrapper {
+            flex: 1;
+            min-height: 0;
+            overflow: auto;
+            padding: 8px;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        #detail-content,
+        #pip-content {
+            transform-origin: top left;
+        }
+
+        #detail-content {
+            width: 100%;
+            height: 100%;
+            min-height: 100%;
+            background: #ffffff;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 6px 16px rgba(15, 23, 42, 0.14);
+            transition: transform 0.18s ease, width 0.18s ease;
+        }
+
+        iframe.news-frame {
+            display: block;
+            width: 100%;
+            height: 100%;
+            min-height: 100%;
+            border: none;
+            background: #ffffff;
+        }
+
+        /* PiP 창 */
         #pip-window {
             position: fixed;
             z-index: 9999;
@@ -57,36 +157,65 @@
             background: #e5e7eb;
         }
 
-        #view-detail {
-            overflow-y: auto !important;
-            -webkit-overflow-scrolling: touch;
-        }
-
-        #detail-content-wrapper {
-            min-height: 100%;
-            overflow-x: hidden;
-        }
-
-        #detail-content,
         #pip-content {
-            transform-origin: top left;
-        }
-
-        iframe.news-frame {
             width: 100%;
-            height: 100%;
-            min-height: 850px;
-            border: none;
-            background: #ffffff;
+            min-height: 100%;
+            transition: transform 0.18s ease, width 0.18s ease;
         }
 
-        .safe-bottom { padding-bottom: env(safe-area-inset-bottom); }
+        #pip-content iframe.news-frame {
+            min-height: 720px;
+        }
+
+        .safe-bottom {
+            padding-bottom: env(safe-area-inset-bottom);
+        }
+
+        @media (min-width: 641px) {
+            #app-container {
+                height: 820px;
+                max-height: min(820px, calc(100vh - 64px));
+            }
+
+            #detail-panel {
+                height: 88%;
+            }
+        }
+
+        @media (max-width: 640px) {
+            body {
+                align-items: stretch !important;
+                justify-content: flex-start !important;
+                overflow: hidden;
+            }
+
+            #app-container {
+                width: 100vw !important;
+                max-width: 100vw !important;
+                border-radius: 0 !important;
+                border-left: none !important;
+                border-right: none !important;
+            }
+
+            header {
+                padding-top: calc(env(safe-area-inset-top) + 12px);
+            }
+
+            #detail-panel {
+                height: 86%;
+                border-radius: 22px 22px 0 0;
+            }
+
+            #pip-window {
+                border-radius: 16px;
+            }
+        }
     </style>
 </head>
 
-<body class="bg-gray-200 min-h-screen flex items-center justify-center p-0 sm:p-8 font-sans overflow-hidden">
+<body class="bg-gray-200 min-h-[100svh] sm:min-h-screen flex sm:items-center sm:justify-center p-0 sm:p-8 font-sans overflow-hidden">
 
-    <div id="app-container" class="w-full h-[100dvh] sm:h-[820px] sm:w-[420px] bg-gray-50 sm:rounded-[2rem] sm:shadow-2xl relative overflow-hidden flex flex-col mx-auto border border-gray-300">
+    <div id="app-container" class="w-full max-w-[420px] sm:w-[420px] bg-gray-50 sm:rounded-[2rem] sm:shadow-2xl relative overflow-hidden flex flex-col mx-auto border border-gray-300">
 
         <header class="bg-white px-5 py-4 shadow-sm border-b flex justify-between items-center z-40 shrink-0">
             <div class="min-w-0">
@@ -98,9 +227,8 @@
             </div>
         </header>
 
-        <main class="flex-1 relative overflow-hidden bg-gray-100 flex flex-col">
+        <main class="flex-1 relative overflow-hidden bg-gray-100 flex flex-col min-h-0">
 
-            <!-- 목록 화면 -->
             <div id="view-list" class="view-content hide-scrollbar active flex flex-col h-full">
                 <div class="px-4 pt-4 pb-3 bg-gray-100 shrink-0 space-y-2">
                     <div class="flex justify-between items-center">
@@ -125,58 +253,57 @@
                     </div>
                 </div>
 
-                <div id="list-container" class="p-4 space-y-3 flex-1 overflow-y-auto">
+                <div id="list-container" class="p-4 space-y-3 flex-1 overflow-y-auto min-h-0">
                     <div class="text-center text-gray-500 py-10 text-sm flex flex-col items-center">
                         <i class="ph-duotone ph-spinner-gap animate-spin text-3xl mb-2 text-blue-400"></i>
                         GitHub HTML 파일 목록을 불러오는 중입니다...
                     </div>
                 </div>
             </div>
-
-            <!-- 상세 화면 -->
-            <div id="view-detail" class="view-content hide-scrollbar bg-gray-300 relative">
-                <div class="sticky top-0 z-20 bg-white border-b border-gray-200 p-3 flex justify-between items-center shadow-sm">
-                    <button onclick="setView('list')" class="w-8 h-8 flex items-center justify-center bg-gray-100 text-gray-600 rounded-full hover:bg-gray-200 transition-colors">
-                        <i class="ph-bold ph-arrow-left"></i>
-                    </button>
-
-                    <span id="detail-title" class="font-bold text-sm truncate flex-1 text-center px-2 text-gray-800"></span>
-
-                    <button onclick="switchToPip()" class="bg-blue-600 text-white px-3 py-1.5 rounded-full text-[10px] font-bold shadow-md flex items-center gap-1 hover:bg-blue-700 transition-colors active:scale-95">
-                        <i class="ph-bold ph-monitor-arrow-up"></i> PiP
-                    </button>
-                </div>
-
-                <div id="detail-content-wrapper" class="relative pb-24 px-2 pt-4">
-                    <div id="detail-content" class="origin-top-left transition-transform w-full bg-white shadow-lg rounded-xl overflow-hidden min-h-full"></div>
-                </div>
-
-                <div class="fixed bottom-[70px] w-full sm:w-[420px] bg-white/90 backdrop-blur border-t p-2 flex justify-center items-center space-x-6 z-20 shadow-[0_-5px_10px_rgba(0,0,0,0.05)]">
-                    <button onclick="adjustDetailZoom(-0.1)" class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-gray-100 active:bg-gray-200 text-gray-500">
-                        <i class="ph-bold ph-minus-circle text-2xl"></i>
-                    </button>
-
-                    <span id="detail-zoom-val" class="font-bold text-xs w-10 text-center text-gray-700">100%</span>
-
-                    <button onclick="adjustDetailZoom(0.1)" class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-gray-100 active:bg-gray-200 text-gray-500">
-                        <i class="ph-bold ph-plus-circle text-2xl"></i>
-                    </button>
-                </div>
-            </div>
         </main>
 
-        <!-- 하단 메뉴: 읽기 전용 -->
-        <nav class="absolute bottom-0 w-full bg-white border-t flex justify-center items-center py-3 safe-bottom z-30 shadow-[0_-5px_15px_rgba(0,0,0,0.03)]">
-            <button onclick="setView('list')" class="flex flex-col items-center text-blue-600 w-full group">
+        <nav class="absolute bottom-0 w-full bg-white border-t flex justify-center items-center pt-3 pb-[calc(env(safe-area-inset-bottom)+12px)] z-30 shadow-[0_-5px_15px_rgba(0,0,0,0.03)]">
+            <button onclick="closeDetailPanel(); setView('list')" class="flex flex-col items-center text-blue-600 w-full group">
                 <div class="p-1 group-hover:bg-blue-50 rounded-lg transition-colors flex flex-col items-center">
                     <i class="ph-fill ph-list-bullets text-2xl mb-1"></i>
                     <span class="text-[10px] font-bold">목록보기</span>
                 </div>
             </button>
         </nav>
+
+        <div id="detail-backdrop" onclick="closeDetailPanel()"></div>
+
+        <section id="detail-panel" aria-hidden="true">
+            <div class="bg-white border-b border-gray-200 px-3 py-2.5 flex justify-between items-center shadow-sm shrink-0">
+                <button onclick="closeDetailPanel()" class="w-9 h-9 flex items-center justify-center bg-gray-100 text-gray-600 rounded-full hover:bg-gray-200 transition-colors active:scale-95" title="상세보기 닫기">
+                    <i class="ph-bold ph-arrow-down text-lg"></i>
+                </button>
+
+                <span id="detail-title" class="font-bold text-sm truncate flex-1 text-center px-2 text-gray-800"></span>
+
+                <button onclick="switchToPip()" class="bg-blue-600 text-white px-3 py-1.5 rounded-full text-[10px] font-bold shadow-md flex items-center gap-1 hover:bg-blue-700 transition-colors active:scale-95">
+                    <i class="ph-bold ph-monitor-arrow-up"></i> PiP
+                </button>
+            </div>
+
+            <div id="detail-content-wrapper">
+                <div id="detail-content"></div>
+            </div>
+
+            <div class="bg-white/95 backdrop-blur border-t p-1.5 flex justify-center items-center space-x-6 shrink-0 shadow-[0_-5px_10px_rgba(0,0,0,0.05)]">
+                <button onclick="adjustDetailZoom(-0.1)" class="w-9 h-9 flex items-center justify-center rounded-full hover:bg-gray-100 active:bg-gray-200 text-gray-500">
+                    <i class="ph-bold ph-minus-circle text-2xl"></i>
+                </button>
+
+                <span id="detail-zoom-val" class="font-bold text-xs w-10 text-center text-gray-700">100%</span>
+
+                <button onclick="adjustDetailZoom(0.1)" class="w-9 h-9 flex items-center justify-center rounded-full hover:bg-gray-100 active:bg-gray-200 text-gray-500">
+                    <i class="ph-bold ph-plus-circle text-2xl"></i>
+                </button>
+            </div>
+        </section>
     </div>
 
-    <!-- PiP 외부창 -->
     <div id="pip-window" style="width: 450px; height: 700px; top: 5vh; left: calc(50vw + 220px);">
         <div class="pip-header p-3 flex justify-between items-center select-none bg-gradient-to-r from-gray-50 to-gray-100">
             <div class="flex items-center min-w-0">
@@ -213,12 +340,6 @@
     </div>
 
     <script>
-        /*
-          저장소 설정
-          - HTML 파일은 GitHub 저장소 루트에 직접 업로드
-          - index.html은 목록에서 제외
-          - 새 HTML 파일을 올리면 자동으로 목록에 표시됨
-        */
         const OWNER = "JongCheon-Kim";
         const REPO = "kimC-fishery-intelligence";
         const BRANCH = "main";
@@ -317,7 +438,6 @@
 
                 const mapped = await Promise.all(htmlFiles.map(async (file) => {
                     const commitDate = await fetchLastCommitDate(file.path);
-
                     const pageUrl = GITHUB_PAGES_BASE + encodeURIComponent(file.name).replace(/%20/g, "%20");
 
                     return {
@@ -500,12 +620,24 @@
 
             renderIframe("detail-content", item);
 
-            setView("detail");
-
             currentDetailZoom = 1;
             updateDetailZoom();
 
-            document.getElementById("view-detail").scrollTop = 0;
+            const panel = document.getElementById("detail-panel");
+            const backdrop = document.getElementById("detail-backdrop");
+
+            backdrop.classList.add("active");
+            panel.classList.add("active");
+            panel.setAttribute("aria-hidden", "false");
+        };
+
+        window.closeDetailPanel = () => {
+            const panel = document.getElementById("detail-panel");
+            const backdrop = document.getElementById("detail-backdrop");
+
+            panel.classList.remove("active");
+            backdrop.classList.remove("active");
+            panel.setAttribute("aria-hidden", "true");
         };
 
         window.adjustDetailZoom = (val) => {
@@ -525,8 +657,8 @@
         window.switchToPip = () => {
             if (currentActiveIndex === -1) return;
 
-            setView("list");
             openPip(currentActiveIndex);
+            closeDetailPanel();
         };
 
         window.openPip = (index) => {
@@ -544,10 +676,10 @@
             const isMobile = window.innerWidth <= 600;
 
             if (isMobile) {
-                pipWin.style.width = "90vw";
-                pipWin.style.height = "80vh";
-                pipWin.style.top = "10vh";
-                pipWin.style.left = "5vw";
+                pipWin.style.width = "92vw";
+                pipWin.style.height = "82svh";
+                pipWin.style.top = "9svh";
+                pipWin.style.left = "4vw";
                 pipWin.style.borderRadius = "16px";
             } else {
                 pipWin.style.width = "450px";
@@ -583,10 +715,10 @@
                 const isMobile = window.innerWidth <= 600;
 
                 if (isMobile) {
-                    pipWin.style.width = "90vw";
-                    pipWin.style.height = "80vh";
-                    pipWin.style.top = "10vh";
-                    pipWin.style.left = "5vw";
+                    pipWin.style.width = "92vw";
+                    pipWin.style.height = "82svh";
+                    pipWin.style.top = "9svh";
+                    pipWin.style.left = "4vw";
                 } else {
                     pipWin.style.width = "450px";
                     pipWin.style.height = "700px";
@@ -598,7 +730,7 @@
                 btn.innerHTML = '<i class="ph-bold ph-corners-out text-lg"></i>';
             } else {
                 pipWin.style.width = "100vw";
-                pipWin.style.height = "100vh";
+                pipWin.style.height = "100svh";
                 pipWin.style.top = "0";
                 pipWin.style.left = "0";
                 pipWin.style.borderRadius = "0";
@@ -626,21 +758,30 @@
             document.getElementById("pip-zoom-val").innerText = `${Math.round(currentPipZoom * 100)}%`;
         }
 
-        interact("#pip-window").draggable({
-            allowFrom: ".pip-header",
-            listeners: {
-                move(e) {
-                    if (isPipFull) return;
+        if (window.interact) {
+            interact("#pip-window").draggable({
+                allowFrom: ".pip-header",
+                listeners: {
+                    move(e) {
+                        if (isPipFull) return;
 
-                    const target = e.target;
+                        const target = e.target;
 
-                    const x = (parseFloat(target.getAttribute("data-x")) || 0) + e.dx;
-                    const y = (parseFloat(target.getAttribute("data-y")) || 0) + e.dy;
+                        const x = (parseFloat(target.getAttribute("data-x")) || 0) + e.dx;
+                        const y = (parseFloat(target.getAttribute("data-y")) || 0) + e.dy;
 
-                    target.style.transform = `translate(${x}px, ${y}px)`;
-                    target.setAttribute("data-x", x);
-                    target.setAttribute("data-y", y);
+                        target.style.transform = `translate(${x}px, ${y}px)`;
+                        target.setAttribute("data-x", x);
+                        target.setAttribute("data-y", y);
+                    }
                 }
+            });
+        }
+
+        document.addEventListener("keydown", (event) => {
+            if (event.key === "Escape") {
+                closeDetailPanel();
+                closePip();
             }
         });
 
