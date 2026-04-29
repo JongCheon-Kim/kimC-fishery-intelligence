@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>멸치 (Anchovy) 연구 보고서</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&family=Outfit:wght@300;400;600&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#f0f9ff',
+                            100: '#e0f2fe',
+                            200: '#bae6fd',
+                            300: '#7dd3fc',
+                            400: '#38bdf8',
+                            500: '#0ea5e9',
+                            600: '#0284c7',
+                            700: '#0369a1',
+                            800: '#075985',
+                            900: '#0c4a6e',
+                        },
+                        neutral: {
+                            background: '#f8fafc',
+                            text: '#1e293b',
+                            muted: '#64748b'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Noto Sans KR', 'sans-serif'],
+                        display: ['Outfit', 'Noto Sans KR', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #f8fafc;
+            color: #1e293b;
+            line-height: 1.8;
+            -webkit-font-smoothing: antialiased;
+        }
+        
+        .glass-card {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .section-divider {
+            height: 1px;
+            background: linear-gradient(to right, transparent, #cbd5e1, transparent);
+            margin: 3rem 0;
+        }
+
+        h1, h2, h3 {
+            font-family: 'Outfit', 'Noto Sans KR', sans-serif;
+            letter-spacing: -0.02em;
+        }
+
+        .academic-term {
+            font-size: 0.9em;
+            color: #64748b;
+            font-weight: 400;
+        }
+
+        .report-shadow {
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
+        }
+
+        /* Micro-animations */
+        .hover-lift {
+            transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        .hover-lift:hover {
+            transform: translateY(-4px);
+        }
+
+        @media (max-width: 640px) {
+            .container-padding {
+                padding-left: 1.5rem;
+                padding-right: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body class="font-sans">
+
+    <!-- Header Section -->
+    <header class="pt-16 pb-12 text-center container-padding">
+        <div class="inline-block px-4 py-1 mb-6 text-sm font-semibold tracking-wider text-brand-700 uppercase bg-brand-100 rounded-full">
+            Digital Research Report
+        </div>
+        <h1 class="text-6xl md:text-8xl font-black text-brand-900 mb-4 tracking-tighter">
+            멸치
+        </h1>
+        <p class="text-xl md:text-2xl text-neutral-muted font-light">
+            (Anchovy)에 관한 상세 연구 보고서
+        </p>
+    </header>
+
+    <!-- Visual Introduction Section -->
+    <section class="max-w-5xl mx-auto container-padding mb-20">
+        <div class="relative group">
+            <div class="absolute -inset-1 bg-gradient-to-r from-brand-400 to-brand-600 rounded-2xl blur opacity-20 group-hover:opacity-30 transition duration-1000 group-hover:duration-200"></div>
+            <div class="relative bg-white rounded-2xl overflow-hidden report-shadow flex justify-center p-6 md:p-12">
+                <div class="w-full h-auto max-w-3xl transform hover:scale-[1.02] transition-transform duration-500">
+                    <img src='https://opal.google/board/blobs/fbd7b8cf-00bc-46e7-845c-9d83f670cfd3' alt='멸치 워드클라우드' class="w-full h-auto object-contain" />
+                </div>
+            </div>
+            <div class="mt-4 text-center">
+                <span class="text-xs font-medium text-neutral-400 tracking-widest uppercase">Visual Abstract: Key Concepts Mapping</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Main Report Content -->
+    <main class="max-w-[800px] mx-auto container-padding pb-32">
+        <article class="prose prose-slate prose-lg max-w-none">
+            
+            <!-- Section 1 -->
+            <section class="mb-16">
+                <h2 class="text-3xl font-bold text-brand-800 mb-8 flex items-center">
+                    <span class="w-8 h-8 bg-brand-800 text-white rounded-lg flex items-center justify-center text-sm mr-4 shrink-0">01</span>
+                    멸치 <span class="academic-term ml-2">(Anchovy)</span>의 정의 및 역사적 배경
+                </h2>
+                <div class="bg-white p-8 rounded-2xl report-shadow border-l-4 border-brand-500">
+                    <p class="mb-4 text-neutral-text leading-relaxed">
+                        멸치 <span class="academic-term">(Anchovy)</span>는 전 세계적으로 광범위하게 소비되는 소형 해산물로, 과거에는 단순한 원물이나 사료용 어분 <span class="academic-term">(Fishmeal)</span>으로 소비되었으나 현재는 고부가가치 건강식품으로 재평가받고 있습니다.
+                    </p>
+                    <p class="text-neutral-text leading-relaxed">
+                        문헌에 따르면 고려시대나 조선 전기 이전에는 대량 어획 기록이 드물었으며, 조선 전기의 『세종실록 <span class="academic-term">(Sejong Sillok)</span>』 지리지 등에 '행어 <span class="academic-term">(Haengeo)</span>'라는 이름으로 일부 기록되어 있습니다. 19세기에 이르러 본격적인 다획성 어종으로 자리 잡았으며, 1803년 김려의 『우해이어보 <span class="academic-term">(Uhaeieobo)</span>』에서는 '멸아 <span class="academic-term">(Myeora)</span>'로, 1814년 정약전의 『자산어보 <span class="academic-term">(Jasan Eobo)</span>』에서는 '추어 <span class="academic-term">(Chueo)</span>' 혹은 '멸어 <span class="academic-term">(Myeoreo)</span>'로 명명되었습니다. 
+                    </p>
+                    <p class="mt-4 italic text-neutral-500 border-t border-slate-100 pt-4">
+                        * 조선 말기에는 대량 어획된 멸치를 반찬으로 소비하거나 부패한 멸치를 농밭의 거름 <span class="academic-term">(Fertilizer)</span>으로 활용하기도 하였습니다.
+                    </p>
+                </div>
+            </section>
+
+            <!-- Section 2 -->
+            <section class="mb-16">
+                <h2 class="text-3xl font-bold text-brand-800 mb-8 flex items-center">
+                    <span class="w-8 h-8 bg-brand-800 text-white rounded-lg flex items-center justify-center text-sm mr-4 shrink-0">02</span>
+                    생태적 특성 및 어획 시기
+                </h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                    <div class="glass-card p-6 rounded-xl hover-lift border-t-2 border-brand-300">
+                        <h3 class="text-xl font-bold text-brand-700 mb-3">봄 멸치 <span class="academic-term">(Spring Anchovy)</span></h3>
+                        <p class="text-sm text-neutral-text">2월~6월 거제, 기장 연해 어획. 살이 통통하여 횟감이나 액젓 <span class="academic-term">(Fish Sauce)</span> 생산에 주로 활용됩니다.</p>
+                    </div>
+                    <div class="glass-card p-6 rounded-xl hover-lift border-t-2 border-brand-300">
+                        <h3 class="text-xl font-bold text-brand-700 mb-3">가을 멸치 <span class="academic-term">(Autumn Anchovy)</span></h3>
+                        <p class="text-sm text-neutral-text">9월~10월 통영 지방 집중 어획. 건더기가 온전한 육젓 제조에 최적화되어 있습니다.</p>
+                    </div>
+                </div>
+                <div class="bg-brand-50 p-6 rounded-xl border border-brand-100">
+                    <p class="text-sm font-medium text-brand-900 mb-2 underline decoration-brand-300 underline-offset-4">💡 상등품 선별 가이드</p>
+                    <p class="text-sm text-brand-800">은빛이 반짝이고 등이 미색을 띠며 비늘이 보존된 것. 건조 멸치는 눈이 맑고 구수한 감칠맛 <span class="academic-term">(Umami)</span>이 나는 것을 추천합니다.</p>
+                </div>
+            </section>
+
+            <!-- Section 3 -->
+            <section class="mb-16">
+                <h2 class="text-3xl font-bold text-brand-800 mb-8 flex items-center">
+                    <span class="w-8 h-8 bg-brand-800 text-white rounded-lg flex items-center justify-center text-sm mr-4 shrink-0">03</span>
+                    영양학적 가치 및 건강 효능
+                </h2>
+                <div class="space-y-4">
+                    <div class="flex items-start p-4 bg-white rounded-xl report-shadow">
+                        <div class="p-3 bg-brand-100 rounded-lg mr-4 text-brand-600 font-bold">01</div>
+                        <div>
+                            <h4 class="font-bold text-neutral-text">골격 건강 <span class="academic-term">(Bone Health)</span></h4>
+                            <p class="text-sm text-neutral-muted">우유 10배 이상의 칼슘 <span class="academic-term">(Calcium)</span> 함유. 골다공증 <span class="academic-term">(Osteoporosis)</span> 예방에 탁월합니다.</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start p-4 bg-white rounded-xl report-shadow">
+                        <div class="p-3 bg-brand-100 rounded-lg mr-4 text-brand-600 font-bold">02</div>
+                        <div>
+                            <h4 class="font-bold text-neutral-text">심혈관 및 뇌 건강 <span class="academic-term">(Cardiovascular and Brain Health)</span></h4>
+                            <p class="text-sm text-neutral-muted">오메가-3, EPA, DHA 함유로 중성지방 수치를 낮추고 치매 예방에 기여합니다.</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start p-4 bg-white rounded-xl report-shadow">
+                        <div class="p-3 bg-brand-100 rounded-lg mr-4 text-brand-600 font-bold">03</div>
+                        <div>
+                            <h4 class="font-bold text-neutral-text">조혈 작용 및 면역력 <span class="academic-term">(Hematopoiesis and Immunity)</span></h4>
+                            <p class="text-sm text-neutral-muted">철분, 엽산, 비타민 B12가 풍부하여 빈혈을 예방하고 염증 억제에 효과적입니다.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-6 p-4 bg-red-50 rounded-xl border border-red-100">
+                    <p class="text-xs text-red-800">⚠️ <strong>섭취 주의:</strong> 퓨린 <span class="academic-term">(Purine)</span> 성분으로 인해 통풍 <span class="academic-term">(Gout)</span> 환자는 섭취에 유의가 필요합니다.</p>
+                </div>
+            </section>
+
+            <!-- Section 4 -->
+            <section class="mb-16">
+                <h2 class="text-3xl font-bold text-brand-800 mb-8 flex items-center">
+                    <span class="w-8 h-8 bg-brand-800 text-white rounded-lg flex items-center justify-center text-sm mr-4 shrink-0">04</span>
+                    가공 및 보존 방법
+                </h2>
+                <div class="grid grid-cols-1 gap-4">
+                    <div class="p-6 bg-white rounded-2xl report-shadow border border-slate-100">
+                        <h4 class="font-bold mb-3 flex items-center">
+                            <span class="w-2 h-2 bg-brand-400 rounded-full mr-2"></span> 제품 고도화 및 다변화
+                        </h4>
+                        <p class="text-sm text-neutral-text">통조림, 멸치장, 페이스트 등 <span class="academic-term">Ready-to-Eat (RTE)</span> 및 가정간편식 <span class="academic-term">(HMR)</span> 제품군으로 시장이 확장되고 있습니다.</p>
+                    </div>
+                    <div class="p-6 bg-white rounded-2xl report-shadow border border-slate-100">
+                        <h4 class="font-bold mb-3 flex items-center">
+                            <span class="w-2 h-2 bg-brand-400 rounded-full mr-2"></span> 비린내 제어 및 소비자 친화 가공
+                        </h4>
+                        <p class="text-sm text-neutral-text">'멸치 스낵'이나 '멸치 가루 <span class="academic-term">(Flavor Base)</span>' 형태의 조리 솔루션은 어린이와 해외 소비자의 거부감을 최소화합니다.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Section 5 -->
+            <section class="mb-16">
+                <h2 class="text-3xl font-bold text-brand-800 mb-8 flex items-center">
+                    <span class="w-8 h-8 bg-brand-800 text-white rounded-lg flex items-center justify-center text-sm mr-4 shrink-0">05</span>
+                    경제적 중요성 및 글로벌 시장 동향
+                </h2>
+                <div class="bg-neutral-900 text-white p-8 rounded-3xl overflow-hidden relative mb-8">
+                    <div class="absolute top-0 right-0 w-32 h-32 bg-brand-500 blur-3xl opacity-20 translate-x-1/2 -translate-y-1/2"></div>
+                    <div class="relative z-10">
+                        <div class="flex justify-between items-end mb-8">
+                            <div>
+                                <p class="text-brand-300 text-sm font-bold tracking-widest">EXPECTED MARKET SIZE</p>
+                                <p class="text-4xl font-black mt-1">$3.5 Billion <span class="text-lg font-light text-slate-400">by 2032</span></p>
+                            </div>
+                            <div class="text-right">
+                                <p class="text-brand-300 text-sm font-bold tracking-widest">CAGR</p>
+                                <p class="text-2xl font-bold">2.94%</p>
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-sm">
+                            <div class="border-t border-slate-700 pt-4">
+                                <span class="block text-brand-400 mb-1 font-bold">APAC</span>
+                                글로벌 수익의 40% 이상을 차지하는 최대 캐시카우.
+                            </div>
+                            <div class="border-t border-slate-700 pt-4">
+                                <span class="block text-brand-400 mb-1 font-bold">Sustainability</span>
+                                IMTA 양식 및 ESG 기반 이력 추적제 도입 필수.
+                            </div>
+                            <div class="border-t border-slate-700 pt-4">
+                                <span class="block text-brand-400 mb-1 font-bold">Blue Carbon</span>
+                                해양 자원 가치를 연계한 프리미엄 브랜드 전략.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Section 6 -->
+            <section class="mb-20">
+                <h2 class="text-3xl font-bold text-brand-800 mb-8 flex items-center">
+                    <span class="w-8 h-8 bg-brand-800 text-white rounded-lg flex items-center justify-center text-sm mr-4 shrink-0">06</span>
+                    결론 및 제언
+                </h2>
+                <div class="bg-gradient-to-br from-brand-800 to-brand-900 text-white p-10 rounded-2xl shadow-2xl relative overflow-hidden">
+                    <p class="text-lg font-light leading-relaxed mb-6 opacity-90">
+                        멸치 산업은 단순한 어업을 넘어선 <span class="font-bold underline decoration-brand-400">가치 사슬 (Value Chain)의 재편기</span>를 맞이하고 있습니다. 향후 글로벌 시장 선점을 위해 바이오 헬스케어 소재화 및 크로스 인더스트리 기술 이전이 필수적입니다.
+                    </p>
+                    <p class="text-lg font-light leading-relaxed opacity-90">
+                        특히 한국의 독창적인 식문화와 멸치의 감칠맛을 결합한 <span class="font-bold text-brand-300">K-Seafood 솔루션</span>은 글로벌 푸드테크 생태계를 주도할 강력한 무기가 될 것입니다.
+                    </p>
+                </div>
+            </section>
+
+            <div class="section-divider"></div>
+
+            <!-- Report Meta Information (Footer) -->
+            <div class="bg-slate-50 border border-slate-200 rounded-2xl p-8 mt-12">
+                <div class="flex flex-col md:flex-row md:justify-between mb-8 pb-8 border-b border-slate-200">
+                    <div>
+                        <p class="text-xs font-bold text-slate-400 mb-1 uppercase tracking-widest">Issuing Institution</p>
+                        <p class="text-xl font-bold text-slate-800">한국AI어촌가치 연구소</p>
+                    </div>
+                    <div class="mt-4 md:mt-0 md:text-right">
+                        <p class="text-xs font-bold text-slate-400 mb-1 uppercase tracking-widest">Report Date</p>
+                        <p class="text-lg text-slate-600">2024. 05. 23</p>
+                    </div>
+                </div>
+
+                <div class="references">
+                    <h4 class="text-sm font-bold text-brand-800 mb-4 flex items-center">
+                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
+                        참고문헌
+                    </h4>
+                    <p class="text-xs text-slate-500 mb-4 italic">참고문헌은 저자, 자료이름, 기관 순으로 표시합니다.</p>
+                    <ul class="space-y-2">
+                        <li class="text-xs text-slate-600 leading-relaxed">1. 작자 미상, 2032 글로벌 멸치 시장 전략 보고서, 미상</li>
+                        <li class="text-xs text-slate-600 leading-relaxed">2. 작자 미상, 글로벌 멸치 수산 시장 규모 및 전망, 미상</li>
+                        <li class="text-xs text-slate-600 leading-relaxed">3. 작자 미상, 2032 글로벌 해산물 시장 주도를 위한 고부가가치 전략, 미상</li>
+                        <li class="text-xs text-slate-600 leading-relaxed">4. 작자 미상, 멸치의 제철과 좋은 멸치 고르는 법, 미상</li>
+                        <li class="text-xs text-slate-600 leading-relaxed">5. 백종원·레이먼 킴, 아이들을 위한 멸치 요리 레시피 및 활용법, 미상</li>
+                        <li class="text-xs text-slate-600 leading-relaxed">6. 작자 미상, 멸치의 주요 영양소 및 주요 약효, 미상</li>
+                        <li class="text-xs text-slate-600 leading-relaxed">7. 김려, 우해이어보, 미상 (조선시대 문헌)</li>
+                        <li class="text-xs text-slate-600 leading-relaxed">8. 정약전, 자산어보, 미상 (조선시대 문헌)</li>
+                        <li class="text-xs text-slate-600 leading-relaxed">9. 이규경, 오주연문장전산고, 미상 (조선시대 문헌)</li>
+                        <li class="text-xs text-slate-600 leading-relaxed">10. 서유구, 난호어목지, 미상 (조선시대 문헌)</li>
+                        <li class="text-xs text-slate-600 leading-relaxed">11. 전남연구원(JNI), 해조류 열수 추출 및 표준화 공정 모델, 전남연구원(JNI)</li>
+                    </ul>
+                </div>
+            </div>
+        </article>
+    </main>
+
+    <!-- Custom scroll progress bar -->
+    <div class="fixed top-0 left-0 w-full h-1 bg-slate-200 z-50">
+        <div id="scroll-progress" class="h-full bg-brand-500 w-0 transition-all duration-100"></div>
+    </div>
+
+    <script>
+        window.onscroll = function() {
+            const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrolled = (winScroll / height) * 100;
+            document.getElementById("scroll-progress").style.width = scrolled + "%";
+        };
+    </script>
+</body>
+</html>
