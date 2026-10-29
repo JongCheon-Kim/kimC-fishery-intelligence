@@ -1,0 +1,700 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>수산물 위생·안전관리의 이해 - 강의 및 실무 가이드</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Chosen Palette: Warm Sand & Slate Harmony (Warm Beige #fbf9f5 background, Slate Blue #1e293b primary, Terracotta #c2410c accent, Sage Green #047857 secondary) -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        warmbg: '#fbf9f5',
+                        cardbg: '#ffffff',
+                        slateprimary: '#1e293b',
+                        accentorange: '#c2410c',
+                        sagegreen: '#047857',
+                        sandborder: '#e2e8f0',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #fbf9f5;
+            color: #1e293b;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 650px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 320px;
+            max-height: 400px;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 360px;
+            }
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between">
+
+    <!-- Application Structure Plan:
+         1. Header & Quick Metrics Bar: Key metrics at a glance (PLS limit, Radiation standards, Mandatory origin items count, Max penalty).
+         2. Navigation Bar: Smooth scroll to major modules.
+         3. Module 1: Legal & PLS Framework - Interactive dual-regulatory structure toggle (NFQS vs MFDS) & PLS drug simulator.
+         4. Module 2: NFQS Governance & Radiation/Origin - Chart.js comparison of radiation safety limits & interactive origin species lookup.
+         5. Module 3: HACCP & CCP Technical Mechanisms - Farm vs Processing HACCP matrix & Chart.js Histamine growth/temperature curve simulator.
+         6. Module 4: Inspection Violation Cases & Legal Penalties - Interactive tabbed viewer for 4 major violation categories and court cases.
+         7. Module 5: Training Curriculum & Field Manager Compliance Score Calculator - Interactive checklist for managers to test their facility's compliance rate.
+    -->
+
+    <!-- Visualization & Content Choices:
+         - Chart 1: Bar chart comparing Codex vs Korea vs Korea Infant Cs-137 radiation limits (Chart.js canvas). Highlighting 10x stricter Korean policy.
+         - Chart 2: Line chart showing Histamine generation speed (mg/kg) vs Storage Temperature over time (Chart.js canvas). Demonstrates cold-chain critical limit necessity.
+         - Interactive Search: Filterable list of 20 mandatory origin-marked seafood species.
+         - Interactive Compliance Checklist: Live score computation in JS for field managers.
+         - CONFIRMATION: NO SVG graphics used (Emoji/Unicode icons used). NO Mermaid JS used.
+    -->
+
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <!-- Chosen Palette: Warm Sand & Slate Harmony -->
+
+    <!-- Top Header -->
+    <header class="bg-slateprimary text-white sticky top-0 z-50 shadow-md">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex flex-col md:flex-row justify-between items-center">
+            <div class="flex items-center space-x-3 mb-2 md:mb-0">
+                <span class="text-3xl">🐟</span>
+                <div>
+                    <h1 class="text-xl font-bold tracking-tight">수산물 위생·안전관리의 이해</h1>
+                    <p class="text-xs text-slate-300">어촌뉴딜 특강 · 법적 규제 · 국립수산물품질관리원 · HACCP · PLS 실무 가이드</p>
+                </div>
+            </div>
+            <nav class="flex flex-wrap gap-2 text-xs md:text-sm">
+                <a href="#section-legal" class="px-3 py-1.5 rounded hover:bg-slate-700 transition">법률 & PLS</a>
+                <a href="#section-nfqs" class="px-3 py-1.5 rounded hover:bg-slate-700 transition">수품원 & 방사능</a>
+                <a href="#section-haccp" class="px-3 py-1.5 rounded hover:bg-slate-700 transition">HACCP & CCP</a>
+                <a href="#section-cases" class="px-3 py-1.5 rounded hover:bg-slate-700 transition">위반 사례</a>
+                <a href="#section-checklist" class="px-3 py-1.5 rounded hover:bg-slate-700 transition">현장 점검표</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Key Metrics Highlight Bar -->
+    <section class="bg-amber-50 border-b border-amber-200 py-3">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
+            <div class="p-2 border-r border-amber-200 last:border-r-0">
+                <span class="text-xs text-amber-800 font-medium block">동물용의약품 PLS 일률기준</span>
+                <span class="text-lg font-bold text-accentorange">0.01 mg/kg</span>
+                <span class="text-[10px] text-gray-500 block">미등록 약제 일률 적용</span>
+            </div>
+            <div class="p-2 border-r border-amber-200 last:border-r-0">
+                <span class="text-xs text-amber-800 font-medium block">국내 방사성 세슘 기준</span>
+                <span class="text-lg font-bold text-sagegreen">100 Bq/kg 이하</span>
+                <span class="text-[10px] text-gray-500 block">Codex 대비 10배 강화</span>
+            </div>
+            <div class="p-2 border-r border-amber-200 last:border-r-0">
+                <span class="text-xs text-amber-800 font-medium block">음식점 원산지 의무표시</span>
+                <span class="text-lg font-bold text-slateprimary">20개 품목</span>
+                <span class="text-[10px] text-gray-500 block">가리비, 방어, 멍게 등 포함</span>
+            </div>
+            <div class="p-2">
+                <span class="text-xs text-amber-800 font-medium block">원산지 거짓표시 최고 형벌</span>
+                <span class="text-lg font-bold text-red-700">7년 이하 / 1억원 이하</span>
+                <span class="text-[10px] text-gray-500 block">징역 및 벌금 병과 가능</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Main Content Container -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-12 flex-grow">
+
+        <!-- SECTION 1: LEGAL & PLS FRAMEWORK -->
+        <section id="section-legal" class="bg-cardbg rounded-xl p-6 shadow-sm border border-sandborder">
+            <div class="border-b pb-4 mb-6">
+                <span class="text-xs font-bold text-accentorange uppercase tracking-wider">Module 01</span>
+                <h2 class="text-2xl font-bold text-slateprimary">1. 수산물 위생·안전관리 법적 기반 및 PLS 규제</h2>
+                <p class="text-sm text-gray-600 mt-1">
+                    수산물 안전관리는 생산·출하 전 단계(해양수산부)와 가공·유통·소비 단계(식품의약품안전처)로 이원화되어 있습니다. 본 단원에서는 각 법률의 적용 영역과 2024년 전면 도입된 동물용의약품 PLS(허용물질목록관리제도)의 주요 핵심을 학습합니다.
+                </p>
+            </div>
+
+            <!-- Dual Legal System Toggle & Comparison -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                <div class="bg-slate-50 p-5 rounded-lg border border-slate-200">
+                    <div class="flex items-center space-x-2 mb-3">
+                        <span class="text-2xl">⚓</span>
+                        <h3 class="font-bold text-lg text-slateprimary">생산 및 출하 전 단계 (해양수산부)</h3>
+                    </div>
+                    <ul class="text-sm space-y-2 text-gray-700">
+                        <li><strong>근거 법률:</strong> 농수산물 품질관리법 (제61조, 제62조 등)</li>
+                        <li><strong>주관 기관:</strong> 국립수산물품질관리원 (NFQS)</li>
+                        <li><strong>관할 영역:</strong> 연근해 어장, 양식장, 산지 위판장, 지정해역</li>
+                        <li><strong>주요 조치:</strong> 생산단계 안전성 조사, 출하연기, 용도전환, 현장 폐기 명령</li>
+                    </ul>
+                </div>
+                <div class="bg-amber-50/50 p-5 rounded-lg border border-amber-200">
+                    <div class="flex items-center space-x-2 mb-3">
+                        <span class="text-2xl">🏬</span>
+                        <h3 class="font-bold text-lg text-slateprimary">가공·유통 및 소비 단계 (식품의약품안전처)</h3>
+                    </div>
+                    <ul class="text-sm space-y-2 text-gray-700">
+                        <li><strong>근거 법률:</strong> 식품위생법 (제7조, 제48조, 제72조 등)</li>
+                        <li><strong>주관 기관:</strong> 식약처 및 각 지방자치단체 (시·군·구)</li>
+                        <li><strong>관할 영역:</strong> 유통 물류센터, 가공공장, 전통시장, 음식점</li>
+                        <li><strong>주요 조치:</strong> 유통 수거검사, 가공식품 HACCP 인증, 영업정지 및 폐쇄</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- PLS Drug Interactive Tool -->
+            <div class="bg-orange-50 border border-orange-200 rounded-lg p-5">
+                <h3 class="font-bold text-orange-900 text-lg mb-2 flex items-center gap-2">
+                    <span>💊</span> 2024 전면 시행: 동물용의약품 PLS (Positive List System) 시뮬레이터
+                </h3>
+                <p class="text-xs text-orange-800 mb-4">
+                    국내 허가되어 정량 기준이 고시된 약제 이외에는 **예외 없이 0.01 mg/kg 일률기준**이 적용됩니다. 아래 선택창에서 약품 유형을 선택하여 법적 규제 적용 결과를 확인하세요.
+                </p>
+                <div class="flex flex-col sm:flex-row gap-4 items-center mb-4">
+                    <label for="pls-select" class="text-sm font-semibold text-gray-700 whitespace-nowrap">투약 약품 선택:</label>
+                    <select id="pls-select" onchange="updatePLSInfo()" class="w-full sm:w-auto flex-1 bg-white border border-gray-300 rounded-md px-3 py-2 text-sm focus:ring-2 focus:ring-accentorange focus:outline-none">
+                        <option value="approved">어종별 승인 항균제 (예: 옥시테트라사이클린 - 휴약기간 준수)</option>
+                        <option value="unapproved">미등록 / 다른 어종용 축산용 항생제 (예: 허가 기준 없음)</option>
+                        <option value="banned">사용 전면 금지 물질 (예: 말라카이트 그린)</option>
+                    </select>
+                </div>
+                <div id="pls-result" class="p-4 rounded-md bg-white border border-orange-300 text-sm">
+                    <!-- Dynamic Content inserted via JS -->
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 2: NFQS & GOVERNANCE & RADIATION/ORIGIN -->
+        <section id="section-nfqs" class="bg-cardbg rounded-xl p-6 shadow-sm border border-sandborder">
+            <div class="border-b pb-4 mb-6">
+                <span class="text-xs font-bold text-sagegreen uppercase tracking-wider">Module 02</span>
+                <h2 class="text-2xl font-bold text-slateprimary">2. 국립수산물품질관리원(NFQS) 거버넌스 & 방사능·원산지 관리</h2>
+                <p class="text-sm text-gray-600 mt-1">
+                    국립수산물품질관리원은 수산물 안전성 조사, 방사능 핵종 정밀 분석, 원산지 표시 단속 등 국가 수산물 안전 컨트롤타워 역할을 수행합니다.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start mb-8">
+                <!-- Radiation Safety Section & Chart -->
+                <div>
+                    <h3 class="font-bold text-slateprimary text-base mb-2 flex items-center gap-2">
+                        <span>☢️</span> 방사능 정밀 분석 및 대국민 기준 (Cs-137 기준)
+                    </h3>
+                    <p class="text-xs text-gray-600 mb-4">
+                        한국은 고순도 게르마늄 검출기(HPGe)를 활용하여 정밀 검사를 수행하며, 국제식품규격(Codex) 대비 10배 엄격한 기준을 적용합니다.
+                    </p>
+                    <div class="chart-container bg-slate-50 p-2 rounded-lg border border-slate-200">
+                        <canvas id="radiationChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Origin Inspection & Species Lookup -->
+                <div>
+                    <h3 class="font-bold text-slateprimary text-base mb-2 flex items-center gap-2">
+                        <span>🔍</span> 음식점 원산지 의무표시 20개 품목 검색기
+                    </h3>
+                    <p class="text-xs text-gray-600 mb-3">
+                        소비량이 많거나 수입산과 외형 구별이 어려운 20개 주요 어종 및 수족관 활어는 원산지 표시가 의무화되어 있습니다.
+                    </p>
+                    <input type="text" id="origin-search" onkeyup="filterOriginSpecies()" placeholder="어종 이름 검색 (예: 가리비, 멍게, 방어...)" class="w-full border border-gray-300 rounded-md px-3 py-2 text-sm mb-3 focus:ring-2 focus:ring-sagegreen focus:outline-none">
+                    <div id="origin-species-list" class="grid grid-cols-2 sm:grid-cols-3 gap-2 max-h-60 overflow-y-auto p-2 bg-slate-50 rounded border border-slate-200 text-xs">
+                        <!-- Dynamic species chips via JS -->
+                    </div>
+                    <div class="mt-3 text-[11px] text-gray-500 bg-amber-50 p-2.5 rounded border border-amber-200">
+                        ⚠️ <strong>수족관 관리 수칙:</strong> 보관·진열되는 모든 살아있는 수산물은 어종을 불문하고 원산지 표지판을 부착해야 하며, 수입산과 국내산 어종의 혼합 보관은 금지됩니다.
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 3: HACCP & CCP TECHNICAL MECHANISMS -->
+        <section id="section-haccp" class="bg-cardbg rounded-xl p-6 shadow-sm border border-sandborder">
+            <div class="border-b pb-4 mb-6">
+                <span class="text-xs font-bold text-slateprimary uppercase tracking-wider">Module 03</span>
+                <h2 class="text-2xl font-bold text-slateprimary">3. 수산 분야 HACCP 메커니즘 & 중요관리점(CCP)</h2>
+                <p class="text-sm text-gray-600 mt-1">
+                    HACCP은 위해요소를 사전에 도출하고 결정적 제어 단계인 중요관리점(CCP)을 과학적 한계기준(CL)에 맞춰 통제하는 예방 위생 시스템입니다.
+                </p>
+            </div>
+
+            <!-- Farm vs Processing HACCP Tab -->
+            <div class="mb-8">
+                <div class="flex border-b border-gray-200 mb-4">
+                    <button onclick="switchHACCPTab('farm')" id="tab-btn-farm" class="py-2 px-4 text-sm font-bold text-accentorange border-b-2 border-accentorange focus:outline-none">양식장 HACCP (해수부)</button>
+                    <button onclick="switchHACCPTab('process')" id="tab-btn-process" class="py-2 px-4 text-sm font-bold text-gray-500 hover:text-slateprimary border-b-2 border-transparent focus:outline-none">식품가공 HACCP (식약처)</button>
+                </div>
+
+                <div id="haccp-farm-content" class="bg-slate-50 p-4 rounded-lg border border-slate-200 text-sm space-y-2">
+                    <h4 class="font-bold text-slateprimary">🌾 생산단계: 양식장 HACCP 특징</h4>
+                    <p class="text-gray-700">· <strong>관할 법령:</strong> 농수산물 품질관리법 제70조 (해양수산부 국립수산물품질관리원 인증)</p>
+                    <p class="text-gray-700">· <strong>신청 성격:</strong> 어업인의 자율적 등록 신청 (임의인증)</p>
+                    <p class="text-gray-700">· <strong>핵심 통제 요소:</strong> 양식용수 품질, 용수 유입·배수 구획, 사료 및 약품 관리(휴약기간 100% 준수), 입식-출하 관리이력 작성</p>
+                </div>
+
+                <div id="haccp-process-content" class="hidden bg-amber-50/60 p-4 rounded-lg border border-amber-200 text-sm space-y-2">
+                    <h4 class="font-bold text-slateprimary">🏭 가공·유통단계: 식품가공 HACCP 특징</h4>
+                    <p class="text-gray-700">· <strong>관할 법령:</strong> 식품위생법 제48조 (식품의약품안전처 한국식품안전관리인증원)</p>
+                    <p class="text-gray-700">· <strong>신청 성격:</strong> 어묵류, 냉동수산식품 등 품목/매출 규모에 따라 법적 의무 적용</p>
+                    <p class="text-gray-700">· <strong>핵심 통제 요소:</strong> 가열 중심온도, 냉동 사멸 온도, 금속검출기 감도, 보관 품온 및 히스타민 통제</p>
+                </div>
+            </div>
+
+            <!-- CCP Matrix Table -->
+            <h3 class="font-bold text-slateprimary text-base mb-3">📋 수산물 5대 핵심 중요관리점(CCP) 및 과학적 한계기준(CL)</h3>
+            <div class="overflow-x-auto mb-8">
+                <table class="w-full text-left text-xs text-gray-700 border-collapse border border-gray-200">
+                    <thead class="bg-slate-100 text-slateprimary uppercase text-[11px] font-bold">
+                        <tr>
+                            <th class="p-3 border border-gray-200">공정 및 대상</th>
+                            <th class="p-3 border border-gray-200">핵심 제어 위해요소</th>
+                            <th class="p-3 border border-gray-200">CCP 번호</th>
+                            <th class="p-3 border border-gray-200">과학적 한계기준 (Critical Limits)</th>
+                            <th class="p-3 border border-gray-200">모니터링 & 검증</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-200">
+                        <tr class="hover:bg-slate-50">
+                            <td class="p-3 border border-gray-200 font-semibold">양식장 약제 투여</td>
+                            <td class="p-3 border border-gray-200">동물용의약품 잔류 (화학적)</td>
+                            <td class="p-3 border border-gray-200 font-bold text-accentorange">CCP-1BC</td>
+                            <td class="p-3 border border-gray-200">승인 약제만 투약, 어종별 법적 휴약기간 100% 충족, PLS 0.01mg/kg 이하</td>
+                            <td class="p-3 border border-gray-200">투약일지 전산 상시 기록, 출하 전 어체 정밀분석</td>
+                        </tr>
+                        <tr class="hover:bg-slate-50">
+                            <td class="p-3 border border-gray-200 font-semibold">선어회 / 횟감 냉동</td>
+                            <td class="p-3 border border-gray-200">아니사키스 기생충 (생물학적)</td>
+                            <td class="p-3 border border-gray-200 font-bold text-accentorange">CCP-1B</td>
+                            <td class="p-3 border border-gray-200">어체 중심온도 -20℃ 이하 7일 이상 또는 -35℃ 이하 15시간 동결</td>
+                            <td class="p-3 border border-gray-200">동결고 센서 연속 온도 기록계 모니터링</td>
+                        </tr>
+                        <tr class="hover:bg-slate-50">
+                            <td class="p-3 border border-gray-200 font-semibold">어묵류 가열 공정</td>
+                            <td class="p-3 border border-gray-200">병원성 비브리오·살모넬라 (생물학적)</td>
+                            <td class="p-3 border border-gray-200 font-bold text-accentorange">CCP-1B</td>
+                            <td class="p-3 border border-gray-200">제품 중심온도 74℃ 이상 도달 후 최소 15초 이상 유지</td>
+                            <td class="p-3 border border-gray-200">배치별 중심온도 프로브 측정 및 타코메타 계측</td>
+                        </tr>
+                        <tr class="hover:bg-slate-50">
+                            <td class="p-3 border border-gray-200 font-semibold">다랑어 해동·보관</td>
+                            <td class="p-3 border border-gray-200">히스타민 생성균 (화학적)</td>
+                            <td class="p-3 border border-gray-200 font-bold text-accentorange">CCP-1C</td>
+                            <td class="p-3 border border-gray-200">어체 중심품온 4.4℃ 이하 유지, 완제품 히스타민 200mg/kg 이하</td>
+                            <td class="p-3 border border-gray-200">품온 주기적 타겟 측정, HPLC 이화학 정량분석</td>
+                        </tr>
+                        <tr class="hover:bg-slate-50">
+                            <td class="p-3 border border-gray-200 font-semibold">포장 라인 이물통제</td>
+                            <td class="p-3 border border-gray-200">가공설비 파손 금지 조각 (물리적)</td>
+                            <td class="p-3 border border-gray-200 font-bold text-accentorange">CCP-1P</td>
+                            <td class="p-3 border border-gray-200">Fe 1.5mm, SUS 2.0mm 이상 금속 이물 전량 불검출 및 자동 배출</td>
+                            <td class="p-3 border border-gray-200">표준 시편 가동 전/중(2시간)/후 감도 테스트</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Histamine Simulation Chart Section -->
+            <div class="bg-slate-50 p-4 rounded-lg border border-slate-200">
+                <h3 class="font-bold text-slateprimary text-base mb-2 flex items-center gap-2">
+                    <span>🌡️</span> 히스타민(Histamine) 생성 및 보관 온도 실물 영향 시뮬레이션
+                </h3>
+                <p class="text-xs text-gray-600 mb-4">
+                    붉은 살 어류(고등어, 참치 등)는 온도 이탈 시 유해 독소인 히스타민이 생성되며, 가열 조리로도 파괴되지 않습니다. 보관 온도별 히스타민 축적속도를 비교하세요.
+                </p>
+                <div class="chart-container">
+                    <canvas id="histamineChart"></canvas>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 4: VIOLATION CASES & LEGAL PENALTIES -->
+        <section id="section-cases" class="bg-cardbg rounded-xl p-6 shadow-sm border border-sandborder">
+            <div class="border-b pb-4 mb-6">
+                <span class="text-xs font-bold text-red-600 uppercase tracking-wider">Module 04</span>
+                <h2 class="text-2xl font-bold text-slateprimary">4. 수산물 위생·안전 위반 적발 사례 및 판례 분석</h2>
+                <p class="text-sm text-gray-600 mt-1">
+                    현장에서 빈발하는 주요 위반 유형(생물학적 패독, PLS 불합격, 원산지 위장, 콜드체인 파탄)의 법적 제재 수준과 사법 판례를 확인합니다.
+                </p>
+            </div>
+
+            <!-- Interactive Tabbed Case Viewer -->
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-3 mb-6">
+                <button onclick="showCaseDetail('biotoxin')" id="case-btn-biotoxin" class="p-3 rounded-lg border border-red-300 bg-red-50 text-red-900 font-bold text-xs text-left hover:bg-red-100 transition focus:outline-none">
+                    🦠 패류독소 & 비브리오
+                </button>
+                <button onclick="showCaseDetail('chemical')" id="case-btn-chemical" class="p-3 rounded-lg border border-gray-200 bg-gray-50 text-gray-700 font-bold text-xs text-left hover:bg-red-50 transition focus:outline-none">
+                    🧪 약물잔류 & PLS 위반
+                </button>
+                <button onclick="showCaseDetail('origin')" id="case-btn-origin" class="p-3 rounded-lg border border-gray-200 bg-gray-50 text-gray-700 font-bold text-xs text-left hover:bg-red-50 transition focus:outline-none">
+                    ⚖️ 원산지 거짓표시
+                </button>
+                <button onclick="showCaseDetail('coldchain')" id="case-btn-coldchain" class="p-3 rounded-lg border border-gray-200 bg-gray-50 text-gray-700 font-bold text-xs text-left hover:bg-red-50 transition focus:outline-none">
+                    🧊 콜드체인 & 히스타민
+                </button>
+            </div>
+
+            <!-- Dynamic Case Detail Display Box -->
+            <div id="case-detail-box" class="bg-slate-50 p-5 rounded-lg border border-slate-200 text-sm">
+                <!-- Injected via JS -->
+            </div>
+        </section>
+
+        <!-- SECTION 5: TRAINING & FIELD COMPLIANCE CHECKLIST -->
+        <section id="section-checklist" class="bg-cardbg rounded-xl p-6 shadow-sm border border-sandborder">
+            <div class="border-b pb-4 mb-6">
+                <span class="text-xs font-bold text-sagegreen uppercase tracking-wider">Module 05</span>
+                <h2 class="text-2xl font-bold text-slateprimary">5. 현장 위생관리 실천 자가 진단 평가 (Checklist)</h2>
+                <p class="text-sm text-gray-600 mt-1">
+                    산지 양식장, 수산물 가공·유통 및 음식점 현장에서 즉시 적용 가능한 법적 준수사항 체크리스트입니다. 항목을 체크하여 자가 점수 및 종합 진단 결과를 확인하세요.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <!-- Checklist Options (2 Cols) -->
+                <div class="lg:col-span-2 space-y-3 text-sm">
+                    <label class="flex items-start space-x-3 p-3 bg-slate-50 rounded-lg border border-slate-200 cursor-pointer hover:bg-slate-100">
+                        <input type="checkbox" class="chk-item mt-1 h-4 w-4 text-sagegreen rounded border-gray-300 focus:ring-sagegreen" onchange="calculateScore()">
+                        <span><strong>[약품/수질]</strong> 어종별 수의사/수산질병관리사의 정식 처방전을 통해 고시 승인된 동물용의약품만 사용하고 있다.</span>
+                    </label>
+                    <label class="flex items-start space-x-3 p-3 bg-slate-50 rounded-lg border border-slate-200 cursor-pointer hover:bg-slate-100">
+                        <input type="checkbox" class="chk-item mt-1 h-4 w-4 text-sagegreen rounded border-gray-300 focus:ring-sagegreen" onchange="calculateScore()">
+                        <span><strong>[휴약기간]</strong> 약제 투약 후 법정 휴약 기간을 일지에 계산·기록하고 100% 준수하여 출하한다.</span>
+                    </label>
+                    <label class="flex items-start space-x-3 p-3 bg-slate-50 rounded-lg border border-slate-200 cursor-pointer hover:bg-slate-100">
+                        <input type="checkbox" class="chk-item mt-1 h-4 w-4 text-sagegreen rounded border-gray-300 focus:ring-sagegreen" onchange="calculateScore()">
+                        <span><strong>[원산지 표시]</strong> 의무표시 20개 어종 및 수족관 활어에 식별 가능한 원산지 표지판을 명확히 게시하고 있다.</span>
+                    </label>
+                    <label class="flex items-start space-x-3 p-3 bg-slate-50 rounded-lg border border-slate-200 cursor-pointer hover:bg-slate-100">
+                        <input type="checkbox" class="chk-item mt-1 h-4 w-4 text-sagegreen rounded border-gray-300 focus:ring-sagegreen" onchange="calculateScore()">
+                        <span><strong>[증빙 보관]</strong> 원산지를 소명할 수 있는 매입 세금계산서, 위판확인서, 수입신고필증을 6개월 이상 비치하고 있다.</span>
+                    </label>
+                    <label class="flex items-start space-x-3 p-3 bg-slate-50 rounded-lg border border-slate-200 cursor-pointer hover:bg-slate-100">
+                        <input type="checkbox" class="chk-item mt-1 h-4 w-4 text-sagegreen rounded border-gray-300 focus:ring-sagegreen" onchange="calculateScore()">
+                        <span><strong>[온도 관리]</strong> 입고 수산물 품온을 0~5℃로 유지하고, 냉동 수산물은 -18℃ 이하 보관을 준수한다.</span>
+                    </label>
+                    <label class="flex items-start space-x-3 p-3 bg-slate-50 rounded-lg border border-slate-200 cursor-pointer hover:bg-slate-100">
+                        <input type="checkbox" class="chk-item mt-1 h-4 w-4 text-sagegreen rounded border-gray-300 focus:ring-sagegreen" onchange="calculateScore()">
+                        <span><strong>[교차오염 방지]</strong> 내장 제거용 칼·도마와 순수 가식부 포뜨기용 칼·도마를 색상별로 분리하여 사용한다.</span>
+                    </label>
+                </div>
+
+                <!-- Live Score Card (1 Col) -->
+                <div class="bg-amber-50 p-6 rounded-lg border border-amber-200 flex flex-col justify-between items-center text-center">
+                    <div>
+                        <span class="text-xs font-bold text-amber-800 uppercase tracking-wider block mb-2">위생 점검 준수율 Score</span>
+                        <div id="score-val" class="text-5xl font-black text-slateprimary">0 %</div>
+                        <p id="score-text" class="text-xs text-gray-600 mt-3">
+                            체크리스트 항목을 클릭하여 현장의 자가 진단 점수를 확인하세요.
+                        </p>
+                    </div>
+                    <div id="score-badge" class="mt-6 w-full py-2.5 rounded font-bold text-xs bg-gray-200 text-gray-700">
+                        진단 미완료
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-slateprimary text-slate-400 text-xs py-6 border-t border-slate-800">
+        <div class="max-w-7xl mx-auto px-4 text-center space-y-2">
+            <p>어촌뉴딜 특강 - 수산물 위생·안전관리의 이해 교육용 인터랙티브 가이드</p>
+            <p class="text-[11px] text-slate-500">관련 법률: 농수산물 품질관리법 (해양수산부) · 식품위생법 (식품의약품안전처) · 농수산물의 원산지 표시 등에 관한 법률</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript Logic -->
+    <script>
+        // -------------------------------------------------------------
+        // Data Storage
+        // -------------------------------------------------------------
+        const originSpeciesList = [
+            "가리비", "우렁쉥이(멍게)", "방어", "부세", "전복",
+            "넙치(광어)", "조피볼락(우럭)", "참돔", "낙지", "오징어",
+            "고등어", "갈치", "명태", "뱀장어", "미꾸라지",
+            "농어", "참조기", "다랑어", "아구", "쭈꾸미"
+        ];
+
+        const caseData = {
+            biotoxin: {
+                title: "🦠 생물학적 위해 & 자연독소 적발 사례",
+                desc: "봄철 마비성 패독(PSP, 기준치 0.8mg/kg) 또는 설사성 패독(DSP, 기준치 0.16mg/kg) 초과 적발 시 당해 해역 채취 금지가 단행됩니다.",
+                penalty: "식품위생법 제72조에 의거 유통 제품 회수·폐기 명령 및 1차 적발 시 영업정지 15일 행정처분. 여름철 수족관 물에서 비브리오패혈증균 검출 시 1차 영업정지 1개월, 3차 영업허가 취소.",
+                note: "패류독소는 열 안정성이 높아 일반 조리 및 가열로 전혀 파괴되지 않으므로 산지 유해 해역 차단이 유일한 예방법입니다."
+            },
+            chemical: {
+                title: "🧪 화학적 잔류물질 & PLS 불합격 사례",
+                desc: "양식어류에서 미승인 동물용의약품 또는 승인 약제의 휴약기간 미준수로 잔류허용기준 초과 검출.",
+                penalty: "농수산물 품질관리법 제63조에 의거, 해당 출하 물량 전체에 대해 현장 참관 하에 전량 분쇄·소각 폐기 명령. PLS 적용으로 기준 미설정 약제는 0.01 mg/kg 초과 시 즉시 적발.",
+                note: "과거 사용되던 말라카이트 그린 등 금지 염료 적발 시 형사 고발조치 병행."
+            },
+            origin: {
+                title: "⚖️ 원산지 거짓표시 사법 판례 분석",
+                desc: "일본산 참돔/가리비, 칠레산 오징어, 중국산 낙지 등을 국내산으로 위장하거나 '국산, 중국산' 혼동 표기.",
+                penalty: "7년 이하의 징역 또는 1억 원 이하의 벌금 (병과 가능). 5년 이내 재범 시 1년 이상 10년 이하 징역 또는 최대 1억 5천만 원 벌금 가중처벌.",
+                note: "판례: 메뉴판에 칠레산 오징어를 국내산으로 거짓 기재한 업주에게 법원은 소비자 기망으로 벌금 300만 원 선고."
+            },
+            coldchain: {
+                title: "🧊 콜드체인 파탄 & 히스타민 독소 적발",
+                desc: "다랑어 및 고등어 유통 과정 중 상온 노출로 인한 히스티딘의 탈탄산 반응 (히스타민 생성).",
+                penalty: "국내 안전기준치 200 mg/kg 초과 시 제품 전량 회수·폐기 및 해당 제조·유통업체 행정처분.",
+                note: "히스타민은 알레르기성 식중독, 두통, 두드러기를 유발하며 한번 생성되면 가열해도 파괴되지 않습니다."
+            }
+        };
+
+        // -------------------------------------------------------------
+        // Module 1: PLS Interactive Function
+        // -------------------------------------------------------------
+        function updatePLSInfo() {
+            const val = document.getElementById('pls-select').value;
+            const container = document.getElementById('pls-result');
+            
+            if (val === 'approved') {
+                container.innerHTML = `
+                    <div class="text-sagegreen font-bold mb-1">✅ 고시 승인 약품 (정량 잔류허용기준 MRL 설정)</div>
+                    <p class="text-gray-700 text-xs">해당 어종에 등록된 승인 약품입니다. 수의사/수산질병관리사 처방 하에 **법정 휴약기간**을 정확히 준수하여 투약하면 출하 가능합니다.</p>
+                `;
+            } else if (val === 'unapproved') {
+                container.innerHTML = `
+                    <div class="text-amber-800 font-bold mb-1">⚠️ 미등록 약품 / 타어종 약제 (PLS 일률기준 0.01 mg/kg 적용)</div>
+                    <p class="text-gray-700 text-xs">해당 어종에 허가 기준이 없으므로 **0.01 mg/kg 초과 검출 시 즉시 적발**됩니다. 유통 불가 판정 및 출하연기/폐기 조치 대상이 됩니다.</p>
+                `;
+            } else {
+                container.innerHTML = `
+                    <div class="text-red-700 font-bold mb-1">🚨 사용 전면 금지 물질 (말라카이트 그린 등)</div>
+                    <p class="text-gray-700 text-xs">발암성 등 인체 위해성이 높은 절대 금지 물질입니다. 극미량 검출 시 즉시 **현장 참관 전량 소각 폐기** 조치되며 수사기관에 형사 고발됩니다.</p>
+                `;
+            }
+        }
+
+        // -------------------------------------------------------------
+        // Module 2: Radiation Chart & Origin Search
+        // -------------------------------------------------------------
+        function initRadiationChart() {
+            const ctx = document.getElementById('radiationChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['Codex 국제권고치', '국내 일반식품 기준', '국내 영유아용 기준'],
+                    datasets: [{
+                        label: '방사성 세슘 (134Cs+137Cs) 기준치 (Bq/kg)',
+                        data: [1000, 100, 50],
+                        backgroundColor: [
+                            'rgba(156, 163, 175, 0.7)',
+                            'rgba(194, 65, 12, 0.8)',
+                            'rgba(4, 120, 87, 0.8)'
+                        ],
+                        borderColor: [
+                            'rgba(107, 114, 128, 1)',
+                            'rgba(194, 65, 12, 1)',
+                            'rgba(4, 120, 87, 1)'
+                        ],
+                        borderWidth: 1.5
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return context.raw + ' Bq/kg (이하)';
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: { display: true, text: '방사능 기준치 (Bq/kg)' }
+                        }
+                    }
+                }
+            });
+        }
+
+        function populateOriginSpecies() {
+            const container = document.getElementById('origin-species-list');
+            container.innerHTML = originSpeciesList.map(s => `
+                <div class="bg-white p-1.5 rounded border border-slate-200 font-medium text-slateprimary flex items-center gap-1">
+                    <span class="text-xs">🐟</span> <span>${s}</span>
+                </div>
+            `).join('');
+        }
+
+        function filterOriginSpecies() {
+            const input = document.getElementById('origin-search').value.toLowerCase();
+            const container = document.getElementById('origin-species-list');
+            const filtered = originSpeciesList.filter(s => s.toLowerCase().includes(input));
+            
+            container.innerHTML = filtered.map(s => `
+                <div class="bg-white p-1.5 rounded border border-slate-200 font-medium text-slateprimary flex items-center gap-1">
+                    <span class="text-xs">🐟</span> <span>${s}</span>
+                </div>
+            `).join('');
+        }
+
+        // -------------------------------------------------------------
+        // Module 3: HACCP Tabs & Histamine Chart
+        // -------------------------------------------------------------
+        function switchHACCPTab(type) {
+            const farmBtn = document.getElementById('tab-btn-farm');
+            const processBtn = document.getElementById('tab-btn-process');
+            const farmContent = document.getElementById('haccp-farm-content');
+            const processContent = document.getElementById('haccp-process-content');
+
+            if (type === 'farm') {
+                farmBtn.className = "py-2 px-4 text-sm font-bold text-accentorange border-b-2 border-accentorange focus:outline-none";
+                processBtn.className = "py-2 px-4 text-sm font-bold text-gray-500 hover:text-slateprimary border-b-2 border-transparent focus:outline-none";
+                farmContent.classList.remove('hidden');
+                processContent.classList.add('hidden');
+            } else {
+                processBtn.className = "py-2 px-4 text-sm font-bold text-accentorange border-b-2 border-accentorange focus:outline-none";
+                farmBtn.className = "py-2 px-4 text-sm font-bold text-gray-500 hover:text-slateprimary border-b-2 border-transparent focus:outline-none";
+                processContent.classList.remove('hidden');
+                farmContent.classList.add('hidden');
+            }
+        }
+
+        function initHistamineChart() {
+            const ctx = document.getElementById('histamineChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: ['0시간', '6시간', '12시간', '24시간', '48시간'],
+                    datasets: [
+                        {
+                            label: '상온 보관 (25℃)',
+                            data: [0, 45, 120, 350, 800],
+                            borderColor: 'rgba(194, 65, 12, 1)',
+                            backgroundColor: 'rgba(194, 65, 12, 0.1)',
+                            fill: true,
+                            tension: 0.3
+                        },
+                        {
+                            label: '냉장 보관 (4℃ 이하 - CCP 준수)',
+                            data: [0, 5, 10, 18, 35],
+                            borderColor: 'rgba(4, 120, 87, 1)',
+                            backgroundColor: 'rgba(4, 120, 87, 0.1)',
+                            fill: true,
+                            tension: 0.3
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return context.dataset.label + ': ' + context.raw + ' mg/kg';
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            title: { display: true, text: '히스타민 농도 (mg/kg)' },
+                            suggestedMax: 400
+                        }
+                    }
+                }
+            });
+        }
+
+        // -------------------------------------------------------------
+        // Module 4: Case Viewer Tabs
+        // -------------------------------------------------------------
+        function showCaseDetail(key) {
+            const data = caseData[key];
+            const box = document.getElementById('case-detail-box');
+            
+            // Update buttons styling
+            ['biotoxin', 'chemical', 'origin', 'coldchain'].forEach(k => {
+                const btn = document.getElementById(`case-btn-${k}`);
+                if (k === key) {
+                    btn.className = "p-3 rounded-lg border border-red-300 bg-red-50 text-red-900 font-bold text-xs text-left hover:bg-red-100 transition focus:outline-none";
+                } else {
+                    btn.className = "p-3 rounded-lg border border-gray-200 bg-gray-50 text-gray-700 font-bold text-xs text-left hover:bg-red-50 transition focus:outline-none";
+                }
+            });
+
+            box.innerHTML = `
+                <h4 class="font-bold text-slateprimary text-base mb-2">${data.title}</h4>
+                <p class="text-gray-700 mb-3">${data.desc}</p>
+                <div class="bg-white p-3 rounded border border-slate-200 mb-2">
+                    <strong class="text-red-700 text-xs block mb-1">⚖️ 법적 제재 및 처분 결과:</strong>
+                    <span class="text-xs text-gray-800">${data.penalty}</span>
+                </div>
+                <div class="text-xs text-amber-800 bg-amber-50 p-2.5 rounded border border-amber-200">
+                    📌 <strong>실무 시사점:</strong> ${data.note}
+                </div>
+            `;
+        }
+
+        // -------------------------------------------------------------
+        // Module 5: Compliance Score Calculator
+        // -------------------------------------------------------------
+        function calculateScore() {
+            const checkboxes = document.querySelectorAll('.chk-item');
+            let checkedCount = 0;
+            checkboxes.forEach(chk => {
+                if (chk.checked) checkedCount++;
+            });
+
+            const score = Math.round((checkedCount / checkboxes.length) * 100);
+            const scoreValDiv = document.getElementById('score-val');
+            const scoreTextDiv = document.getElementById('score-text');
+            const scoreBadgeDiv = document.getElementById('score-badge');
+
+            scoreValDiv.innerText = `${score} %`;
+
+            if (score === 100) {
+                scoreValDiv.className = "text-5xl font-black text-sagegreen";
+                scoreTextDiv.innerText = "축하합니다! 현장 위생 및 법적 준수사항이 완벽하게 이행되고 있습니다.";
+                scoreBadgeDiv.className = "mt-6 w-full py-2.5 rounded font-bold text-xs bg-emerald-100 text-emerald-800";
+                scoreBadgeDiv.innerText = "최우수 위생 준수 사업장";
+            } else if (score >= 60) {
+                scoreValDiv.className = "text-5xl font-black text-amber-600";
+                scoreTextDiv.innerText = "양호한 수준이나, 일부 미흡한 항목에 대해 개선 조치가 필요합니다.";
+                scoreBadgeDiv.className = "mt-6 w-full py-2.5 rounded font-bold text-xs bg-amber-100 text-amber-800";
+                scoreBadgeDiv.innerText = "보통 (개선 필요)";
+            } else {
+                scoreValDiv.className = "text-5xl font-black text-red-600";
+                scoreTextDiv.innerText = "경고: 법적 단속 시 행정처분 및 부적합 판정 위험이 매우 높습니다.";
+                scoreBadgeDiv.className = "mt-6 w-full py-2.5 rounded font-bold text-xs bg-red-100 text-red-800";
+                scoreBadgeDiv.innerText = "위험 (즉시 점검 시급)";
+            }
+        }
+
+        // -------------------------------------------------------------
+        // Initializations on Window Load
+        // -------------------------------------------------------------
+        window.onload = function() {
+            updatePLSInfo();
+            initRadiationChart();
+            populateOriginSpecies();
+            initHistamineChart();
+            showCaseDetail('biotoxin');
+        };
+    </script>
+</body>
+</html>
