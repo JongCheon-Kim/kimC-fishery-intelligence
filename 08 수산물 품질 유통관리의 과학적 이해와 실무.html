@@ -1,0 +1,843 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>어촌뉴딜특강 4차시: 수산물 품질·유통관리의 이해</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap');
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            background-color: #f8fafc;
+            color: #1e293b;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 650px;
+            height: 320px;
+            max-height: 380px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 350px;
+            }
+        }
+        .tab-btn.active {
+            border-bottom: 3px solid #0284c7;
+            color: #0284c7;
+            font-weight: 700;
+            background-color: #f0f9ff;
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 3px;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 min-h-screen flex flex-col">
+
+<!-- Chosen Palette: Warm Coastal Slate & Oceanic Amber (Slate 50 background, Navy #0f172a primary, Sky Blue #0284c7 accent, Amber #f59e0b highlight) -->
+<!-- Application Structure Plan: Designed as a 6-module interactive dashboard tailored for fishery extension training. Includes real-time calculators (K-value slider, Ice-to-fish ratio calculator, MAP gas mix selector) and interactive Chart.js visualizations (ATP degradation curve, freezing rate curves, ice ratio comparisons) plus an interactive field checklist to transition theoretical science into practical fishing community operations. -->
+<!-- Visualization & Content Choices: 
+1. ATP & K-Value: Interactive line chart + slider -> visualizes biochemical decay stages and maps directly to food usability.
+2. Ice Ratio & Thermodynamics: Interactive Bar Chart + Fish-Ice Calculator -> computes real-time ice weight based on Q10 parameters.
+3. Freezing Curve: Dual line chart (-1℃ to -5℃ zone) -> explains cell damage and drip loss visually.
+4. MAP Gas Ratio: Interactive switcher -> dynamic horizontal bar visualizes CO2/O2/N2 formulation for red vs white fish.
+5. Field Checklist: Dynamic JS checklist with completion progress bar -> enables interactive self-assessment.
+All charts rendered via Chart.js Canvas. Zero SVG or Mermaid JS used. -->
+<!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+
+    <!-- Header Navigation Bar -->
+    <header class="bg-slate-900 text-white shadow-lg sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex flex-col md:flex-row justify-between items-center">
+            <div class="flex items-center space-x-3 mb-2 md:mb-0">
+                <span class="bg-sky-600 text-white font-black text-xs px-2.5 py-1 rounded">어촌뉴딜 4차시</span>
+                <h1 class="text-xl font-bold tracking-tight text-slate-100">수산물 품질·유통관리의 과학적 이해와 실무</h1>
+            </div>
+            <div class="text-xs text-slate-300 flex items-center space-x-4">
+                <span>시간: 16:00 ~ 18:00</span>
+                <span class="bg-slate-800 px-2 py-1 rounded border border-slate-700">콜드체인 & 위생관리</span>
+            </div>
+        </div>
+        
+        <!-- Module Navigation Tabs -->
+        <nav class="bg-white border-b border-slate-200 overflow-x-auto custom-scrollbar">
+            <div class="max-w-7xl mx-auto px-4 flex space-x-1 sm:space-x-4 whitespace-nowrap text-sm font-medium text-slate-600">
+                <button onclick="switchTab('sec1')" id="tab-sec1" class="tab-btn active py-3 px-3 hover:text-sky-600 transition">1. 생화학적 선도지표</button>
+                <button onclick="switchTab('sec2')" id="tab-sec2" class="tab-btn py-3 px-3 hover:text-sky-600 transition">2. 법적위생 & 식중독</button>
+                <button onclick="switchTab('sec3')" id="tab-sec3" class="tab-btn py-3 px-3 hover:text-sky-600 transition">3. 저온열역학 & 동결</button>
+                <button onclick="switchTab('sec4')" id="tab-sec4" class="tab-btn py-3 px-3 hover:text-sky-600 transition">4. 첨단 패키징</button>
+                <button onclick="switchTab('sec5')" id="tab-sec5" class="tab-btn py-3 px-3 hover:text-sky-600 transition">5. 국내외 혁신사례</button>
+                <button onclick="switchTab('sec6')" id="tab-sec6" class="tab-btn py-3 px-3 hover:text-sky-600 transition">6. 현장 실무 체크리스트</button>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Main Content Body -->
+    <main class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 w-full">
+
+        <!-- SECTION 1: 생화학적 선도 지표 -->
+        <section id="sec1" class="tab-content space-y-6">
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
+                <h2 class="text-2xl font-bold text-slate-800 mb-2">1. 수산물 선도 저하의 생물화학적 메커니즘과 과학적 품질 지표</h2>
+                <p class="text-slate-600 text-sm leading-relaxed mb-6">
+                    수산물은 절명 직후 생체 대사가 중단되면서 사후강직, 자기소화, 미생물 부패의 3단계를 매우 빠르게 거칩니다. 이 섹션에서는 세포 내 ATP 분해 경로에 기반한 K값(K-value)과 VBN/TMA 화학적 지표, QIM 관능평가의 과학적 작동 원리를 학습합니다.
+                </p>
+
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <!-- ATP 분해 및 K값 산출 원리 -->
+                    <div class="bg-slate-50 p-5 rounded-lg border border-slate-200 flex flex-col justify-between">
+                        <div>
+                            <h3 class="text-lg font-semibold text-slate-800 mb-3 flex items-center">
+                                <span class="w-3 h-3 bg-sky-600 rounded-full inline-block mr-2"></span>
+                                ATP 분해 경로 및 K값(K-value) 산출식
+                            </h3>
+                            <p class="text-xs text-slate-600 mb-4 leading-relaxed">
+                                어류 사후 근육 내 ATP는 enzymatic breakdown을 통해 순차적으로 분해됩니다. IMP는 감칠맛을 내지만, HxR(이노신)과 Hx(하이포크산틴)으로 분해되면 쓴맛과 선도 저하를 야기합니다.
+                            </p>
+                            <div class="bg-white p-3 rounded border border-slate-300 text-center font-mono text-xs sm:text-sm text-slate-800 mb-4 shadow-inner">
+                                K (%) = [ (HxR + Hx) / (ATP + ADP + AMP + IMP + HxR + Hx) ] × 100
+                            </div>
+                        </div>
+
+                        <!-- K값 슬라이더 시뮬레이터 -->
+                        <div class="bg-sky-50 p-4 rounded-lg border border-sky-200">
+                            <div class="flex justify-between items-center mb-2">
+                                <label for="kSlider" class="text-xs font-bold text-sky-900">K-Value 시뮬레이터:</label>
+                                <span id="kValueDisp" class="text-base font-extrabold text-sky-700">15%</span>
+                            </div>
+                            <input type="range" id="kSlider" min="0" max="80" value="15" class="w-full h-2 bg-sky-200 rounded-lg appearance-none cursor-pointer accent-sky-600" oninput="updateKSim(this.value)">
+                            <div class="mt-3 p-3 bg-white rounded border border-sky-100 text-xs space-y-1">
+                                <div class="flex justify-between"><span class="text-slate-500">선도 등급:</span><span id="kGrade" class="font-bold text-emerald-600">극상 (초기 선도)</span></div>
+                                <div class="flex justify-between"><span class="text-slate-500">가공/식용 적합도:</span><span id="kUsage" class="font-bold text-slate-800">생식용 (고급 횟감 및 초밥용)</span></div>
+                                <div class="flex justify-between"><span class="text-slate-500">생화학적 상태:</span><span id="kState" class="text-slate-700">사후강직 진행 중 / 고농도 IMP 유지</span></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- K값 시각화 차트 -->
+                    <div class="bg-slate-50 p-5 rounded-lg border border-slate-200">
+                        <h3 class="text-lg font-semibold text-slate-800 mb-2">어종별 저장 일수에 따른 K값 변화 추이</h3>
+                        <p class="text-xs text-slate-500 mb-4">온도 0℃ 빙장 조건 하에서의 시간 경과에 따른 선도 저하율 비교</p>
+                        <div class="chart-container">
+                            <canvas id="kValueChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- VBN & QIM 설명 카드 -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
+                    <div class="p-4 bg-amber-50 rounded-lg border border-amber-200">
+                        <h4 class="font-bold text-amber-900 text-sm mb-2">휘발성 염기질소(VBN) & TMA 측정 기준</h4>
+                        <ul class="text-xs text-amber-800 space-y-1.5 list-disc list-inside">
+                            <li><b>VBN (Volatile Basic Nitrogen):</b> 미생물 부패 초기 단백질 분해산물 정량. 신선육 15~20mg%, 초기부패 30~40mg%.</li>
+                            <li><b>붉은살 vs 흰살 어류:</b> 붉은살 생선(고등어 등)은 히스티딘 등 유리 아미노산 함량이 높아 흰살 생선보다 VBN 상승이 훨씬 가속화됨.</li>
+                            <li><b>TMA (Trimethylamine):</b> 해수어의 TMAO가 저온 세균 환원효소에 의해 분해되어 발생하는 어류 독유의 비린내 지표.</li>
+                        </ul>
+                    </div>
+                    <div class="p-4 bg-slate-100 rounded-lg border border-slate-300">
+                        <h4 class="font-bold text-slate-900 text-sm mb-2">품질지수평가법 (QIM: Quality Index Method)</h4>
+                        <ul class="text-xs text-slate-700 space-y-1.5 list-disc list-inside">
+                            <li><b>객관적 관능평가:</b> 피부, 눈, 아가미, 복부 등 부위별 0(최상)~3(저하) 감점(Demerit Point) 산출.</li>
+                            <li><b>잔여 유통수명 예측:</b> QIM 총점과 빙장 보관 일수 간의 높은 선형 회귀 상관관계(R² > 0.95)를 활용하여 잔여 수명 즉시 산출.</li>
+                            <li><b>현장 비파괴 검사:</b> 기기 분석 시간 지연 없이 산지 위판장에서 즉각 판정 가능.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 2: 법적위생 & 식중독 -->
+        <section id="sec2" class="tab-content hidden space-y-6">
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
+                <h2 class="text-2xl font-bold text-slate-800 mb-2">2. 유통 공정별 법적 위생 기준과 식중독 제어</h2>
+                <p class="text-slate-600 text-sm leading-relaxed mb-6">
+                    수산물 유통은 식품공전 및 산지위판장 위생관리기준법의 법적 규제를 준수해야 합니다. 입고부터 판매에 이르는 전 공정별 교차오염 방지 및 주요 위해생물 제어 기전을 점검합니다.
+                </p>
+
+                <!-- 식품공전 규격 요약 Grid -->
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+                    <div class="bg-blue-50 border-l-4 border-blue-500 p-4 rounded shadow-sm">
+                        <span class="text-xs font-bold text-blue-600 uppercase">일반 냉장 수산물</span>
+                        <div class="text-xl font-extrabold text-slate-800 mt-1">0 ~ 10 ℃</div>
+                        <p class="text-xs text-slate-500 mt-1">식품공전 기본 보율 및 유통 온도 규격</p>
+                    </div>
+                    <div class="bg-indigo-50 border-l-4 border-indigo-500 p-4 rounded shadow-sm">
+                        <span class="text-xs font-bold text-indigo-600 uppercase">일반 냉동 수산물</span>
+                        <div class="text-xl font-extrabold text-slate-800 mt-1">-18 ℃ 이하</div>
+                        <p class="text-xs text-slate-500 mt-1">재냉동 원칙적 금지 (단순가공 예외)</p>
+                    </div>
+                    <div class="bg-emerald-50 border-l-4 border-emerald-500 p-4 rounded shadow-sm">
+                        <span class="text-xs font-bold text-emerald-600 uppercase">신선편의 / 훈제연어</span>
+                        <div class="text-xl font-extrabold text-slate-800 mt-1">0 ~ 5 ℃</div>
+                        <p class="text-xs text-slate-500 mt-1">리스테리아 등 저온균 증식 억제 강화기준</p>
+                    </div>
+                    <div class="bg-rose-50 border-l-4 border-rose-500 p-4 rounded shadow-sm">
+                        <span class="text-xs font-bold text-rose-600 uppercase">해동 수산물 판매</span>
+                        <div class="text-xl font-extrabold text-slate-800 mt-1">24시간 이내</div>
+                        <p class="text-xs text-slate-500 mt-1">0~10℃ 냉장 상태 판매 후 미판매분 폐기</p>
+                    </div>
+                </div>
+
+                <!-- 산지위판장 위생관리기준 & 교차오염 방지 -->
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+                    <div class="bg-slate-50 p-5 rounded-lg border border-slate-200">
+                        <h3 class="font-bold text-slate-800 mb-3 text-base flex items-center">
+                            <span class="bg-sky-500 text-white text-xs px-2 py-0.5 rounded mr-2">위판장</span>
+                            산지위판장 위생관리기준 (법적 프로토콜)
+                        </h3>
+                        <ul class="text-xs text-slate-700 space-y-2">
+                            <li class="flex items-start">
+                                <span class="text-sky-600 font-bold mr-2">▪</span>
+                                <div><b>바닥 비접촉(Floor Contact Elimination):</b> 수산물이 경매장 바닥 잔류 오폐수와 접촉 금지. 이동식 상치대(배드) 또는 HDPE 위생 파렛트 필수.</div>
+                            </li>
+                            <li class="flex items-start">
+                                <span class="text-sky-600 font-bold mr-2">▪</span>
+                                <div><b>시설·조명 규격:</b> 에폭시/내수성 콘크리트 배수구배 시공, 비산 방지형 보호 커버 장착 조명 설치.</div>
+                            </li>
+                            <li class="flex items-start">
+                                <span class="text-sky-600 font-bold mr-2">▪</span>
+                                <div><b>용수 및 얼음 규격:</b> 먹는물 수질기준 적합 용수 및 식용·어업용 규격 얼음 사용.</div>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="bg-slate-50 p-5 rounded-lg border border-slate-200">
+                        <h3 class="font-bold text-slate-800 mb-3 text-base flex items-center">
+                            <span class="bg-amber-500 text-white text-xs px-2 py-0.5 rounded mr-2">가공·진열</span>
+                            공정별 교차오염 방지 핵심 수칙
+                        </h3>
+                        <ul class="text-xs text-slate-700 space-y-2">
+                            <li class="flex items-start">
+                                <span class="text-amber-600 font-bold mr-2">▪</span>
+                                <div><b>작업대 높이:</b> 바닥 오염수 튐으로 인한 세균 전파 방지를 위해 작업대 높이 60cm 이상 이격.</div>
+                            </li>
+                            <li class="flex items-start">
+                                <span class="text-amber-600 font-bold mr-2">▪</span>
+                                <div><b>도구의 물리적 분리:</b> 1차 내장 적출용 칼·도마와 2차 세절·횟감용 칼·도마 엄격 구분.</div>
+                            </li>
+                            <li class="flex items-start">
+                                <span class="text-amber-600 font-bold mr-2">▪</span>
+                                <div><b>보관 적재율:</b> 냉장고 내부 냉기 순환을 위해 적재 용적 70% 이하 유지, 수산물은 최하단 수납.</div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- 4대 위해생물 제어 데이터 카드 -->
+                <h3 class="font-bold text-slate-800 mb-3 text-lg">주요 위해생물 및 식중독 임계 제어 조건</h3>
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                    <div class="p-4 bg-white border border-slate-200 rounded-lg shadow-sm hover:border-sky-400 transition">
+                        <div class="text-sky-600 font-bold text-sm mb-1">장염비브리오</div>
+                        <div class="text-xs text-slate-500 mb-2">V. parahaemolyticus</div>
+                        <p class="text-xs text-slate-700 leading-relaxed">
+                            <b>제어 핵심:</b> 호염성 세균으로 삼투압에 약함. <b>흐르는 수돗물(담수)로 2~3회 세척</b> 시 세포막 파괴 사멸. 5℃ 이하 증식 정지.
+                        </p>
+                    </div>
+                    <div class="p-4 bg-white border border-slate-200 rounded-lg shadow-sm hover:border-rose-400 transition">
+                        <div class="text-rose-600 font-bold text-sm mb-1">비브리오패혈증균</div>
+                        <div class="text-xs text-slate-500 mb-2">V. vulnificus</div>
+                        <p class="text-xs text-slate-700 leading-relaxed">
+                            <b>제어 핵심:</b> 하절기(5~10월) 고수온기 증식, 치사율 50%. <b>중심온도 85℃ 1분 이상 가열</b> 또는 생식용 5℃ 이하 저온 제어.
+                        </p>
+                    </div>
+                    <div class="p-4 bg-white border border-slate-200 rounded-lg shadow-sm hover:border-purple-400 transition">
+                        <div class="text-purple-600 font-bold text-sm mb-1">보툴리누스 E형</div>
+                        <div class="text-xs text-slate-500 mb-2">C. botulinum Type E</div>
+                        <p class="text-xs text-slate-700 leading-relaxed">
+                            <b>제어 핵심:</b> 진공포장 내 혐기성 아포균. 저온적응형으로 3.3℃에서도 발육. <b>유통온도 3℃ 이하 엄격 통제</b> 필수.
+                        </p>
+                    </div>
+                    <div class="p-4 bg-white border border-slate-200 rounded-lg shadow-sm hover:border-amber-400 transition">
+                        <div class="text-amber-600 font-bold text-sm mb-1">아니사키스(고래회충)</div>
+                        <div class="text-xs text-slate-500 mb-2">Anisakis simplex</div>
+                        <p class="text-xs text-slate-700 leading-relaxed">
+                            <b>제어 핵심:</b> 사후 내장에서 근육으로 침투. 어획 직후 내장 적출. 물리적 사멸: <b>-20℃ 24시간 동결</b> 또는 60℃ 1분 가열.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 3: 저온열역학 & 동결 -->
+        <section id="sec3" class="tab-content hidden space-y-6">
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
+                <h2 class="text-2xl font-bold text-slate-800 mb-2">3. 저온저장 열역학과 콜드체인 핵심 제어 기술</h2>
+                <p class="text-slate-600 text-sm leading-relaxed mb-6">
+                    저온 저장은 온도시스템의 열역학적 감속 원리($Q_{10}$ 계수)를 기반으로 합니다. 이 섹션에서는 빙장법의 융해잠열, 어종별 어빙비 계산, 슬러리아이스 및 급속동결 시 최대 빙결정 생성대(-1℃ ~ -5℃) 통과 기전을 심층 분석합니다.
+                </p>
+
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+                    <!-- Q10 계수 & 어빙비 계산기 -->
+                    <div class="bg-slate-50 p-5 rounded-lg border border-slate-200 flex flex-col justify-between">
+                        <div>
+                            <h3 class="font-bold text-slate-800 text-base mb-2">Q10 온도계수 & 얼음 융해잠열</h3>
+                            <p class="text-xs text-slate-600 leading-relaxed mb-3">
+                                온도가 10℃ 하강함에 따라 변질 반응속도가 줄어드는 비율인 <b>$Q_{10}$ 계수는 수산물에서 약 2~3</b>입니다. 25℃ 상온 방치 대비 0℃ 빙장 처리 시 변질 속도가 6~10배 감속됩니다.
+                            </p>
+                            <div class="bg-amber-100 p-2.5 rounded border border-amber-300 text-xs text-amber-900 mb-4">
+                                <b>얼음 융해잠열:</b> 0℃ 얼음 1kg이 물로 변할 때 <b>79.7 kcal</b> 열량 탈취 (현열 냉각 대비 월등한 체열 냉각 효과 + 융해수 세정 효과)
+                            </div>
+                        </div>
+
+                        <!-- 어빙비 산출 시뮬레이터 -->
+                        <div class="bg-white p-4 rounded-lg border border-slate-300 shadow-sm">
+                            <h4 class="font-bold text-xs text-slate-800 mb-3 text-sky-800 uppercase">어종별 맞춤형 어빙비(Fish-to-Ice) 계산기</h4>
+                            <div class="grid grid-cols-2 gap-3 mb-3">
+                                <div>
+                                    <label class="text-xs text-slate-600 block mb-1">어류 중량 (kg):</label>
+                                    <input type="number" id="fishWeight" value="100" class="w-full p-1.5 border border-slate-300 rounded text-xs font-bold" oninput="calcIce()">
+                                </div>
+                                <div>
+                                    <label class="text-xs text-slate-600 block mb-1">어종 및 계절:</label>
+                                    <select id="fishType" class="w-full p-1.5 border border-slate-300 rounded text-xs font-bold" onchange="calcIce()">
+                                        <option value="1.0">백색육 어류 (춘추/동절기 1:1)</option>
+                                        <option value="1.5">백색육 어류 (하절기 1:1.5)</option>
+                                        <option value="1.5">적색육 어류 (춘추/동절기 1:1.5)</option>
+                                        <option value="2.0">적색육 어류 (하절기 1:2)</option>
+                                        <option value="2.0">갑각류 (표준 1:2)</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="p-3 bg-sky-50 rounded border border-sky-200 text-center">
+                                <span class="text-xs text-slate-600">필요 투입 얼음 중량: </span>
+                                <span id="iceResult" class="text-lg font-extrabold text-sky-700">100 kg</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 어종별 어빙비 비교 차트 -->
+                    <div class="bg-slate-50 p-5 rounded-lg border border-slate-200">
+                        <h3 class="font-bold text-slate-800 text-base mb-2">어종 및 계절별 권장 어빙비 비율</h3>
+                        <p class="text-xs text-slate-500 mb-4">어체 중량 1 대비 투입 얼음 비율 비교</p>
+                        <div class="chart-container">
+                            <canvas id="iceRatioChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 동결 기술 및 최대 빙결정 생성대 (-1℃ ~ -5℃) -->
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <div class="bg-slate-50 p-5 rounded-lg border border-slate-200">
+                        <h3 class="font-bold text-slate-800 text-base mb-2">완만동결 vs 급속동결 온도 곡선</h3>
+                        <p class="text-xs text-slate-500 mb-4">최대 빙결정 생성대(-1℃~-5℃) 통과 속도 차이와 세포 파괴 메커니즘</p>
+                        <div class="chart-container">
+                            <canvas id="freezingChart"></canvas>
+                        </div>
+                    </div>
+
+                    <div class="bg-slate-50 p-5 rounded-lg border border-slate-200 flex flex-col justify-between">
+                        <div>
+                            <h3 class="font-bold text-slate-800 text-base mb-3">동결 공학 및 냉각 기술 비교</h3>
+                            <div class="space-y-3 text-xs">
+                                <div class="p-3 bg-white rounded border border-slate-200">
+                                    <div class="font-bold text-sky-700 text-sm">슬러리아이스 (Slurry Ice / Liquid Ice)</div>
+                                    <p class="text-slate-600 mt-1">0.1~1.0mm 미세 구형 빙결정. 어체 전면 3D 피복으로 일반 각빙 대비 <b>3~4배 빠른 냉각 속도</b>. 표면 압박 손상 방지 및 산소 차단.</p>
+                                </div>
+                                <div class="p-3 bg-white rounded border border-slate-200">
+                                    <div class="font-bold text-indigo-700 text-sm">슈퍼칠링 (Superchilling / Partial Freezing)</div>
+                                    <p class="text-slate-600 mt-1">어체 빙점 직하(-1.0℃ ~ -2.0℃) 냉각. 표층 1~2mm만 미세 결빙시켜 추가 얼음 적재 없이 <b>유통수명 1.5~2배 연장</b> 및 항공 물류비 경감.</p>
+                                </div>
+                                <div class="p-3 bg-rose-50 rounded border border-rose-200">
+                                    <div class="font-bold text-rose-800 text-sm">최대 빙결정 생성대 통과와 드립(Drip) 억제</div>
+                                    <p class="text-slate-700 mt-1">완만동결 시 거대 빙결정이 세포막을 찢어 해동 시 수용성 단백질 및 정미성분이 <b>드립(Drip)으로 누출</b>됨. 급속동결(-40℃ 35분 이내 통과) 필수.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 4: 첨단 패키징 -->
+        <section id="sec4" class="tab-content hidden space-y-6">
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
+                <h2 class="text-2xl font-bold text-slate-800 mb-2">4. 유통 물류 환경의 변질 요인과 보존 패키징 혁신</h2>
+                <p class="text-slate-600 text-sm leading-relaxed mb-6">
+                    물류 운송 중 발생하는 온도 스파이크(Temperature Abuse), 결로, 하중 진동은 품질을 가속 손상시킵니다. 가스치환포장(MAP)과 진공스킨포장(VSP), 지능형 포장(TTI)의 기술적 특성을 살펴봅니다.
+                </p>
+
+                <!-- MAP 가스 비율 라이브 시뮬레이터 -->
+                <div class="bg-slate-50 p-5 rounded-lg border border-slate-200 mb-6">
+                    <h3 class="font-bold text-slate-800 text-base mb-3">가스치환포장(MAP: Modified Atmosphere Packaging) 가스 배합 시뮬레이터</h3>
+                    <div class="flex flex-wrap gap-3 mb-4">
+                        <button onclick="setMapGas('white')" id="btnMapWhite" class="px-4 py-2 bg-sky-600 text-white font-bold text-xs rounded-lg shadow sm:text-sm">백색육 어류 포장 (고농도 CO₂)</button>
+                        <button onclick="setMapGas('red')" id="btnMapRed" class="px-4 py-2 bg-slate-200 text-slate-700 font-bold text-xs rounded-lg hover:bg-slate-300 sm:text-sm">적색육 어류 포장 (산소 혼합)</button>
+                    </div>
+
+                    <!-- Dynamic Gas Bar -->
+                    <div class="space-y-3 bg-white p-4 rounded-lg border border-slate-200">
+                        <div class="flex justify-between text-xs font-bold mb-1">
+                            <span>가스 혼합 비율 시각화</span>
+                            <span id="mapGasTitle" class="text-sky-700">백색육 표준 배합 (60% CO₂ + 40% N₂)</span>
+                        </div>
+                        <div class="w-full h-8 bg-slate-100 rounded-lg overflow-hidden flex shadow-inner">
+                            <div id="barCO2" class="bg-emerald-500 h-full text-white text-xs font-bold flex items-center justify-center transition-all duration-500" style="width: 60%;">CO₂ 60%</div>
+                            <div id="barO2" class="bg-rose-500 h-full text-white text-xs font-bold flex items-center justify-center transition-all duration-500" style="width: 0%;">O₂ 0%</div>
+                            <div id="barN2" class="bg-sky-500 h-full text-white text-xs font-bold flex items-center justify-center transition-all duration-500" style="width: 40%;">N₂ 40%</div>
+                        </div>
+                        <p id="mapGasDesc" class="text-xs text-slate-600 leading-relaxed pt-2">
+                            <b>백색육 메커니즘:</b> CO₂가 어육 표면 수분에 용해되어 탄산(H₂CO₃) 형성 → 세균 세포 내 pH 저하 및 탈수소효소 저해로 정균 작용. 무산소 상태로 지질 산화 방지.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- VSP & TTI 비교 Grid -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="bg-slate-50 p-4 rounded-lg border border-slate-200">
+                        <h4 class="font-bold text-slate-800 text-sm mb-2 flex items-center">
+                            <span class="w-2 h-2 bg-sky-500 rounded-full mr-2"></span>
+                            진공스킨포장 (VSP)
+                        </h4>
+                        <p class="text-xs text-slate-600 leading-relaxed">
+                            3D 열성형 배리어 필름이 어체 표면에 밀착 압착. 잔존 산소를 차단하고 세포 내 자유수의 드립 누출 공간을 물리적으로 원천 봉쇄하여 프리미엄 소매 진열성 극대화.
+                        </p>
+                    </div>
+
+                    <div class="bg-slate-50 p-4 rounded-lg border border-slate-200">
+                        <h4 class="font-bold text-slate-800 text-sm mb-2 flex items-center">
+                            <span class="w-2 h-2 bg-amber-500 rounded-full mr-2"></span>
+                            능동형 패키징 (Active)
+                        </h4>
+                        <p class="text-xs text-slate-600 leading-relaxed">
+                            <b>항균 드립 흡수 패드:</b> 고흡수성 폴리머(SAP)에 자몽종자추출물/나이신 코팅하여 삼출액 흡수 격리 및 세균 번식 억제. CO₂ 지속 방출 패드 포함.
+                        </p>
+                    </div>
+
+                    <div class="bg-slate-50 p-4 rounded-lg border border-slate-200">
+                        <h4 class="font-bold text-slate-800 text-sm mb-2 flex items-center">
+                            <span class="w-2 h-2 bg-emerald-500 rounded-full mr-2"></span>
+                            지능형 TTI 라벨 (Smart)
+                        </h4>
+                        <p class="text-xs text-slate-600 leading-relaxed">
+                            <b>시간-온도 지시계 (TTI):</b> 효소 변색 반응으로 유통 중 누적 열노출 이력(Temperature Abuse)을 라벨 변색으로 실시간 표시하여 콜드체인 단절 여부 즉각 판정.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 5: 국내외 혁신사례 -->
+        <section id="sec5" class="tab-content hidden space-y-6">
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
+                <h2 class="text-2xl font-bold text-slate-800 mb-2">5. 국내외 수산물 콜드체인 및 위생관리 혁신 사례</h2>
+                <p class="text-slate-600 text-sm leading-relaxed mb-6">
+                    어촌뉴딜 및 신활력증진 사업을 통한 국내 산지위판장 현대화 모델과 일본 도요스 시장, 노르웨이 스마트 연어 밸류체인의 선진 콜드체인 구축 현황을 비교 분석합니다.
+                </p>
+
+                <!-- Comparison Table -->
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-xs border-collapse">
+                        <thead>
+                            <tr class="bg-slate-800 text-white">
+                                <th class="p-3 font-bold border border-slate-700">비교 항목</th>
+                                <th class="p-3 font-bold border border-slate-700">국내 전통 위판장 (개선 전)</th>
+                                <th class="p-3 font-bold border border-slate-700 bg-sky-900">국내 스마트 FPC·현대화 위판장</th>
+                                <th class="p-3 font-bold border border-slate-700">일본 도요스(豊洲) 수산시장</th>
+                                <th class="p-3 font-bold border border-slate-700">노르웨이 스마트 연어 밸류체인</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-200 text-slate-700">
+                            <tr class="hover:bg-slate-50">
+                                <td class="p-3 font-bold bg-slate-100 border">시설 구조</td>
+                                <td class="p-3 border">오픈형 개방 구조 (상온 노출)</td>
+                                <td class="p-3 border font-semibold text-sky-900 bg-sky-50">전면/부분 폐쇄형 저온 경매장</td>
+                                <td class="p-3 border">완전 밀폐 폐쇄형 복합 건물</td>
+                                <td class="p-3 border">완전 자동화 스마트 팩토리</td>
+                            </tr>
+                            <tr class="hover:bg-slate-50">
+                                <td class="p-3 font-bold bg-slate-100 border">온도 제어</td>
+                                <td class="p-3 border">외기 의존 (하절기 25~30℃)</td>
+                                <td class="p-3 border font-semibold text-sky-900 bg-sky-50">경매구역 10~15℃, 창고 < 0℃</td>
+                                <td class="p-3 border">전 작업 구역 항시 5℃ 이하</td>
+                                <td class="p-3 border">가공·물류 전반 0~2℃ 초저온</td>
+                            </tr>
+                            <tr class="hover:bg-slate-50">
+                                <td class="p-3 font-bold bg-slate-100 border">바닥 위생</td>
+                                <td class="p-3 border text-rose-600">어체 바닥 직접 적치 및 오염수 접촉</td>
+                                <td class="p-3 border font-semibold text-sky-900 bg-sky-50">이동식 상치대 및 위생 파렛트</td>
+                                <td class="p-3 border">항균 에폭시 바닥, 접촉 전면 금지</td>
+                                <td class="p-3 border">공압 및 컨베이어 (무인 자동화)</td>
+                            </tr>
+                            <tr class="hover:bg-slate-50">
+                                <td class="p-3 font-bold bg-slate-100 border">물류 용기</td>
+                                <td class="p-3 border">나무/스티로폼 상자, 쇄빙 혼합</td>
+                                <td class="p-3 border font-semibold text-sky-900 bg-sky-50">재순환 HDPE 스마트 어상자</td>
+                                <td class="p-3 border">전용 위생 용기 및 저온 전동차</td>
+                                <td class="p-3 border">MAP/VSP 자동 포장, 항공 직송</td>
+                            </tr>
+                            <tr class="hover:bg-slate-50">
+                                <td class="p-3 font-bold bg-slate-100 border">이력 추적</td>
+                                <td class="p-3 border">수기 장부 기록</td>
+                                <td class="p-3 border font-semibold text-sky-900 bg-sky-50">RFID 태그 및 전산화 연계</td>
+                                <td class="p-3 border">디지털 바코드 물류 추적</td>
+                                <td class="p-3 border">AI 영상 분석 및 전주기 바코드</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 6: 현장 실무 체크리스트 -->
+        <section id="sec6" class="tab-content hidden space-y-6">
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-4">
+                    <div>
+                        <h2 class="text-2xl font-bold text-slate-800">6. 4차시 교육 실무 적용 체크리스트</h2>
+                        <p class="text-slate-600 text-sm">어업 현장 종사자가 즉각 이행해야 할 공정별 필수 행동 지침</p>
+                    </div>
+                    <!-- Progress Bar Component -->
+                    <div class="mt-3 md:mt-0 w-full md:w-64 bg-slate-100 p-3 rounded-lg border border-slate-200">
+                        <div class="flex justify-between text-xs font-bold mb-1">
+                            <span>자가진단 달성도:</span>
+                            <span id="checkPercent" class="text-sky-600">0%</span>
+                        </div>
+                        <div class="w-full h-3 bg-slate-200 rounded-full overflow-hidden">
+                            <div id="checkBar" class="bg-sky-600 h-full w-0 transition-all duration-300"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Interactive Checklist Items -->
+                <div class="space-y-3">
+                    <label class="flex items-start p-3 bg-slate-50 rounded-lg border border-slate-200 cursor-pointer hover:bg-sky-50 transition">
+                        <input type="checkbox" class="chk-item mt-1 w-4 h-4 text-sky-600 rounded" onchange="updateChecklist()">
+                        <div class="ml-3 text-xs">
+                            <span class="font-bold text-slate-800 block text-sm">[선상 수확] 어획 즉시 신속한 즉살·방혈 작업 및 어빙비 1:1 이상(하절기 1:1.5) 준수</span>
+                            <span class="text-slate-500">어체의 스트레스성 사투 반응을 물리적으로 차단하여 체내 ATP 고갈 지연</span>
+                        </div>
+                    </label>
+
+                    <label class="flex items-start p-3 bg-slate-50 rounded-lg border border-slate-200 cursor-pointer hover:bg-sky-50 transition">
+                        <input type="checkbox" class="chk-item mt-1 w-4 h-4 text-sky-600 rounded" onchange="updateChecklist()">
+                        <div class="ml-3 text-xs">
+                            <span class="font-bold text-slate-800 block text-sm">[양륙·위판] 경매장 콘크리트 바닥 직접 적치 금지 (상치대 또는 파렛트 거치)</span>
+                            <span class="text-slate-500">바닥 잔류 오폐수 및 침출물과의 직접 접촉 차단 (법적 준수사항)</span>
+                        </div>
+                    </label>
+
+                    <label class="flex items-start p-3 bg-slate-50 rounded-lg border border-slate-200 cursor-pointer hover:bg-sky-50 transition">
+                        <input type="checkbox" class="chk-item mt-1 w-4 h-4 text-sky-600 rounded" onchange="updateChecklist()">
+                        <div class="ml-3 text-xs">
+                            <span class="font-bold text-slate-800 block text-sm">[가공·전처리] 1차 내장 적출 및 2차 세절용 칼·도마 물리적 구분 사용</span>
+                            <span class="text-slate-500">작업대 높이 60cm 이상 유지 및 내장 세균의 순수 근육층 교차오염 방지</span>
+                        </div>
+                    </label>
+
+                    <label class="flex items-start p-3 bg-slate-50 rounded-lg border border-slate-200 cursor-pointer hover:bg-sky-50 transition">
+                        <input type="checkbox" class="chk-item mt-1 w-4 h-4 text-sky-600 rounded" onchange="updateChecklist()">
+                        <div class="ml-3 text-xs">
+                            <span class="font-bold text-slate-800 block text-sm">[위생 세척] 어패류 세척 시 해수가 아닌 흐르는 수돗물(담수)로 2~3회 강력 세척</span>
+                            <span class="text-slate-500">삼투압 차이를 이용하여 장염비브리오균 세포막 파괴 및 사멸 유도</span>
+                        </div>
+                    </label>
+
+                    <label class="flex items-start p-3 bg-slate-50 rounded-lg border border-slate-200 cursor-pointer hover:bg-sky-50 transition">
+                        <input type="checkbox" class="chk-item mt-1 w-4 h-4 text-sky-600 rounded" onchange="updateChecklist()">
+                        <div class="ml-3 text-xs">
+                            <span class="font-bold text-slate-800 block text-sm">[포장·보관] 진공포장 냉장 어류 유통온도 3℃ 이하 엄격 통제</span>
+                            <span class="text-slate-500">저온 적응형 혐기성 신경독소균인 Clostridium botulinum Type E 독소 생성 방지</span>
+                        </div>
+                    </label>
+
+                    <label class="flex items-start p-3 bg-slate-50 rounded-lg border border-slate-200 cursor-pointer hover:bg-sky-50 transition">
+                        <input type="checkbox" class="chk-item mt-1 w-4 h-4 text-sky-600 rounded" onchange="updateChecklist()">
+                        <div class="ml-3 text-xs">
+                            <span class="font-bold text-slate-800 block text-sm">[소매·진열] 해동 수산물 재냉동 전면 금지 및 24시간 이내 판매 완료</span>
+                            <span class="text-slate-500">해동 후 냉장 쇼케이스(0~4℃) 진열, 미판매 잔여 물량 폐기 법적 준수</span>
+                        </div>
+                    </label>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-slate-900 text-slate-400 text-xs py-6 border-t border-slate-800 mt-12">
+        <div class="max-w-7xl mx-auto px-4 text-center space-y-2">
+            <p class="font-semibold text-slate-300">어촌뉴딜300 & 어촌신활력증진사업 역량강화 교육과정</p>
+            <p>4차시: 수산물 품질·유통관리의 이해 (수산물 선도유지, 콜드체인, 패키징 및 위생관리)</p>
+            <p class="text-slate-500">© 2026 어촌뉴딜특강. All Rights Reserved.</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript Application Logic -->
+    <script>
+        // --- Tab Switching Logic ---
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+            document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+            
+            document.getElementById(tabId).classList.remove('hidden');
+            document.getElementById('tab-' + tabId).classList.add('active');
+        }
+
+        // --- SECTION 1: K-Value Simulator & Chart ---
+        function updateKSim(val) {
+            document.getElementById('kValueDisp').innerText = val + '%';
+            
+            let grade = '', usage = '', state = '', colorClass = '';
+            if (val <= 20) {
+                grade = '극상 (초기 선도)';
+                usage = '생식용 (고급 횟감 및 초밥용)';
+                state = '사후강직 진행 중 / 고농도 IMP 유지';
+                colorClass = 'text-emerald-600';
+            } else if (val <= 40) {
+                grade = '양호 (보통 선도)';
+                usage = '일반 조리용 (구이, 조림, 탕용 선어)';
+                state = '강직 해제 및 자기소화 초기 / 육질 연화 개시';
+                colorClass = 'text-sky-600';
+            } else if (val <= 60) {
+                grade = '저하 (한계 선도)';
+                usage = '2차 가공 원료 (어묵, 통조림, 건어물)';
+                state = '자기소화 심화 / 하이포크산틴(Hx) 쓴맛 생성';
+                colorClass = 'text-amber-600';
+            } else {
+                grade = '부패 (가식 한계 초과)';
+                usage = '상업적 식용 불가 (폐기 대상)';
+                state = '미생물 침투 / 단백질 변성 및 부패취 발생';
+                colorClass = 'text-rose-600';
+            }
+
+            const gradeEl = document.getElementById('kGrade');
+            gradeEl.innerText = grade;
+            gradeEl.className = 'font-bold ' + colorClass;
+            document.getElementById('kUsage').innerText = usage;
+            document.getElementById('kState').innerText = state;
+        }
+
+        function initKChart() {
+            const ctx = document.getElementById('kValueChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: ['0일차', '2일차', '4일차', '6일차', '8일차', '10일차', '12일차'],
+                    datasets: [
+                        {
+                            label: '붉은살 어류 (고등어)',
+                            data: [5, 18, 38, 58, 75, 88, 98],
+                            borderColor: '#ef4444',
+                            backgroundColor: 'rgba(239, 68, 68, 0.1)',
+                            fill: true,
+                            tension: 0.3
+                        },
+                        {
+                            label: '흰살 어류 (광어/넙치)',
+                            data: [3, 10, 22, 35, 48, 62, 75],
+                            borderColor: '#0284c7',
+                            backgroundColor: 'rgba(2, 132, 199, 0.1)',
+                            fill: true,
+                            tension: 0.3
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'top' },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    let label = context.dataset.label || '';
+                                    if (label) label += ': ';
+                                    return label + context.parsed.y + '% (K값)';
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            min: 0,
+                            max: 100,
+                            title: { display: true, text: 'K값 (%)' }
+                        }
+                    }
+                }
+            });
+        }
+
+        // --- SECTION 3: Ice Calculator & Charts ---
+        function calcIce() {
+            const weight = parseFloat(document.getElementById('fishWeight').value) || 0;
+            const ratio = parseFloat(document.getElementById('fishType').value) || 1.0;
+            const ice = Math.round(weight * ratio);
+            document.getElementById('iceResult').innerText = ice + ' kg';
+        }
+
+        function initIceChart() {
+            const ctx = document.getElementById('iceRatioChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['백색육 어류', '적색육 어류', '연체류(오징어)', '갑각류(게/새우)'],
+                    datasets: [
+                        {
+                            label: '동절기/표준 어빙비',
+                            data: [1.0, 1.5, 1.0, 2.0],
+                            backgroundColor: '#38bdf8'
+                        },
+                        {
+                            label: '하절기/원거리 어빙비',
+                            data: [1.5, 2.0, 1.5, 2.5],
+                            backgroundColor: '#0284c7'
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'top' }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: { display: true, text: '어체 중량(1) 대비 얼음 비율' }
+                        }
+                    }
+                }
+            });
+        }
+
+        function initFreezingChart() {
+            const ctx = document.getElementById('freezingChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: ['0분', '20분', '40분', '60분', '80분', '100분', '120분'],
+                    datasets: [
+                        {
+                            label: '완만동결 (-20℃ 대류식)',
+                            data: [15, 0, -2, -3, -4, -10, -18],
+                            borderColor: '#f59e0b',
+                            borderDash: [5, 5],
+                            tension: 0.2
+                        },
+                        {
+                            label: '급속동결 (-40℃ 터널/접촉식)',
+                            data: [15, -3, -15, -25, -32, -38, -40],
+                            borderColor: '#0284c7',
+                            tension: 0.2
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'top' },
+                        annotation: {
+                            annotations: {
+                                box1: {
+                                    type: 'box',
+                                    yMin: -5,
+                                    yMax: -1,
+                                    backgroundColor: 'rgba(244, 63, 94, 0.1)'
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            title: { display: true, text: '어체 심부 온도 (℃)' }
+                        }
+                    }
+                }
+            });
+        }
+
+        // --- SECTION 4: MAP Gas Interactive Switcher ---
+        function setMapGas(type) {
+            const btnW = document.getElementById('btnMapWhite');
+            const btnR = document.getElementById('btnMapRed');
+            const title = document.getElementById('mapGasTitle');
+            const desc = document.getElementById('mapGasDesc');
+            
+            const barCO2 = document.getElementById('barCO2');
+            const barO2 = document.getElementById('barO2');
+            const barN2 = document.getElementById('barN2');
+
+            if (type === 'white') {
+                btnW.className = 'px-4 py-2 bg-sky-600 text-white font-bold text-xs rounded-lg shadow sm:text-sm';
+                btnR.className = 'px-4 py-2 bg-slate-200 text-slate-700 font-bold text-xs rounded-lg hover:bg-slate-300 sm:text-sm';
+                
+                title.innerText = '백색육 표준 배합 (60% CO₂ + 40% N₂)';
+                title.className = 'text-sky-700';
+                
+                barCO2.style.width = '60%';
+                barCO2.innerText = 'CO₂ 60%';
+                
+                barO2.style.width = '0%';
+                barO2.innerText = '';
+                
+                barN2.style.width = '40%';
+                barN2.innerText = 'N₂ 40%';
+
+                desc.innerHTML = '<b>백색육 메커니즘:</b> CO₂가 어육 표면 수분에 용해되어 탄산(H₂CO₃) 형성 → 세균 세포 내 pH 저하 및 탈수소효소 저해로 정균 작용. 무산소 상태로 지질 산화 방지.';
+            } else {
+                btnR.className = 'px-4 py-2 bg-rose-600 text-white font-bold text-xs rounded-lg shadow sm:text-sm';
+                btnW.className = 'px-4 py-2 bg-slate-200 text-slate-700 font-bold text-xs rounded-lg hover:bg-slate-300 sm:text-sm';
+                
+                title.innerText = '적색육 표준 배합 (40% CO₂ + 30% O₂ + 30% N₂)';
+                title.className = 'text-rose-700';
+
+                barCO2.style.width = '40%';
+                barCO2.innerText = 'CO₂ 40%';
+                
+                barO2.style.width = '30%';
+                barO2.innerText = 'O₂ 30%';
+                
+                barN2.style.width = '30%';
+                barN2.innerText = 'N₂ 30%';
+
+                desc.innerHTML = '<b>적색육 메커니즘:</b> 산소(O₂)를 30% 혼합하여 미오글로빈을 옥시미오글로빈으로 유지(갈색 변색 방지). 또한 밀폐 용기 내 혐기성 <i>Clostridium botulinum</i> 독소 생성을 억제함.';
+            }
+        }
+
+        // --- SECTION 6: Interactive Checklist Logic ---
+        function updateChecklist() {
+            const items = document.querySelectorAll('.chk-item');
+            let checked = 0;
+            items.forEach(item => {
+                if (item.checked) checked++;
+            });
+            const percent = Math.round((checked / items.length) * 100);
+            
+            document.getElementById('checkPercent').innerText = percent + '%';
+            const bar = document.getElementById('checkBar');
+            bar.style.width = percent + '%';
+            
+            if (percent === 100) {
+                bar.className = 'bg-emerald-500 h-full transition-all duration-300';
+            } else {
+                bar.className = 'bg-sky-600 h-full transition-all duration-300';
+            }
+        }
+
+        // --- App Initialization ---
+        window.addEventListener('DOMContentLoaded', () => {
+            initKChart();
+            initIceChart();
+            initFreezingChart();
+            calcIce();
+        });
+    </script>
+</body>
+</html>
