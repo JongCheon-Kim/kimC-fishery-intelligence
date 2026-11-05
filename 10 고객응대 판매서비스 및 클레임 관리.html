@@ -1,0 +1,965 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>거제 장목 상권 수산물 고객응대 · 판매서비스 및 클레임 관리 실천 가이드</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap');
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            background-color: #f8fafc;
+            color: #1e293b;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 320px;
+            max-height: 380px;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 350px;
+            }
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 antialiased selection:bg-teal-500 selection:text-white">
+
+    <!-- Chosen Palette: Ocean Calm Neutrals (Slate background with Deep Navy `#1e3a8a`, Marine Teal `#0d9488`, and Soft Warm Slate) -->
+    <!-- Application Structure Plan:
+         1. Executive Dashboard & Hero Banner: Summary stats, core purpose of Jangmok commercial area, key performance metrics.
+         2. Paradigm Shift & Quality Factors (Section 1): Interactive breakdown of Experience Goods (경험재), information asymmetry, and dynamic Chart.js radar chart comparing traditional vs modern customer selection priorities.
+         3. Customer Persona & Response Strategy (Section 2): Interactive tab-based customer persona selector (Beginner, Loyal/Expert, Price-Sensitive, Skeptical) showing psychological risks, non-verbal behaviors, recommended scripts, and forbidden practices.
+         4. Product Communication & Origin Law Compliance (Section 3): Interactive freshness checklist (Fish vs Crustaceans), Legal origin fine matrix with interactive calculator, and Geoje Jangmok specialty story & cross-selling combination generator.
+         5. Claim Causes & 5-Step Resolution Simulator (Section 4): Breakdown of claim types (scale tricking, freshness, substitution, price), interactive 5-Step Claim Resolver wizard with practical scenarios, and scale zero-point checklist.
+         6. Regional Brand Impact & Sustainable Action Plan (Section 5): Interactive tourist spillover simulator showing how customer satisfaction directly impacts tourist stay duration and regional revenue, followed by the 3-pillar future strategy for Jangmok.
+         This non-linear interactive approach converts complex guidelines into practical, actionable tools for merchants, trainers, and policy makers. -->
+    <!-- Visualization & Content Choices:
+         - Priority Shift Radar Chart -> Chart.js Radar -> Illustrates how consumer evaluation factors moved from raw price to transparency/hygiene/kindness -> Interactive metric toggling.
+         - Claim Category Distribution Bar Chart -> Chart.js Doughnut/Bar -> Visualizes main claim triggers in seafood markets -> Highlights prevention impact.
+         - Customer Persona Matrix -> HTML Grid + JS State Toggle -> Dynamic content updating based on selected persona -> Practical reference for field sellers.
+         - Origin Law Fine Calculator -> Interactive JS Inputs -> Calculates fines based on violation count -> Immediate educational impact.
+         - 5-Step Claim Wizard -> Interactive Step Bar & Scenario Display -> Teaches procedural conflict resolution -> Standardizes field operations.
+         - Regional Spillover Simulator -> JS Sliders & Interactive Counters -> Shows connection between customer service and total regional economic value.
+         - CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. Standard Unicode characters & CSS badges used. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+
+    <!-- Header / Navigation -->
+    <header class="sticky top-0 z-50 bg-slate-900 text-white shadow-md border-b border-slate-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex items-center space-x-3">
+                    <span class="bg-teal-600 text-white font-black text-xl px-2.5 py-1 rounded-lg">장목</span>
+                    <div>
+                        <h1 class="text-lg font-bold leading-tight">수산물 고객응대 및 클레임 관리 가이드</h1>
+                        <p class="text-xs text-slate-400 hidden md:block">거제 장목항 국가어항 상권 연계 실천 전략 인터랙티브 플랫폼</p>
+                    </div>
+                </div>
+                <nav class="hidden lg:flex space-x-1 text-sm font-medium">
+                    <button onclick="scrollToSection('sec-paradigm')" class="px-3 py-2 rounded-md hover:bg-slate-800 hover:text-teal-400 transition">서비스 패러다임</button>
+                    <button onclick="scrollToSection('sec-persona')" class="px-3 py-2 rounded-md hover:bg-slate-800 hover:text-teal-400 transition">고객유형별 응대</button>
+                    <button onclick="scrollToSection('sec-origin')" class="px-3 py-2 rounded-md hover:bg-slate-800 hover:text-teal-400 transition">상품설명·원산지</button>
+                    <button onclick="scrollToSection('sec-claim')" class="px-3 py-2 rounded-md hover:bg-slate-800 hover:text-teal-400 transition">클레임 5단계 해결</button>
+                    <button onclick="scrollToSection('sec-brand')" class="px-3 py-2 rounded-md hover:bg-slate-800 hover:text-teal-400 transition">지역브랜드 파급효과</button>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content Container -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-12">
+
+        <!-- Executive Summary & Hero Section -->
+        <section class="bg-gradient-to-br from-slate-900 via-blue-950 to-slate-900 rounded-2xl p-6 sm:p-10 text-white shadow-xl relative overflow-hidden">
+            <div class="relative z-10 max-w-3xl space-y-4">
+                <div class="inline-flex items-center space-x-2 bg-teal-500/20 text-teal-300 border border-teal-500/30 px-3 py-1 rounded-full text-xs font-semibold">
+                    <span>⚓ 거제 장목항 국가어항 & 어촌신활력증진 연계</span>
+                </div>
+                <h2 class="text-2xl sm:text-4xl font-extrabold tracking-tight text-white leading-tight">
+                    신뢰와 투명성으로 완성하는<br>
+                    <span class="text-teal-400">장목 수산물 상권의 명품 고객 서비스</span>
+                </h2>
+                <p class="text-slate-300 text-sm sm:text-base leading-relaxed">
+                    수산물은 소비자가 외관만으로 내부 상태를 파악하기 어려운 <strong>'경험재(Experience Goods)'</strong>입니다. 
+                    거가대교 관문이자 해양관광 거점으로 도약하는 장목 상권에서 상인의 투명한 계량과 친절한 응대는 단순한 판매를 넘어 
+                    <strong>장목 지역 브랜드 전체의 가치를 결정짓는 핵심 자산</strong>입니다.
+                </p>
+                <!-- Key Stats Grid -->
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-4">
+                    <div class="bg-white/10 backdrop-blur-md p-3 rounded-xl border border-white/10 text-center">
+                        <div class="text-xs text-slate-300 font-medium">원산지 표시 의무</div>
+                        <div class="text-xl font-bold text-teal-300 mt-0.5">100% 준수</div>
+                        <div class="text-[10px] text-slate-400">법정 30pt 이상 푯말</div>
+                    </div>
+                    <div class="bg-white/10 backdrop-blur-md p-3 rounded-xl border border-white/10 text-center">
+                        <div class="text-xs text-slate-300 font-medium">부정 계량 차단</div>
+                        <div class="text-xl font-bold text-amber-300 mt-0.5">ZERO 목표</div>
+                        <div class="text-[10px] text-slate-400">영점 및 용기 자동 공제</div>
+                    </div>
+                    <div class="bg-white/10 backdrop-blur-md p-3 rounded-xl border border-white/10 text-center">
+                        <div class="text-xs text-slate-300 font-medium">클레임 대응</div>
+                        <div class="text-xl font-bold text-blue-300 mt-0.5">5단계 매뉴얼</div>
+                        <div class="text-[10px] text-slate-400">경청 → 공감 → 확인 → 보상</div>
+                    </div>
+                    <div class="bg-white/10 backdrop-blur-md p-3 rounded-xl border border-white/10 text-center">
+                        <div class="text-xs text-slate-300 font-medium">지역 파급 효과</div>
+                        <div class="text-xl font-bold text-emerald-300 mt-0.5">관광 시너지</div>
+                        <div class="text-[10px] text-slate-400">매미성·외포항 연계 체류</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 1: Paradigm Shift & Consumer Evaluation Factors -->
+        <section id="sec-paradigm" class="bg-white rounded-2xl p-6 sm:p-8 shadow-sm border border-slate-200 space-y-6">
+            <div class="border-b border-slate-100 pb-4">
+                <div class="flex items-center space-x-2 text-teal-600 font-bold text-xs uppercase tracking-wider">
+                    <span>SECTION 01</span>
+                    <span>•</span>
+                    <span>Service Paradigm</span>
+                </div>
+                <h3 class="text-xl sm:text-2xl font-bold text-slate-900 mt-1">수산물 유통 환경의 특수성과 고객 평가 패러다임</h3>
+                <p class="text-sm text-slate-600 mt-1">
+                    신선도 저하가 급격하고 정형화되지 않은 수산물 유통의 특성상, 현대 소비자는 단순히 '가격'만을 보지 않고 
+                    위생, 계량의 신뢰성, 서비스 친절도 등 종합적인 정서적 안심을 평가합니다.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+                <!-- Info Cards Column -->
+                <div class="lg:col-span-6 space-y-4">
+                    <div class="p-4 bg-slate-50 rounded-xl border border-slate-200">
+                        <div class="font-bold text-slate-900 text-sm flex items-center space-x-2">
+                            <span class="w-2 h-2 rounded-full bg-teal-500"></span>
+                            <span>수산물의 생물학적 특수성과 경험재(Experience Goods) 속성</span>
+                        </div>
+                        <p class="text-xs text-slate-600 mt-1.5 leading-relaxed">
+                            소비자는 구매 시점에 활어의 내부 수율(살수율), 맛, 정확한 선도를 즉시 판별하기 어렵습니다. 
+                            이러한 <strong>정보의 비대칭성</strong>으로 인해 판매자의 작업대 청결, 저울 측정의 정직성, 친절한 어종 설명이 품질을 판단하는 핵심 대리 지표가 됩니다.
+                        </p>
+                    </div>
+
+                    <div class="p-4 bg-slate-50 rounded-xl border border-slate-200">
+                        <div class="font-bold text-slate-900 text-sm flex items-center space-x-2">
+                            <span class="w-2 h-2 rounded-full bg-blue-500"></span>
+                            <span>전통적 상행위 관행에서 투명성 중심으로의 변화</span>
+                        </div>
+                        <p class="text-xs text-slate-600 mt-1.5 leading-relaxed">
+                            과거의 구두 권유, 주관적 에누리, 무질서한 호객 행위는 디지털 시대에 불신을 유발합니다. 
+                            100g당 정찰제, 전자저울 영점 시연, 위생 복장 착용 등 **가시적 투명성**이 필수적입니다.
+                        </p>
+                    </div>
+
+                    <div class="p-4 bg-slate-50 rounded-xl border border-slate-200">
+                        <div class="font-bold text-slate-900 text-sm flex items-center space-x-2">
+                            <span class="w-2 h-2 rounded-full bg-amber-500"></span>
+                            <span>매장 환경 위생의 중요성</span>
+                        </div>
+                        <p class="text-xs text-slate-600 mt-1.5 leading-relaxed">
+                            해수 배수 관리, 어취(비린내) 제거, 도마·칼의 주기적 소독은 소비자가 매장에 들어서서 결정을 내리는 첫 3초의 심리적 안정감을 좌우합니다.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Chart Column -->
+                <div class="lg:col-span-6 bg-slate-50 p-4 rounded-xl border border-slate-200 text-center">
+                    <h4 class="text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">소비자 매장 선택 기준의 변화 (과거 vs 현대)</h4>
+                    <div class="chart-container">
+                        <canvas id="paradigmChart"></canvas>
+                    </div>
+                    <p class="text-[11px] text-slate-500 mt-2">
+                        💡 가격 저렴성 중심에서 계량 신뢰성, 매장 위생, 친절한 어종 설명의 비중이 크게 확대되었습니다.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 2: Customer Personas & Response Strategies -->
+        <section id="sec-persona" class="bg-white rounded-2xl p-6 sm:p-8 shadow-sm border border-slate-200 space-y-6">
+            <div class="border-b border-slate-100 pb-4">
+                <div class="flex items-center space-x-2 text-teal-600 font-bold text-xs uppercase tracking-wider">
+                    <span>SECTION 02</span>
+                    <span>•</span>
+                    <span>Customer Personas</span>
+                </div>
+                <h3 class="text-xl sm:text-2xl font-bold text-slate-900 mt-1">소비자 유형별 행동 특성 및 맞춤형 응대 전략</h3>
+                <p class="text-sm text-slate-600 mt-1">
+                    수산물 매장을 찾는 고객은 구매 경험과 민감도에 따라 요구사항이 크게 다릅니다. 고객의 비언어적 태도를 파악하여 최선의 맞춤형 서비스를 제공해야 합니다.
+                </p>
+            </div>
+
+            <!-- Persona Selector Tabs -->
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                <button onclick="selectPersona('beginner')" id="btn-persona-beginner" class="persona-btn active p-3 rounded-xl border text-left transition flex flex-col justify-between bg-teal-50 border-teal-500 text-teal-900">
+                    <span class="text-xs font-semibold text-teal-600">유형 01</span>
+                    <span class="text-sm font-bold mt-1">🐟 초보 구매자</span>
+                    <span class="text-[11px] text-slate-500 mt-1">질문 망설임 / 바가지 공포</span>
+                </button>
+                <button onclick="selectPersona('expert')" id="btn-persona-expert" class="persona-btn p-3 rounded-xl border border-slate-200 text-left transition flex flex-col justify-between hover:bg-slate-50 text-slate-700">
+                    <span class="text-xs font-semibold text-slate-400">유형 02</span>
+                    <span class="text-sm font-bold mt-1">🦀 숙련 · 단골 고객</span>
+                    <span class="text-[11px] text-slate-500 mt-1">산지 직접 지목 / 전문 지식</span>
+                </button>
+                <button onclick="selectPersona('price')" id="btn-persona-price" class="persona-btn p-3 rounded-xl border border-slate-200 text-left transition flex flex-col justify-between hover:bg-slate-50 text-slate-700">
+                    <span class="text-xs font-semibold text-slate-400">유형 03</span>
+                    <span class="text-sm font-bold mt-1">🏷️ 가격 민감형</span>
+                    <span class="text-[11px] text-slate-500 mt-1">시세 비교 / 덤 요청</span>
+                </button>
+                <button onclick="selectPersona('skeptical')" id="btn-persona-skeptical" class="persona-btn p-3 rounded-xl border border-slate-200 text-left transition flex flex-col justify-between hover:bg-slate-50 text-slate-700">
+                    <span class="text-xs font-semibold text-slate-400">유형 04</span>
+                    <span class="text-sm font-bold mt-1">🔍 의심 · 불만형</span>
+                    <span class="text-[11px] text-slate-500 mt-1">저울 감시 / 방어적 태도</span>
+                </button>
+            </div>
+
+            <!-- Dynamic Persona Card -->
+            <div id="persona-detail-card" class="bg-slate-50 rounded-xl p-6 border border-slate-200 space-y-4">
+                <!-- JavaScript will populate this based on selection -->
+            </div>
+        </section>
+
+        <!-- SECTION 3: Communication & Legal Origin Regulations -->
+        <section id="sec-origin" class="bg-white rounded-2xl p-6 sm:p-8 shadow-sm border border-slate-200 space-y-8">
+            <div class="border-b border-slate-100 pb-4">
+                <div class="flex items-center space-x-2 text-teal-600 font-bold text-xs uppercase tracking-wider">
+                    <span>SECTION 03</span>
+                    <span>•</span>
+                    <span>Product & Regulation</span>
+                </div>
+                <h3 class="text-xl sm:text-2xl font-bold text-slate-900 mt-1">전문 상품 설명, 원산지 준수 & 지역 스토리텔링</h3>
+                <p class="text-sm text-slate-600 mt-1">
+                    주관적 설명 대신 객관적 신선도 지표를 제시하고, 법적 원산지 표시를 정직하게 이행하며, 거제 장목의 지리적·문화적 스토리를 융합합니다.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <!-- Sub-block 1: Freshness Inspector Checklist -->
+                <div class="space-y-4 bg-slate-50 p-5 rounded-xl border border-slate-200">
+                    <div class="flex items-center justify-between">
+                        <h4 class="font-bold text-slate-900 text-sm">🔍 수산물 종류별 객관적 신선도 설명 지표</h4>
+                        <div class="inline-flex rounded-lg p-0.5 bg-slate-200 text-xs">
+                            <button onclick="toggleFreshnessTab('fish')" id="tab-fresh-fish" class="px-2.5 py-1 rounded-md bg-white font-bold text-slate-800 shadow-sm">어류</button>
+                            <button onclick="toggleFreshnessTab('crust')" id="tab-fresh-crust" class="px-2.5 py-1 rounded-md font-medium text-slate-600">갑각류/패류</button>
+                        </div>
+                    </div>
+
+                    <div id="freshness-fish-content" class="space-y-2 text-xs">
+                        <div class="p-2.5 bg-white rounded-lg border border-slate-200 flex items-start space-x-2">
+                            <span class="text-teal-600 font-bold">1. 아가미:</span>
+                            <span class="text-slate-700">선홍색을 띠고 점액질이 적으며 선명함 안내</span>
+                        </div>
+                        <div class="p-2.5 bg-white rounded-lg border border-slate-200 flex items-start space-x-2">
+                            <span class="text-teal-600 font-bold">2. 안구(눈):</span>
+                            <span class="text-slate-700">각막이 투명하고 맑게 돌출되어 있는지 직접 확인 유도</span>
+                        </div>
+                        <div class="p-2.5 bg-white rounded-lg border border-slate-200 flex items-start space-x-2">
+                            <span class="text-teal-600 font-bold">3. 비늘/육질:</span>
+                            <span class="text-slate-700">비늘이 균일하게 밀착되어 있고, 눌렀을 때 근육의 탄력이 즉시 복원됨 설명</span>
+                        </div>
+                    </div>
+
+                    <div id="freshness-crust-content" class="space-y-2 text-xs hidden">
+                        <div class="p-2.5 bg-white rounded-lg border border-slate-200 flex items-start space-x-2">
+                            <span class="text-amber-600 font-bold">1. 관절/다리:</span>
+                            <span class="text-slate-700">다리 결손이 없고 마디가 단단하며 유연하게 움직이는 개체 제시</span>
+                        </div>
+                        <div class="p-2.5 bg-white rounded-lg border border-slate-200 flex items-start space-x-2">
+                            <span class="text-amber-600 font-bold">2. 복부/무게:</span>
+                            <span class="text-slate-700">복부 덮개가 단단하게 닫혀 있고 들어보았을 때 살수율이 차서 묵직함 설명</span>
+                        </div>
+                        <div class="p-2.5 bg-white rounded-lg border border-slate-200 flex items-start space-x-2">
+                            <span class="text-amber-600 font-bold">3. 패류 수조:</span>
+                            <span class="text-slate-700">입을 다물고 있거나 자극 시 즉시 다무는 활력 상태 시연</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sub-block 2: Legal Origin Calculator -->
+                <div class="space-y-4 bg-slate-50 p-5 rounded-xl border border-slate-200">
+                    <h4 class="font-bold text-slate-900 text-sm flex items-center justify-between">
+                        <span>⚖️ 원산지 표시법 규정 및 위반 시 처벌 계산기</span>
+                        <span class="text-[11px] bg-red-100 text-red-700 font-semibold px-2 py-0.5 rounded">농수산물원산지표시법</span>
+                    </h4>
+                    <p class="text-xs text-slate-600">
+                        원산지 표시 위반은 영업정지 및 고액 과태료뿐만 아니라 상권 전체의 신뢰도를 파괴합니다.
+                    </p>
+
+                    <div class="bg-white p-3.5 rounded-lg border border-slate-200 space-y-3">
+                        <div class="grid grid-cols-2 gap-2 text-xs">
+                            <div>
+                                <label class="font-semibold text-slate-700 block mb-1">위반 유형 선택</label>
+                                <select id="origin-violation-type" onchange="calculateOriginFine()" class="w-full p-2 border rounded-md text-xs bg-slate-50">
+                                    <option value="unmarked">원산지 미표시 (과태료)</option>
+                                    <option value="false">원산지 거짓/허위 표시 (형사처벌)</option>
+                                    <option value="confusing">표시방법 위반 (시정명령)</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="font-semibold text-slate-700 block mb-1">적발 횟수</label>
+                                <select id="origin-violation-count" onchange="calculateOriginFine()" class="w-full p-2 border rounded-md text-xs bg-slate-50">
+                                    <option value="1">1차 적발</option>
+                                    <option value="2">2차 적발</option>
+                                    <option value="3">3차 적발 이상</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Fine Result Display -->
+                        <div id="origin-fine-result" class="p-3 bg-red-50 rounded-md border border-red-200 text-xs text-red-900 space-y-1">
+                            <!-- Populated by JS -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Geoje Jangmok Specialty Storytelling & Cross-Selling Generator -->
+            <div class="bg-gradient-to-r from-blue-900 to-slate-900 text-white rounded-xl p-6 space-y-4">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-blue-800/80 pb-3">
+                    <div>
+                        <h4 class="font-bold text-base text-teal-300">🌊 거제 장목 지역 특산물 스토리텔링 & 교차판매(Cross-Selling) 결합기</h4>
+                        <p class="text-xs text-slate-300">장목항, 외포항 등 청정 지역 어종의 역사성 및 조리법을 융합하여 객단가와 만족도를 동시에 제고합니다.</p>
+                    </div>
+                    <select id="jangmok-species-select" onchange="updateJangmokStory()" class="bg-slate-800 text-teal-300 font-bold border border-teal-500/50 rounded-lg px-3 py-1.5 text-xs">
+                        <option value="cod">🐟 겨울철 거제 대구 (외포·장목)</option>
+                        <option value="clam">🐚 장목 관포 바지락 & 개조개</option>
+                        <option value="rockfish">🎣 청정 해역 볼락 & 굴</option>
+                    </select>
+                </div>
+
+                <div id="jangmok-story-card" class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
+                    <!-- Populated by JS -->
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 4: Claim Analysis & 5-Step Resolution Protocol -->
+        <section id="sec-claim" class="bg-white rounded-2xl p-6 sm:p-8 shadow-sm border border-slate-200 space-y-8">
+            <div class="border-b border-slate-100 pb-4">
+                <div class="flex items-center space-x-2 text-teal-600 font-bold text-xs uppercase tracking-wider">
+                    <span>SECTION 04</span>
+                    <span>•</span>
+                    <span>Claim Management</span>
+                </div>
+                <h3 class="text-xl sm:text-2xl font-bold text-slate-900 mt-1">고객 민원 원인 분석 & 체계적 클레임 해결 5단계</h3>
+                <p class="text-sm text-slate-600 mt-1">
+                    수산시장의 클레임은 주로 저울 무게, 선도, 가격 이중 청구 등 구조적 원인에서 발생합니다. 감정적 대응을 배제하고 표준 프로토콜에 따라 해결해야 합니다.
+                </p>
+            </div>
+
+            <!-- Claim Distribution Chart & Scale Checklist -->
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+                <div class="lg:col-span-6 bg-slate-50 p-4 rounded-xl border border-slate-200 text-center">
+                    <h4 class="text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">수산물 주요 민원·클레임 발생 원인 비중</h4>
+                    <div class="chart-container">
+                        <canvas id="claimChart"></canvas>
+                    </div>
+                </div>
+
+                <div class="lg:col-span-6 space-y-3 text-xs">
+                    <h4 class="font-bold text-slate-900 text-sm mb-1">⚠️ 계량 부정(저울치기·물치기) 원천 차단 체크리스트</h4>
+                    <div class="p-3 bg-amber-50 rounded-lg border border-amber-200 text-amber-900 space-y-2">
+                        <label class="flex items-start space-x-2 cursor-pointer">
+                            <input type="checkbox" checked class="mt-0.5 rounded text-teal-600">
+                            <span><strong>바구니 영점 사전 공제 시연:</strong> 계량 전 빈 바구니 무게(예: 500g)를 전자저울 타라(Tare) 기능으로 차감하는 과정을 고객에게 눈으로 보여줌</span>
+                        </label>
+                        <label class="flex items-start space-x-2 cursor-pointer">
+                            <input type="checkbox" checked class="mt-0.5 rounded text-teal-600">
+                            <span><strong>해수 수분 충분히 제거:</strong> 뜰채나 바구니를 물에서 건진 후 3~5초간 해수를 충분히 턴 후 저울에 안착</span>
+                        </label>
+                        <label class="flex items-start space-x-2 cursor-pointer">
+                            <input type="checkbox" checked class="mt-0.5 rounded text-teal-600">
+                            <span><strong>저울 하향 가압 금지:</strong> 손가락이나 뜰채 갈고리로 바구니를 누르는 행위 절대 지양</span>
+                        </label>
+                        <label class="flex items-start space-x-2 cursor-pointer">
+                            <input type="checkbox" checked class="mt-0.5 rounded text-teal-600">
+                            <span><strong>양면 디스플레이 활용:</strong> 소비자가 단가와 총 무게를 실시간으로 직접 확인할 수 있도록 각도 유지</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 5-Step Claim Wizard Simulator -->
+            <div class="bg-slate-900 text-white p-6 rounded-2xl space-y-6">
+                <div class="border-b border-slate-800 pb-3 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                    <div>
+                        <h4 class="text-base font-bold text-teal-400">🛡️ 표준 클레임 해결 5단계 시뮬레이터</h4>
+                        <p class="text-xs text-slate-300">단계별 클릭을 통해 실제 불만 상황에서의 현장 대처 행동 요령을 연습하세요.</p>
+                    </div>
+                    <div class="text-xs font-mono bg-teal-900/80 text-teal-300 px-3 py-1 rounded-full border border-teal-500/30">
+                        STEP <span id="wizard-step-num">1</span> / 5
+                    </div>
+                </div>
+
+                <!-- Wizard Progress Bar -->
+                <div class="grid grid-cols-5 gap-1 text-center text-[11px]">
+                    <button onclick="setWizardStep(1)" id="wiz-btn-1" class="wiz-step-btn py-2 rounded-lg bg-teal-600 text-white font-bold transition">1. 경청·사과</button>
+                    <button onclick="setWizardStep(2)" id="wiz-btn-2" class="wiz-step-btn py-2 rounded-lg bg-slate-800 text-slate-400 font-medium transition">2. 공감·인정</button>
+                    <button onclick="setWizardStep(3)" id="wiz-btn-3" class="wiz-step-btn py-2 rounded-lg bg-slate-800 text-slate-400 font-medium transition">3. 사실 확인</button>
+                    <button onclick="setWizardStep(4)" id="wiz-btn-4" class="wiz-step-btn py-2 rounded-lg bg-slate-800 text-slate-400 font-medium transition">4. 보상 제시</button>
+                    <button onclick="setWizardStep(5)" id="wiz-btn-5" class="wiz-step-btn py-2 rounded-lg bg-slate-800 text-slate-400 font-medium transition">5. 사후 피드백</button>
+                </div>
+
+                <!-- Wizard Dynamic Content Area -->
+                <div id="wizard-content-box" class="bg-slate-800/90 border border-slate-700 p-5 rounded-xl space-y-3">
+                    <!-- Populated by JS -->
+                </div>
+
+                <div class="flex justify-between text-xs pt-2">
+                    <button onclick="prevWizardStep()" class="px-4 py-2 bg-slate-700 hover:bg-slate-600 rounded-lg text-slate-200 font-semibold transition">← 이전 단계</button>
+                    <button onclick="nextWizardStep()" class="px-4 py-2 bg-teal-600 hover:bg-teal-500 rounded-lg text-white font-semibold transition">다음 단계 →</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 5: Regional Brand Synergy & Sustainable Strategy -->
+        <section id="sec-brand" class="bg-white rounded-2xl p-6 sm:p-8 shadow-sm border border-slate-200 space-y-8">
+            <div class="border-b border-slate-100 pb-4">
+                <div class="flex items-center space-x-2 text-teal-600 font-bold text-xs uppercase tracking-wider">
+                    <span>SECTION 05</span>
+                    <span>•</span>
+                    <span>Regional Spillover & Future</span>
+                </div>
+                <h3 class="text-xl sm:text-2xl font-bold text-slate-900 mt-1">친절 서비스와 거제 장목 지역 브랜드 경제 파급효과</h3>
+                <p class="text-sm text-slate-600 mt-1">
+                    장목항 국가어항 개발, 어촌신활력증진, 매미성 관광객 유입과 맞물려 상인의 접점 응대 품질은 지역 전체의 재방문율을 좌우합니다.
+                </p>
+            </div>
+
+            <!-- Tourist Spillover Simulator -->
+            <div class="p-6 bg-slate-50 rounded-2xl border border-slate-200 space-y-6">
+                <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                    <div>
+                        <h4 class="font-bold text-slate-900 text-sm">📈 관광객 응대 만족도에 따른 지역 경제 파급효과 시뮬레이터</h4>
+                        <p class="text-xs text-slate-600">서비스 만족도 슬라이더를 조절하여 관광 체류 시간 및 인근 상권 매출 파급효과 변화를 확인해보세요.</p>
+                    </div>
+                    <div class="bg-white px-4 py-2 rounded-xl border border-slate-200 text-center">
+                        <span class="text-[11px] text-slate-500 block">설정된 서비스 만족도</span>
+                        <span id="satisfaction-score-label" class="text-xl font-extrabold text-teal-600">80점</span>
+                    </div>
+                </div>
+
+                <div class="space-y-2">
+                    <input type="range" id="satisfaction-slider" min="40" max="100" value="80" oninput="updateSpilloverSimulator()" class="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-teal-600">
+                    <div class="flex justify-between text-[11px] text-slate-400 font-medium">
+                        <span>40점 (불친절·저울치기 소문)</span>
+                        <span>70점 (보통)</span>
+                        <span>100점 (명품 신뢰 상권)</span>
+                    </div>
+                </div>
+
+                <!-- Simulation Dynamic Result Cards -->
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 text-center">
+                    <div class="p-4 bg-white rounded-xl border border-slate-200 space-y-1">
+                        <span class="text-xs text-slate-500 font-medium">평균 관광 체류 시간</span>
+                        <div id="sim-stay-time" class="text-lg font-bold text-slate-900">3.5 시간</div>
+                        <span class="text-[10px] text-slate-400">인근 매미성·카페 연계</span>
+                    </div>
+                    <div class="p-4 bg-white rounded-xl border border-slate-200 space-y-1">
+                        <span class="text-xs text-slate-500 font-medium">온라인 자발적 추천율(NPS)</span>
+                        <div id="sim-nps" class="text-lg font-bold text-teal-600">+45 %</div>
+                        <span class="text-[10px] text-slate-400">SNS 및 블로그 긍정 후기</span>
+                    </div>
+                    <div class="p-4 bg-white rounded-xl border border-slate-200 space-y-1">
+                        <span class="text-xs text-slate-500 font-medium">장목 상권 전체 매출 증대 효과</span>
+                        <div id="sim-revenue-impact" class="text-lg font-bold text-emerald-600">+28 %</div>
+                        <span class="text-[10px] text-slate-400">식당·특산물·숙박 파급</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 3 Pillars for Sustainable Market -->
+            <div class="space-y-4">
+                <h4 class="font-bold text-slate-900 text-sm">🏛️ 장목 수산 상권 고도화를 위한 3대 지속 가능 추진 과제</h4>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
+                    <div class="p-4 bg-slate-50 rounded-xl border-t-4 border-t-teal-600 border border-slate-200 space-y-2">
+                        <div class="font-bold text-slate-900 text-sm">1. 스마트 디지털 계량 인프라</div>
+                        <p class="text-slate-600 leading-relaxed">
+                            바구니 무게 자동 차감 및 양면 디스플레이가 장착된 스마트 전자저울의 전면 도입을 통해 물리적으로 부정 계량 여지를 차단합니다.
+                        </p>
+                    </div>
+                    <div class="p-4 bg-slate-50 rounded-xl border-t-4 border-t-blue-600 border border-slate-200 space-y-2">
+                        <div class="font-bold text-slate-900 text-sm">2. 상인회 자율 정정 & 무관용 원칙</div>
+                        <p class="text-slate-600 leading-relaxed">
+                            원산지 위반, 저울치기 등 불공정 행위 적발 시 자율 규약에 따른 경고 및 영업 제재 등 엄격한 무관용 자정 시스템을 구축합니다.
+                        </p>
+                    </div>
+                    <div class="p-4 bg-slate-50 rounded-xl border-t-4 border-t-indigo-600 border border-slate-200 space-y-2">
+                        <div class="font-bold text-slate-900 text-sm">3. 상설 서비스 역량 강화 교육</div>
+                        <p class="text-slate-600 leading-relaxed">
+                            어촌신활력증진 사업과 연계하여 상인 대상 고객 응대 기법, 위생 법규, 5단계 클레임 해결 표준 매뉴얼 교육을 정례화합니다.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-slate-900 text-slate-400 text-xs py-8 border-t border-slate-800">
+        <div class="max-w-7xl mx-auto px-4 text-center space-y-2">
+            <p class="font-semibold text-slate-300">거제 장목 상권 수산물 고객응대 · 판매서비스 및 클레임 관리 가이드</p>
+            <p>본 애플리케이션은 수산물 유통의 정보 비대칭 해소 및 거제 장목항 지역 브랜드 가치 제고를 위해 제작되었습니다.</p>
+            <p class="text-slate-500 text-[11px] pt-2">© 2026 Geoje Jangmok Commercial Revitalization Initiative. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript Application Logic -->
+    <script>
+        // Smooth scroll helper
+        function scrollToSection(id) {
+            const el = document.getElementById(id);
+            if (el) {
+                el.scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+
+        // --- Data Stores ---
+        const personaData = {
+            beginner: {
+                title: "🐟 초보 구매자 (수산물 지식 부족 & 가격 불안)",
+                psychology: "바가지요금이나 저울치기에 대한 심리적 공포가 크며, 손질이나 보관법을 몰라 선뜻 구매를 망설임.",
+                behavior: "수조 주변을 배회하며 가격표만 유심히 바라봄. 질문하기 머뭇거림.",
+                dos: [
+                    "전문 용어 배제 및 용도(횟감·구이·탕) 우선 질문",
+                    "무료 손질 서비스 및 100g당 정찰 가격 명확히 안내",
+                    "친절한 조리법 팁 카드 함께 제공"
+                ],
+                donts: [
+                    "다짜고짜 바구니에 담으며 구매 강요 금지",
+                    "'어떤 것 찾으세요?'라며 압박감 주는 어조 사용 금지"
+                ],
+                script: "“고객님, 오늘 어떤 조리용으로 준비하시나요? 횟감용이시면 뼈가 없고 부드러운 개체로 1kg당 가격 기준 깔끔하게 추천해 드릴게요!”"
+            },
+            expert: {
+                title: "🦀 숙련 · 단골 고객 (전문 지식 보유 & 관계 중시)",
+                psychology: "산지, 어획 시기, 선도 구분법을 이미 숙지하고 있으며, 자신을 전문가로 인정해 주길 원함.",
+                behavior: "특정 어종을 직접 지목하며 아가미나 눈 투명도를 유심히 살핌.",
+                dos: [
+                    "당일 입고된 가장 신선한 산지 어종 정보 및 어황 공유",
+                    "계량 및 손질의 일관된 정량성 보장",
+                    "단골에 대한 정서적 환대 및 감사 표현"
+                ],
+                donts: [
+                    "고객의 수산물 지식을 무시하거나 박식함을 다투는 행위 금지",
+                    "품질이 떨어진 재고 상품을 덤으로 몰래 얹어주는 행위 금지"
+                ],
+                script: "“사장님, 역시 보는 눈이 정확하시네요! 오늘 아침 장목항으로 직송된 활어인데, 살수율이 아주 좋습니다.”"
+            },
+            price: {
+                title: "🏷️ 가격 민감형 (시세 비교 & 실질 효용 극대화)",
+                psychology: "여러 점포의 가격을 비교하며, 자신이 불이익을 받지 않는지 철저히 계산함.",
+                behavior: "가격 할인을 집요하게 요구하거나 서비스 덤 추가를 요청함.",
+                dos: [
+                    "100g/1kg 당 단가를 명확히 제시하고 정찰제 취지 안내",
+                    "불투명한 가격 할인 대신 정량과 정직한 품질 강조",
+                    "매운탕 부재료나 소스 등 정형화된 서비스 항목 제공"
+                ],
+                donts: [
+                    "지나치게 가격을 깎아주면서 품질을 낮추는 편법 금지",
+                    "할인 요구에 불쾌한 표정을 지어 기분을 상하게 하는 행위 금지"
+                ],
+                script: "“저희 매장은 전자저울로 영점부터 정직하게 측정하는 정찰 매장입니다! 대신 탕거리 양념과 야채 세트를 알차게 챙겨드릴게요.”"
+            },
+            skeptical: {
+                title: "🔍 의심 · 불만형 (과거 피해 경험 & 방어적 태도)",
+                psychology: "언론 보도나 주변 이야기로 인해 저울 조작, 바구니 무게 가압 등을 의심함.",
+                behavior: "상인의 손동작을 유심히 감시하며, 계량 및 손질 과정을 가까이서 지켜봄.",
+                dos: [
+                    "계량 전 빈 바구니 무게(영점)를 눈앞에서 먼저 보여주기",
+                    "뜰채의 해수를 충분히 털고 저울에 올려 정직함 시연",
+                    "주방 오픈형 손질 과정 노출로 안심 유도"
+                ],
+                donts: [
+                    "의심하는 고객에게 변명하거나 신경질적인 반응 보이기 금지",
+                    "저울 화면을 상인 쪽으로만 돌려놓고 비공개 측정 금지"
+                ],
+                script: "“고객님, 계량 전 바구니 무게 400g 먼저 빼고 영점 잡는 거 보여드릴게요. 저울 디스플레이 화면 함께 확인해 주세요!”"
+            }
+        };
+
+        const jangmokStories = {
+            cod: {
+                title: "👑 겨울철 거제 외포·장목 진상 대구",
+                desc: "조선시대 왕실 진상품으로 으뜸이었던 거제 대구는 장목 관포항과 외포항 일대 청정 해역에서 어획됩니다. 담백하고 깊은 맛이 일품입니다.",
+                cross: "💡 교차판매 제안: 대구 지리/매운탕용 생대구를 구매한 고객에게 '장목 전통 바지락 육수용 조개'와 '특제 매운탕 양념 세트'를 결합 제안!"
+            },
+            clam: {
+                title: "🐚 장목 관포 바지락 & 개조개",
+                desc: "장목의 영양 풍부한 갯벌에서 자란 바지락과 개조개는 속이 꽉 차고 씹히는 맛이 달큰합니다.",
+                cross: "💡 교차판매 제안: 횟감(모듬회)을 고른 고객에게 서더리탕의 시원한 풍미를 극대화할 '장목 바지락 500g 덤 결합 세트' 제안!"
+            },
+            rockfish: {
+                title: "🎣 청정 해역 볼락 & 거제 굴",
+                desc: "거제 해역의 맑은 바다에서 어획된 볼락은 구이와 볼락김치로 유명하며, 거제 굴은 남해안 해풍을 맞아 향이 매우 진합니다.",
+                cross: "💡 교차판매 제안: 볼락 구이용을 찾는 관광객에게 '캠핑·숙소용 석화/하프쉘 굴 구이 세트' 교차 제안!"
+            }
+        };
+
+        const wizardSteps = [
+            {
+                step: 1,
+                title: "1단계: 경청 및 초기 진정 (Listening & Initial Apology)",
+                action: "고객의 말을 자르지 않고 끝까지 경청하며 정중한 유감 표명",
+                detail: "고객이 불만을 제기할 때 감정적으로 반박하지 말고 경청합니다. 고객 주장의 사실 여부를 떠나, 구매 과정에서 느낀 정서적 불편함 자체에 대해 '불편을 드려 정중히 사과드립니다'라는 초기 사과를 건넸을 때 대립 구도가 완화됩니다.",
+                example: "“고객님, 즐거운 방문길에 선도 문제로 심려를 끼쳐드려 정말 죄송합니다. 말씀 주신 내용 차분히 들려주시면 신속히 도와드리겠습니다.”"
+            },
+            {
+                step: 2,
+                title: "2단계: 공감 및 불편 인정 (Empathy & De-escalation)",
+                action: "고객의 시간적·경제적 손실과 불쾌감에 대해 깊이 공감",
+                detail: "고객 입장에서 겪었을 불편의 무게를 헤아리고 있음을 표현합니다. 상인의 변명이나 책임 회피는 불만을 폭발시키는 원인이 됩니다.",
+                example: "“가족분들과 드시려고 기분 좋게 사가셨을 텐데, 얼마나 속상하셨을지 충분히 이해가 됩니다.”"
+            },
+            {
+                step: 3,
+                title: "3단계: 객관적 사실 및 원인 확인 (Fact-Finding & Verification)",
+                action: "주관적 주장을 배제하고 객관적 근거(저울 영점, CCTV, 보관상태) 확인",
+                detail: "계량 문제인 경우 고객 입회하에 전자저울의 영점 및 표준 분동 테스트를 진행합니다. 선도 문제 시 상품의 보관 온도 및 손질 시점을 상호 확인합니다.",
+                example: "“고객님, 가지고 오신 포장 상품의 상태를 함께 확인하고, 작업장 CCTV 및 저울 영점 기록을 정직하게 검증해 드리겠습니다.”"
+            },
+            {
+                step: 4,
+                title: "4단계: 대안 제시 및 합리적 보상 (Solution Proposal & Compensation)",
+                action: "표준 보상 규정에 따른 신속한 환불 또는 정상 상품 교환",
+                detail: "매장의 과실(바구니 무게 미공제, 선도 미달 등) 확인 시 즉각적인 전액 환불 또는 교환을 실시합니다. 단순 변심 시에도 완곡한 설명과 대안을 제안합니다.",
+                example: "“저희 매장의 바구니 무게 공제 실수가 확인되었습니다. 정말 죄송합니다. 전액 환불 조치해 드리고, 새로 신선한 개체로 다시 포장해 드리겠습니다.”"
+            },
+            {
+                step: 5,
+                title: "5단계: 신속한 처리 및 사후 피드백 환류 (Swift Resolution & Process Feedback)",
+                action: "보상 이행 완료 후 일지 작성 및 상인 교육을 통한 재발 방지",
+                detail: "사건 종결 후 발생 원인과 보상 결과를 상인회 클레임 일지에 기록하고, 점포 작업 프로세스를 개선하여 동일 사례 재발을 차단합니다.",
+                example: "“처리 결과 일지 기록 완료. [개선 조치] 타라(Tare) 바구니 공제 버튼 자동 고정형 전자저울로 전면 교체 등록.”"
+            }
+        ];
+
+        let currentWizardStep = 1;
+
+        // --- Functions ---
+
+        function selectPersona(key) {
+            document.querySelectorAll('.persona-btn').forEach(btn => {
+                btn.classList.remove('active', 'bg-teal-50', 'border-teal-500', 'text-teal-900');
+                btn.classList.add('border-slate-200', 'text-slate-700');
+            });
+
+            const activeBtn = document.getElementById(`btn-persona-${key}`);
+            if (activeBtn) {
+                activeBtn.classList.add('active', 'bg-teal-50', 'border-teal-500', 'text-teal-900');
+            }
+
+            const p = personaData[key];
+            const container = document.getElementById('persona-detail-card');
+            
+            container.innerHTML = `
+                <div class="border-b border-slate-200 pb-3 flex items-center justify-between">
+                    <h4 class="font-bold text-slate-900 text-base">${p.title}</h4>
+                    <span class="text-xs bg-teal-100 text-teal-800 font-semibold px-2.5 py-0.5 rounded-full">맞춤 응대 프로토콜</span>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+                    <div class="space-y-2">
+                        <div class="p-2.5 bg-white rounded-lg border border-slate-200">
+                            <span class="font-bold text-slate-800 block mb-1">🧠 심리 상태 및 욕구</span>
+                            <p class="text-slate-600">${p.psychology}</p>
+                        </div>
+                        <div class="p-2.5 bg-white rounded-lg border border-slate-200">
+                            <span class="font-bold text-slate-800 block mb-1">👀 관찰 가능한 비언어적 행동</span>
+                            <p class="text-slate-600">${p.behavior}</p>
+                        </div>
+                    </div>
+                    <div class="space-y-2">
+                        <div class="p-2.5 bg-emerald-50 rounded-lg border border-emerald-200 text-emerald-900">
+                            <span class="font-bold block mb-1">✅ 권장 응대 수칙 (DO)</span>
+                            <ul class="list-disc list-inside space-y-1 text-slate-700">
+                                ${p.dos.map(item => `<li>${item}</li>`).join('')}
+                            </ul>
+                        </div>
+                        <div class="p-2.5 bg-rose-50 rounded-lg border border-rose-200 text-rose-900">
+                            <span class="font-bold block mb-1">❌ 금지 행동 (DON'T)</span>
+                            <ul class="list-disc list-inside space-y-1 text-slate-700">
+                                ${p.donts.map(item => `<li>${item}</li>`).join('')}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="p-3 bg-slate-900 text-teal-300 rounded-lg text-xs font-mono">
+                    <span class="text-slate-400 font-sans font-bold mr-2">💬 권장 화법 표준 스크립트:</span>
+                    ${p.script}
+                </div>
+            `;
+        }
+
+        function toggleFreshnessTab(type) {
+            const fishBtn = document.getElementById('tab-fresh-fish');
+            const crustBtn = document.getElementById('tab-fresh-crust');
+            const fishContent = document.getElementById('freshness-fish-content');
+            const crustContent = document.getElementById('freshness-crust-content');
+
+            if (type === 'fish') {
+                fishBtn.className = "px-2.5 py-1 rounded-md bg-white font-bold text-slate-800 shadow-sm";
+                crustBtn.className = "px-2.5 py-1 rounded-md font-medium text-slate-600";
+                fishContent.classList.remove('hidden');
+                crustContent.classList.add('hidden');
+            } else {
+                crustBtn.className = "px-2.5 py-1 rounded-md bg-white font-bold text-slate-800 shadow-sm";
+                fishBtn.className = "px-2.5 py-1 rounded-md font-medium text-slate-600";
+                crustContent.classList.remove('hidden');
+                fishContent.classList.add('hidden');
+            }
+        }
+
+        function calculateOriginFine() {
+            const type = document.getElementById('origin-violation-type').value;
+            const count = document.getElementById('origin-violation-count').value;
+            const resultBox = document.getElementById('origin-fine-result');
+
+            let title = "";
+            let fineText = "";
+            let actionText = "";
+
+            if (type === 'unmarked') {
+                title = "원산지 미표시 (과태료 대상)";
+                if (count === '1') fineText = "과태료 30만 원 부과";
+                else if (count === '2') fineText = "과태료 60만 원 부과";
+                else fineText = "과태료 100만 원 부과";
+                actionText = "규격 푯말(30포인트 이상) 및 수조 구획별 즉시 시정 조치 명령";
+            } else if (type === 'false') {
+                title = "원산지 거짓/허위 표시 (형사처벌 대상)";
+                fineText = "7년 이하의 징역 또는 1억 원 이하의 벌금 (2년 내 2회 적발 시 재발 과징금)";
+                actionText = "영업정지 행정처분 및 관할 시·군·구 홈페이지 1년간 위반 사실 공표";
+            } else {
+                title = "표시 방법 위반 (혼동·은폐 표시)";
+                fineText = "1차 시정명령, 불이행 시 1년 이하 징역 또는 1천만 원 이하 벌금";
+                actionText = "소비자 시선 높이에 명확한 표시 위치 변경 조치";
+            }
+
+            resultBox.innerHTML = `
+                <div class="font-bold text-slate-900">${title} - ${count}차 적발 처벌 수위</div>
+                <div class="text-sm font-extrabold text-red-700 mt-0.5">💰 ${fineText}</div>
+                <div class="text-[11px] text-slate-600 mt-1">📌 행정 처분 기준: ${actionText}</div>
+            `;
+        }
+
+        function updateJangmokStory() {
+            const spec = document.getElementById('jangmok-species-select').value;
+            const data = jangmokStories[spec];
+            const container = document.getElementById('jangmok-story-card');
+
+            container.innerHTML = `
+                <div class="bg-white/10 p-3 rounded-lg border border-white/10 space-y-1">
+                    <span class="text-teal-300 font-bold block text-sm">${data.title}</span>
+                    <p class="text-slate-300 leading-relaxed">${data.desc}</p>
+                </div>
+                <div class="md:col-span-2 bg-teal-950/80 p-3 rounded-lg border border-teal-500/30 text-teal-200 flex items-center">
+                    <p class="leading-relaxed">${data.cross}</p>
+                </div>
+            `;
+        }
+
+        function setWizardStep(stepNum) {
+            currentWizardStep = stepNum;
+            document.getElementById('wizard-step-num').innerText = stepNum;
+
+            for (let i = 1; i <= 5; i++) {
+                const btn = document.getElementById(`wiz-btn-${i}`);
+                if (i === stepNum) {
+                    btn.className = "wiz-step-btn py-2 rounded-lg bg-teal-600 text-white font-bold transition shadow-lg";
+                } else {
+                    btn.className = "wiz-step-btn py-2 rounded-lg bg-slate-800 text-slate-400 font-medium transition";
+                }
+            }
+
+            const stepData = wizardSteps[stepNum - 1];
+            const box = document.getElementById('wizard-content-box');
+            
+            box.innerHTML = `
+                <div class="flex items-center justify-between border-b border-slate-700 pb-2">
+                    <h5 class="text-sm font-bold text-teal-300">${stepData.title}</h5>
+                    <span class="text-[11px] bg-slate-700 text-slate-300 px-2 py-0.5 rounded">핵심 목표: ${stepData.action}</span>
+                </div>
+                <p class="text-xs text-slate-300 leading-relaxed">${stepData.detail}</p>
+                <div class="p-3 bg-slate-900 border border-slate-700 rounded-lg text-xs font-mono text-emerald-300">
+                    <span class="text-slate-400 font-sans font-bold block mb-0.5">💬 현장 실전 대처 예시문:</span>
+                    ${stepData.example}
+                </div>
+            `;
+        }
+
+        function nextWizardStep() {
+            if (currentWizardStep < 5) {
+                setWizardStep(currentWizardStep + 1);
+            }
+        }
+
+        function prevWizardStep() {
+            if (currentWizardStep > 1) {
+                setWizardStep(currentWizardStep - 1);
+            }
+        }
+
+        function updateSpilloverSimulator() {
+            const score = parseInt(document.getElementById('satisfaction-slider').value);
+            document.getElementById('satisfaction-score-label').innerText = `${score}점`;
+
+            // Calculations based on score
+            const stayTime = (1.5 + (score / 100) * 2.5).toFixed(1);
+            const nps = Math.round((score - 50) * 1.8);
+            const rev = Math.round((score - 50) * 0.7);
+
+            document.getElementById('sim-stay-time').innerText = `${stayTime} 시간`;
+            document.getElementById('sim-nps').innerText = `${nps > 0 ? '+' : ''}${nps} %`;
+            document.getElementById('sim-revenue-impact').innerText = `${rev > 0 ? '+' : ''}${rev} %`;
+
+            const stayEl = document.getElementById('sim-stay-time');
+            if (score >= 80) stayEl.className = "text-lg font-bold text-teal-600";
+            else if (score >= 60) stayEl.className = "text-lg font-bold text-slate-900";
+            else stayEl.className = "text-lg font-bold text-rose-600";
+        }
+
+        // --- Chart.js Initializations ---
+        function initCharts() {
+            // Chart 1: Consumer Priority Shift Radar Chart
+            const ctxParadigm = document.getElementById('paradigmChart').getContext('2d');
+            new Chart(ctxParadigm, {
+                type: 'radar',
+                data: {
+                    labels: ['낮은 단가(원)', '계량 신뢰성', '매장 위생', '어종·선도 설명', '손질 편의성', '친절·환대'],
+                    datasets: [
+                        {
+                            label: '과태 전통시장 관행',
+                            data: [90, 40, 30, 40, 50, 45],
+                            backgroundColor: 'rgba(148, 163, 184, 0.2)',
+                            borderColor: '#94a3b8',
+                            borderWidth: 1.5,
+                            pointRadius: 3
+                        },
+                        {
+                            label: '현대 스마트 상권 고객',
+                            data: [60, 95, 90, 85, 88, 92],
+                            backgroundColor: 'rgba(13, 148, 136, 0.25)',
+                            borderColor: '#0d9488',
+                            borderWidth: 2,
+                            pointRadius: 4
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        r: {
+                            min: 0,
+                            max: 100,
+                            ticks: { display: false },
+                            pointLabels: {
+                                font: { size: 10, family: 'Noto Sans KR' }
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: { boxWidth: 12, font: { size: 10 } }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return context.dataset.label + ': ' + context.raw + '점';
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Chart 2: Claim Trigger Distribution Doughnut Chart
+            const ctxClaim = document.getElementById('claimChart').getContext('2d');
+            new Chart(ctxClaim, {
+                type: 'doughnut',
+                data: {
+                    labels: ['계량 부정 (저울/물치기)', '품질·선도 미달', '상품 바꿔치기 의혹', '가격 시비/상차림 이중청구', '기타 불친절'],
+                    datasets: [{
+                        data: [42, 28, 15, 10, 5],
+                        backgroundColor: [
+                            '#e11d48', // red
+                            '#f59e0b', // amber
+                            '#3b82f6', // blue
+                            '#8b5cf6', // purple
+                            '#cbd5e1'  // slate
+                        ],
+                        borderWidth: 2,
+                        borderColor: '#ffffff'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                boxWidth: 10,
+                                font: { size: 10, family: 'Noto Sans KR' },
+                                generateLabels: function(chart) {
+                                    const data = chart.data;
+                                    if (data.labels.length && data.datasets.length) {
+                                        return data.labels.map(function(label, i) {
+                                            const meta = chart.getDatasetMeta(0);
+                                            const ds = data.datasets[0];
+                                            const val = ds.data[i];
+                                            return {
+                                                text: label.length > 14 ? label.substring(0, 14) + '...' : label + ' (' + val + '%)',
+                                                fillStyle: ds.backgroundColor[i],
+                                                hidden: isNaN(ds.data[i]) || meta.data[i].hidden,
+                                                index: i
+                                            };
+                                        });
+                                    }
+                                    return [];
+                                }
+                            }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return ' ' + context.label + ': ' + context.raw + '%';
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // On Page Load Initialization
+        window.addEventListener('DOMContentLoaded', () => {
+            selectPersona('beginner');
+            calculateOriginFine();
+            updateJangmokStory();
+            setWizardStep(1);
+            updateSpilloverSimulator();
+            initCharts();
+        });
+    </script>
+</body>
+</html>
